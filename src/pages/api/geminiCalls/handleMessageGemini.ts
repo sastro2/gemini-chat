@@ -6,11 +6,11 @@ type startGeminiChatReqBody = {
   history: Message[];
   message: string;
   temp: number;
-}
+};
 
 type startGeminiChatNextApiReq = Omit<NextApiRequest, 'body'> & {
   body: startGeminiChatReqBody;
-}
+};
 
 const AI = new GoogleGenerativeAI(process.env.GOOGLE_AI_APIKEY!);
 
@@ -26,9 +26,11 @@ const handleMessageGemini = async(req: startGeminiChatNextApiReq, res: NextApiRe
         }
       });
 
-      const stream = await chat.sendMessage(req.body.message);
+      const asd = await chat.sendMessageStream(req.body.message);
 
-      res.send({text: stream.response.text()})
+      for await(const x of asd.stream){
+        res.status(200).write(x.text());
+      }
     }else{
       res.status(405).end();
     };
