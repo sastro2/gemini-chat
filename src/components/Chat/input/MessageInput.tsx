@@ -18,9 +18,21 @@ export const messageGemini = async(message: string, temp: number, currentMessage
     })
   });
 
-  const jsonRes = await res.json()
+  const reader = res.body!.getReader();
 
-  changeCurrentMessageHistory([...currentMessageHistory, {role: 'model', parts: jsonRes.text}]);
+  while(true){
+    console.log('hi')
+    const {done, value} = await reader.read();
+
+    if(done){
+      break;
+    };
+
+    const decoder = new TextDecoder('utf-8');
+
+    console.log(value.toString())
+    changeCurrentMessageHistory([...currentMessageHistory, {role: 'model', parts: decoder.decode(value)}])
+  }
 };
 
 const handleSendClick = (messageInput: string, currentMessageHistory: Message[], changeMessageInput: (input: string) => void, ChangeCurrentMessageHistory: (history: Message[]) => void) => {
