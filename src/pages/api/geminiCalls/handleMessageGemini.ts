@@ -14,9 +14,11 @@ type startGeminiChatNextApiReq = Omit<NextApiRequest, 'body'> & {
 
 const AI = new GoogleGenerativeAI(process.env.GOOGLE_AI_APIKEY!);
 
+
 const handleMessageGemini = async(req: startGeminiChatNextApiReq, res: NextApiResponse) => {
   res.setHeader('Content-Type', 'text/plain');
-  res.setHeader('Transfer-Encoding', 'chunked');
+  res.setHeader('Cache-Control', 'no-cache');
+
     if(req.method === 'POST'){
       res.setHeader('Content-Type', 'application/json');
   	  const model = AI.getGenerativeModel({ model: 'gemini-pro' });
@@ -28,12 +30,14 @@ const handleMessageGemini = async(req: startGeminiChatNextApiReq, res: NextApiRe
         }
       });
 
-      const asd = await chat.sendMessageStream(req.body.message);
+      const aiRes = await chat.sendMessageStream(req.body.message);
 
-      for await(const x of asd.stream){
+      for await(const x of aiRes.stream){
+      console.log(x.text())
         res.write(x.text());
-      }
+      };
 
+      res.end();
     }else{
       res.status(405).end();
     };

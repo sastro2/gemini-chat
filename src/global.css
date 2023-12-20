@@ -4,3 +4,7 @@ body {
   padding: 0;
   height: 100vh;
 }
+
+.simplebar-scrollbar:before {
+  background: white;
+}
