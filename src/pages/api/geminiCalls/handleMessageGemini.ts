@@ -24,7 +24,7 @@ const handleMessageGemini = async(req: startGeminiChatNextApiReq, res: NextApiRe
   	  const model = AI.getGenerativeModel({ model: 'gemini-pro' });
 
       const chat = model.startChat({
-        history: req.body.history,
+        history: [...req.body.history],
         generationConfig: {
           temperature: req.body.temp
         }
@@ -33,7 +33,6 @@ const handleMessageGemini = async(req: startGeminiChatNextApiReq, res: NextApiRe
       const aiRes = await chat.sendMessageStream(req.body.message);
 
       for await(const x of aiRes.stream){
-      console.log(x.text())
         res.write(x.text());
       };
 

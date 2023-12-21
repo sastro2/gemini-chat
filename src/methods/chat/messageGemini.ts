@@ -1,7 +1,15 @@
+import { GeminiMessage } from '../../_types/GeminiMessage';
 import { Message } from '../../_types/Message';
 
-export const messageGemini = async(messageInput: string, temp: number, currentMessageHistory: Message[], changeCurrentMessageHistory: (history: Message[]) => void, changeAiResponseLoading: (loading: boolean) => void) => {
+export const messageGemini = async(messageInput: string, temp: number, currentMessageHistory: Message[], history: Message[][], changeHistory: (history: Message[][]) => void, changeCurrentMessageHistory: (history: Message[]) => void, changeAiResponseLoading: (loading: boolean) => void) => {
   changeAiResponseLoading(true);
+
+  const geminiHistory: GeminiMessage[] = currentMessageHistory.map((message) => {
+
+    return {role: message.role, parts: message.parts}
+  });
+  geminiHistory.shift();
+
   const res = await fetch('/api/geminiCalls/handleMessageGemini', {
     method: 'POST',
     headers: {
@@ -9,7 +17,7 @@ export const messageGemini = async(messageInput: string, temp: number, currentMe
     },
     body:  JSON.stringify({
       message: messageInput,
-      history:  [],
+      history:  geminiHistory,
       temp: temp
     })
   });

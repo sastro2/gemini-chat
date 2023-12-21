@@ -1,12 +1,12 @@
 export const StyleSheet = {
   background: {
-    base: '#0b385f',
+    base: '#1A1A1D',
     history: {
-      historyContainer: '#bdd9cd',
+      historyContainer: '#C5C6C7',
     },
     messages: {
-      message: '#1c2127',
-      messageWindowContainer: '#161d23',
+      message: '#1A1A1D',
+      messageWindowContainer: '#202023',
     }
   },
   characters: 'white',
