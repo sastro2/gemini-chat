@@ -1,10 +1,6 @@
 import React from 'react';
-import App from './_app';
+import { ChatWindow } from '../components/Chat/ChatWindow';
 
 export default function Entry() {
-  return(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  )
+  return <ChatWindow />;
 }

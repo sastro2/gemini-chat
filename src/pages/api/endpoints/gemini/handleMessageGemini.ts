@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Message } from '../../../_types/Message';
+import { Message } from '../../../../_types/Message';
 
 type startGeminiChatReqBody = {
   history: Message[];
