@@ -6,8 +6,7 @@ import '../global.css';
 import { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // Additional context providers, layouts, or other setup can be added here
   return <Component {...pageProps} />;
-}
+};
 
 export default MyApp;

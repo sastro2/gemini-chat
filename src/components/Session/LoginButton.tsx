@@ -6,7 +6,9 @@ interface ILoginButton {
 }
 
 export const LoginButton: React.FC<ILoginButton> = () => {
-  const {changeLoginDialogOpen} = useLoginStore();
+  const {loggedIn, changeLoginDialogOpen} = useLoginStore();
+
+  if(loggedIn) return null;
 
   return (
     <Button variant="contained" color="primary" onClick={() => changeLoginDialogOpen(true)}>

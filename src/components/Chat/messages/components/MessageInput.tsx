@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import { useEffect, useRef } from 'react';
 import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historyStore';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
+import { useLoginStore } from '../../../../_state/Session/loginStore';
 import { Message } from '../../../../_types/Message';
 import { sendUserMessageToGemini } from '../../../../methods/chat/sendUserMessageToGemini';
 import { StyleSheet } from '../../../../styleSheet';
@@ -41,6 +42,7 @@ const getTempButtonColor = (temperatureInput: number) => {
 export const MessageInput: React.FC<IMessageInput> = () => {
   const {messageInput, currentMessageHistory, aiResponseLoading, typingOutResponse, temperatureInput, showTempInput, changeShowTempInput, changeCurrentMessageHistory, changeMessageInput, changeAiReponseLoading, changeTemperatureInput} = useMessagesStore();
   const {history, changeHistory} = useHistoryStore();
+  const {loggedIn} = useLoginStore();
 
   const sliderContainerRef = useRef<HTMLDivElement>(null);
 
@@ -64,7 +66,7 @@ export const MessageInput: React.FC<IMessageInput> = () => {
 
   return (
     <Container style={{ width: '100%', display: 'flex', padding: 0, margin: 0, gap: '0.5%'}} maxWidth={false}>
-      <TextField onKeyDown={(e) => {sendUserMessageToGemini(aiResponseLoading, messageInput, currentMessageHistory, temperatureInput, changeMessageInput, changeCurrentMessageHistory, e.code, changeAiReponseLoading, changeHistory, history, typingOutResponse)}} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} style={{ width: '100%', backgroundColor: StyleSheet.background.messages.messageWindowContainer }} sx={{ input: {color: StyleSheet.characters, borderColor: StyleSheet.borders} }} autoFocus placeholder='Message Gemini' />
+      <TextField onKeyDown={(e) => {sendUserMessageToGemini(aiResponseLoading, messageInput, currentMessageHistory, temperatureInput, changeMessageInput, changeCurrentMessageHistory, e.code, changeAiReponseLoading, changeHistory, history, typingOutResponse, loggedIn)}} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} style={{ width: '100%', backgroundColor: StyleSheet.background.messages.messageWindowContainer }} sx={{ input: {color: StyleSheet.characters, borderColor: StyleSheet.borders} }} autoFocus placeholder='Message Gemini' />
       <Container ref={sliderContainerRef} style={{position: 'relative', height: '100%', width: 'auto', padding: 0, margin: 0, alignItems: 'center', justifyContent: 'center'}} maxWidth={false}>
         {showTempInput
           ?<Slider orientation='vertical' color={getTempButtonColor(temperatureInput)} value={temperatureInput} onChange={(e, newValue) => changeTemperatureInput(newValue as number)} defaultValue={0.2} min={0} max={1} step={0.1} style={{position: 'absolute', bottom: 66, left: 15, height: '200%'}} valueLabelDisplay='auto'/>
@@ -75,7 +77,7 @@ export const MessageInput: React.FC<IMessageInput> = () => {
           </Button>
         </Tooltip>
       </Container>
-      <Button onClick={() => sendUserMessageToGemini(aiResponseLoading, messageInput, currentMessageHistory, temperatureInput, changeMessageInput, changeCurrentMessageHistory, 'Enter', changeAiReponseLoading, changeHistory, history, typingOutResponse)} style={{justifyContent: 'center', alignItems: 'center', lineHeight: 0, backgroundColor: StyleSheet.buttons}} variant='contained'>Send</Button>
+      <Button onClick={() => sendUserMessageToGemini(aiResponseLoading, messageInput, currentMessageHistory, temperatureInput, changeMessageInput, changeCurrentMessageHistory, 'Enter', changeAiReponseLoading, changeHistory, history, typingOutResponse, loggedIn)} style={{justifyContent: 'center', alignItems: 'center', lineHeight: 0, backgroundColor: StyleSheet.buttons}} variant='contained'>Send</Button>
     </Container>
   );
 };

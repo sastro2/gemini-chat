@@ -10,7 +10,7 @@ export const messageGemini = async(messageInput: string, temp: number, currentMe
   });
   geminiHistory.shift();
 
-  const res = await fetch('/api/geminiCalls/handleMessageGemini', {
+  const res = await fetch('/api/endpoints/gemini/handleMessageGemini', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -22,18 +22,16 @@ export const messageGemini = async(messageInput: string, temp: number, currentMe
     })
   });
 
+  const parsedRes = await res.json();
 
-  const reader = res.body!.getReader();
+  if(!parsedRes.auth){
+    changeCurrentMessageHistory([...currentMessageHistory, {role: 'user', parts: messageInput, initialPrint: true}, {role: 'model', parts: 'Please login to use Chat Gemini', initialPrint: false}])
+    changeAiResponseLoading(false);
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
+    return;
+  };
 
-    const decoder = new TextDecoder('utf-8');
-    const chunk = decoder.decode(value);
-
-    changeCurrentMessageHistory([...currentMessageHistory, {role: 'user', parts: messageInput, initialPrint: true}, {role: 'model', parts: chunk, initialPrint: false}])
-  }
-
+  changeCurrentMessageHistory([...currentMessageHistory, {role: 'user', parts: messageInput, initialPrint: true}, {role: 'model', parts: parsedRes.message, initialPrint: false}])
   changeAiResponseLoading(false);
+  return;
 };
