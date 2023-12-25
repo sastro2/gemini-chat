@@ -1,32 +1,42 @@
 import { create } from 'zustand';
-import { Message } from '../../../_types/Message';
+import { History } from '../../../_types/History';
 
 interface IMessagesStore{
-  currentMessageHistory: Message[];
+  currentMessageHistory: History;
   aiResponseLoading: boolean;
   messageInput: string;
-  temperatureInput: number;
   showTempInput: boolean;
   typingOutResponse: boolean;
-  changeCurrentMessageHistory: (history: Message[]) => void;
+  changeCurrentMessageHistory: (history: History) => void;
   changeAiReponseLoading: (loading: boolean) => void;
   changeMessageInput:  (input: string) =>  void;
-  changeTemperatureInput: (temp: number) => void;
   changeShowTempInput: (boolean: boolean) => void;
   changeTypingOutResponse: (boolean: boolean) =>  void;
 };
 
+export const defaultCurrentMessageHistory: History = {
+  id: 0,
+  temperature: 0.2,
+  created: new Date(),
+  messages: [
+    {
+      role: 'model',
+      parts: 'Hello, how can I help you today?',
+      initialPrint: false,
+      historyId: 0
+    }
+  ]
+};
+
 export const useMessagesStore = create<IMessagesStore>(set => ({
-  currentMessageHistory: [{role: 'model', parts: 'Hello, how can I help you today?', initialPrint: false}],
+  currentMessageHistory: defaultCurrentMessageHistory,
   aiResponseLoading: false,
   messageInput: '',
-  temperatureInput: 0.2,
   typingOutResponse: false,
   showTempInput: false,
-  changeCurrentMessageHistory: (history: Message[]) => set(({currentMessageHistory: history})),
+  changeCurrentMessageHistory: (history: History) => set(({currentMessageHistory: history})),
   changeAiReponseLoading: (loading: boolean) => set(({aiResponseLoading: loading})),
   changeMessageInput: (input: string) => set(({messageInput: input})),
-  changeTemperatureInput: (temp: number) => set(({temperatureInput: temp})),
   changeShowTempInput: (boolean: boolean) => set(({showTempInput: boolean})),
   changeTypingOutResponse: (boolean: boolean) => set(({typingOutResponse: boolean})),
 }));

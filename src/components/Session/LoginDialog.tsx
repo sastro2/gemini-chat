@@ -6,30 +6,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useLoginStore } from '../../_state/Session/loginStore';
-
-const login = async(usernameInput: string, passwordInput: string, changeLoggedIn: (loggedIn: boolean) => void): Promise<undefined>=> {
-  if(!usernameInput || !passwordInput) return;
-
-  const res = await fetch('http://localhost:3000/api/endpoints/auth/authenticateUser', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      usernameInput: usernameInput,
-      passwordInput: passwordInput
-    })
-  });
-
-  const parsedRes = await res.json();
-
-  changeLoggedIn(parsedRes.auth);
-
-  return;
-};
+import { LoginData } from '../../methods/_Bundles/login/LoginData';
+import { LoginMethods } from '../../methods/_Bundles/login/LoginMethods';
+import { login } from '../../methods/login/login';
 
 export const LoginDialog = () => {
   const {loginDialogOpen, passwordInput, usernameInput, changeLoginDialogOpen, changePasswordInput, changeUsernameInput, changeLoggedIn} = useLoginStore();
+
+  const loginData: LoginData = {usernameInput, passwordInput};
+  const loginDataMethods: LoginMethods = {changeLoggedIn, changeLoginDialogOpen};
 
   return (
       <Dialog open={loginDialogOpen} onClose={() => changeLoginDialogOpen(false)}>
@@ -43,7 +28,7 @@ export const LoginDialog = () => {
           </Container>
         </DialogContent>
         <DialogActions>
-          <Button onClick={async() => [await login(usernameInput, passwordInput, changeLoggedIn), changeLoginDialogOpen(false)]}>Sign In</Button>
+          <Button onClick={async() => [await login(loginData, loginDataMethods)]}>Sign In</Button>
         </DialogActions>
       </Dialog>
   );

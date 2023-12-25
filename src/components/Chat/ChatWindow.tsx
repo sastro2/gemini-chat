@@ -1,7 +1,7 @@
 import { Container, Grid } from '@mui/material';
 import { StyleSheet } from '../../styleSheet';
-import { LoginButton } from '../Session/loginButton';
-import { LoginDialog } from '../Session/loginDialog';
+import { LoginButton } from '../Session/LoginButton';
+import { LoginDialog } from '../Session/LoginDialog';
 import { HistoryWindow } from './history/HistoryWindow';
 import { MessageInput } from './messages/components/MessageInput';
 import { MessagesWindow } from './messages/MessagesWindow';

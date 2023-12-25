@@ -16,37 +16,38 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
 
   const scrollableNodeRef = createRef();
 
+  //type out Ai response
   useEffect(() => {
-    if((currentMessageHistory[currentMessageHistory.length - 1].role === 'user') || (currentMessageHistory[currentMessageHistory.length - 1].initialPrint)) return;
+    if((currentMessageHistory.messages[currentMessageHistory.messages.length - 1].role === 'user') || (currentMessageHistory.messages[currentMessageHistory.messages.length - 1].initialPrint)) return;
     changeTypingOutResponse(true);
 
     let currentIndex = 0;
 
     const intervalId = setInterval(() => {
-      setText((prevText) => prevText  + currentMessageHistory[currentMessageHistory.length - 1].parts[currentIndex]);
+      setText((prevText) => prevText  + currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts[currentIndex]);
 
       currentIndex += 1;
 
-      if (currentIndex === currentMessageHistory[currentMessageHistory.length - 1].parts.length) {
+      if (currentIndex === currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length) {
         clearInterval(intervalId);
         setText('')
 
-        const newMessage = currentMessageHistory[currentMessageHistory.length - 1];
+        const newMessage = currentMessageHistory.messages[currentMessageHistory.messages.length - 1];
         newMessage.initialPrint = true;
         const newHistory = currentMessageHistory;
-        currentMessageHistory[currentMessageHistory.length - 1] = newMessage;
+        currentMessageHistory.messages[currentMessageHistory.messages.length - 1] = newMessage;
 
         changeCurrentMessageHistory(newHistory);
         changeTypingOutResponse(false);
       }
-    }, 1000/(currentMessageHistory[currentMessageHistory.length - 1].parts.length * 3));
+    }, 1000/(currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length * 3));
   }, [currentMessageHistory]);
 
   return(
     <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 20% 5% 20%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer}}>
       <Container style={{height: '100%', display: 'flex', flexDirection: 'column'}} maxWidth={false}>
-      {currentMessageHistory.map((message, index) => {
-        if((index === currentMessageHistory.length - 1) && message.role === 'model' && aiResponseLoading){
+      {currentMessageHistory.messages.map((message, index) => {
+        if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
           return <AutorenewOutlinedIcon key={message.parts + index} />
         };
 
