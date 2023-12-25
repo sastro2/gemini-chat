@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { History } from '../../../../_types/History';
-import { selectAccessTokenByUsername } from '../../dataAccess/users/SELECT/selectAccessTokenByUsername';
-import { selectAllHistoriesByUserId } from '../../dataAccess/users/SELECT/selectAllHistoriesByUserId';
-import { selectUserIdByUsername } from '../../dataAccess/users/SELECT/selectUserIdByUsername';
+import { History } from '../../../../../_types/History';
+import { validateAccessOptions } from '../../../../../methods/server/validateAccessOptions';
+import { selectAllHistoriesByUserId } from '../../../dataAccess/histories/SELECT/selectAllHistoriesByUserId';
+import { selectAccessTokenByUsername } from '../../../dataAccess/users/SELECT/selectAccessTokenByUsername';
+import { selectUserIdByUsername } from '../../../dataAccess/users/SELECT/selectUserIdByUsername';
 
 type GetAllHistoriesReqBody = {
   accessToken: string;
@@ -17,10 +18,12 @@ type GetAllHistoriesResponseBody = {
   history: History[] | null;
 };
 
-const getAllHistories = async(req: GetAllHistoriesNextApiReq, res: NextApiResponse<GetAllHistoriesResponseBody>) => {
+const getAllHistoriesPrefetch = async(req: GetAllHistoriesNextApiReq, res: NextApiResponse<GetAllHistoriesResponseBody>) => {
   const resBody: GetAllHistoriesResponseBody = {history: null};
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
+
+  await validateAccessOptions(req.body.accessToken, res, true, req.body.username);
 
   const { accessToken, username } = req.body;
 
@@ -44,4 +47,4 @@ const getAllHistories = async(req: GetAllHistoriesNextApiReq, res: NextApiRespon
   return;
 };
 
-export default getAllHistories;
+export default getAllHistoriesPrefetch;

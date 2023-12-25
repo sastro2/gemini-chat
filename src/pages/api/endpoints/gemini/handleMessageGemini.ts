@@ -1,8 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { parse } from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Message } from '../../../../_types/Message';
-import { selectAccessTokenByUsername } from '../../dataAccess/users/SELECT/selectAccessTokenByUsername';
+import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
 type StartGeminiChatReqBody = {
   history: Message[];
@@ -20,29 +19,20 @@ type StartGeminiChatResponseBody = {
   auth: boolean;
 };
 
-type AccessOptions = {
-  accessToken: string;
-  username: string;
-};
-
 const AI = new GoogleGenerativeAI(process.env.GOOGLE_AI_APIKEY!);
 
-const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiResponse<StartGeminiChatResponseBody>) => {
+const handleMessageGeminiPrefetch = async(req: StartGeminiChatNextApiReq, res: NextApiResponse<StartGeminiChatResponseBody>) => {
     if(req.method === 'POST'){
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Content-Type', 'application/json');
 
-      const cookies = parse(req.headers.cookie || '' );
-      const stringifiedAccessOptions = cookies['accessOptions'];
-      const accessOptions: AccessOptions = JSON.parse(stringifiedAccessOptions);
-
-      if(!accessOptions.accessToken || accessOptions.accessToken !== await selectAccessTokenByUsername(accessOptions.username)) {res.status(401).send({auth: false, message: ''}); return;};
+      await validateAccessOptions(req.headers.cookie, res, false);
 
   	  const model = AI.getGenerativeModel({ model: 'gemini-pro' });
 
       let aiRes;
 
-      console.log(req.body.history);
+      console.log(req.body.history, req.body.message);
 
       try{
         const chat = model.startChat({
@@ -59,7 +49,7 @@ const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiRe
         return;
       };
 
-      res.send({auth: true, message: (await aiRes.response).text()});
+      res.send({auth: true, message: (await aiRes.response).text()? (await aiRes.response).text(): 'Sorry, we have detected an unsafe response from the AI. Please try again with a different message or change the safety settings on your profile page.'});
       return;
     }else{
       res.status(405).end();
@@ -67,4 +57,4 @@ const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiRe
     };
 };
 
-export default handleMessageGemini;
+export default handleMessageGeminiPrefetch;

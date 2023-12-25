@@ -5,6 +5,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { useHistoryStore } from '../../_state/Chat/historyWindow/historyStore';
+import { useMessagesStore } from '../../_state/Chat/messageWindow/messagesStore';
 import { useLoginStore } from '../../_state/Session/loginStore';
 import { LoginData } from '../../methods/_Bundles/login/LoginData';
 import { LoginMethods } from '../../methods/_Bundles/login/LoginMethods';
@@ -12,9 +14,11 @@ import { login } from '../../methods/login/login';
 
 export const LoginDialog = () => {
   const {loginDialogOpen, passwordInput, usernameInput, changeLoginDialogOpen, changePasswordInput, changeUsernameInput, changeLoggedIn} = useLoginStore();
+  const {changeCurrentMessageHistory} = useMessagesStore();
+  const {changeHistories} = useHistoryStore();
 
   const loginData: LoginData = {usernameInput, passwordInput};
-  const loginDataMethods: LoginMethods = {changeLoggedIn, changeLoginDialogOpen};
+  const loginMethods: LoginMethods = {changeLoggedIn, changeLoginDialogOpen, changeCurrentMessageHistory, changeHistories};
 
   return (
       <Dialog open={loginDialogOpen} onClose={() => changeLoginDialogOpen(false)}>
@@ -24,11 +28,11 @@ export const LoginDialog = () => {
         <DialogContent>
           <Container style={{display: 'flex', flexDirection: 'column', gap: 2}}>
             <TextField onChange={(e) => [changeUsernameInput(e.currentTarget.value)]} autoFocus placeholder='Username' />
-            <TextField onChange={(e) => [changePasswordInput(e.currentTarget.value)]} placeholder='Password' type='password' />
+            <TextField onChange={(e) => [changePasswordInput(e.currentTarget.value)]} placeholder='Password' type='password' onKeyDown={async(e) => {e.code === 'Enter'? [await login(loginData, loginMethods), console.log('hi')]: null}} />
           </Container>
         </DialogContent>
         <DialogActions>
-          <Button onClick={async() => [await login(loginData, loginDataMethods)]}>Sign In</Button>
+          <Button onClick={async() => [await login(loginData, loginMethods)]}>Sign In</Button>
         </DialogActions>
       </Dialog>
   );

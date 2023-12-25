@@ -1,14 +1,9 @@
-import { parse } from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { History } from '../../../../_types/History';
-import { insertHistory } from '../../dataAccess/users/INSERT/insertHistory';
+import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
+import { insertHistory } from '../../dataAccess/histories/INSERT/insertHistory';
 import { selectAccessTokenByUsername } from '../../dataAccess/users/SELECT/selectAccessTokenByUsername';
 import { selectUserIdByUsername } from '../../dataAccess/users/SELECT/selectUserIdByUsername';
-
-type AccessOptions = {
-  accessToken: string;
-  username: string;
-};
 
 type AddHistoryReqBody = {
   historyTemperature: number;
@@ -27,21 +22,18 @@ const addHistory = async(req: AddHistoryNextApiReq, res: NextApiResponse<AddHist
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
 
-  const cookies = parse(req.headers.cookie || '' );
-  const stringifiedAccessOptions = cookies['accessOptions'];
-  const accessOptions: AccessOptions = JSON.parse(stringifiedAccessOptions);
+  const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
+
+  if(!accessOptions) {res.status(401).send(resBody); return;}
+
   const { historyTemperature } = req.body;
 
-  if(!accessOptions.accessToken) {res.status(400).send(resBody); return;};
-
-  const { accessToken, username } = accessOptions;
-
-  const userAccessToken = await selectAccessTokenByUsername(username);
+  const userAccessToken = await selectAccessTokenByUsername(accessOptions.username);
 
   if(!userAccessToken) {res.status(401).send(resBody); return;}
-  if(userAccessToken !== accessToken) {res.status(401).send(resBody); return;}
+  if(userAccessToken !== accessOptions?.accessToken) {res.status(401).send(resBody); return;}
 
-  const userId = await selectUserIdByUsername(username);
+  const userId = await selectUserIdByUsername(accessOptions.username);
 
   if(!userId) {res.status(401).send(resBody); return;}
 

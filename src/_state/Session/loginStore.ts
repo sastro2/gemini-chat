@@ -12,7 +12,7 @@ interface ILoginStore{
 };
 
 export const useLoginStore = create<ILoginStore>(set => ({
-  loggedIn: false,
+  loggedIn: true,
   loginDialogOpen: false,
   usernameInput: '',
   passwordInput: '',

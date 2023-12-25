@@ -16,7 +16,7 @@ interface IMessageInput {};
 
 export const MessageInput: React.FC<IMessageInput> = () => {
   const {messageInput, currentMessageHistory, aiResponseLoading, typingOutResponse, showTempInput, changeShowTempInput, changeCurrentMessageHistory, changeMessageInput, changeAiReponseLoading} = useMessagesStore();
-  const {addHistory, addMessageToHistory} = useHistoryStore();
+  const {addHistory, addMessageToHistory, changeHistoryTemp} = useHistoryStore();
   const {loggedIn} = useLoginStore();
 
   const sliderContainerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +57,7 @@ export const MessageInput: React.FC<IMessageInput> = () => {
       <TextField onKeyDown={(e) => {sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)}} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} style={{ width: '100%', backgroundColor: StyleSheet.background.messages.messageWindowContainer }} sx={{ input: {color: StyleSheet.characters, borderColor: StyleSheet.borders} }} autoFocus placeholder='Message Gemini' />
       <Container ref={sliderContainerRef} style={{position: 'relative', height: '100%', width: 'auto', padding: 0, margin: 0, alignItems: 'center', justifyContent: 'center'}} maxWidth={false}>
         {showTempInput
-          ?<Slider orientation='vertical' color={getTempButtonColor(currentMessageHistory.temperature)} value={currentMessageHistory.temperature} onChange={(e, newValue) => [changeCurrentMessageHistory({...currentMessageHistory, temperature: newValue as number}), console.log(newValue)]} defaultValue={0.2} min={0} max={1} step={0.1} style={{position: 'absolute', bottom: 66, left: 15, height: '200%'}} valueLabelDisplay='auto'/>
+          ?<Slider orientation='vertical' color={getTempButtonColor(currentMessageHistory.temperature)} value={currentMessageHistory.temperature} onChange={(e, newValue) => [changeCurrentMessageHistory({...currentMessageHistory, temperature: newValue as number}), changeHistoryTemp(currentMessageHistory.id, newValue as number)]} defaultValue={currentMessageHistory.temperature} min={0} max={1} step={0.1} style={{position: 'absolute', bottom: 66, left: 15, height: '200%'}} valueLabelDisplay='auto'/>
           : null}
         <Tooltip title={<div>Adjust the temperature to increase randomness in Geminis responses making it more or less creative. Learn more about <a target='blanc' href={'https://ai.google.dev/docs/concepts#model_parameters'}>temperature</a></div>} placement='left' arrow>
           <Button variant='contained' color={getTempButtonColor(currentMessageHistory.temperature)} style={{height: '100%', padding: 0}} onClick={() => changeShowTempInput(!showTempInput)}>

@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { StyleSheet } from '../../../styleSheet';
+import { MessageIcon } from './components/MessageIcon';
 
 interface IMessagesWindow {}
 
@@ -44,7 +45,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   }, [currentMessageHistory]);
 
   return(
-    <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 20% 5% 20%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer}}>
+    <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 17% 5% 17%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer}}>
       <Container style={{height: '100%', display: 'flex', flexDirection: 'column'}} maxWidth={false}>
       {currentMessageHistory.messages.map((message, index) => {
         if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
@@ -59,19 +60,23 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
           const textToRender = text;
 
           return(
-            <Container key={message.parts + index} style={{display: 'flex', justifyContent: message.role === 'model'? 'start':  'end', padding: '0.5%'}} maxWidth={false}>
+            <Container key={message.parts + index} style={{display: 'flex', justifyContent: message.role === 'model'? 'start':  'end', padding: '0.5%', position: 'relative'}} maxWidth={false}>
+              {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
               <Container style={{border: `${StyleSheet.background.messages.message} 0.01px solid`, borderRadius: message.role === 'model'? '3px 15px 15px 15px':  '15px 3px 15px 15px', width: 'auto', padding: '0 3% 0 3%', margin: 0, color: StyleSheet.characters, backgroundColor: StyleSheet.background.messages.message, letterSpacing: '0.3px'}} maxWidth={false}>
                 <ReactMarkdown>{textToRender}</ReactMarkdown>
               </Container>
+              {message.role === 'user'? <MessageIcon index={index} role='user' />: null}
             </Container>
           )
         }
 
         return(
-          <Container key={message.parts + index} style={{display: 'flex', justifyContent: message.role === 'model'? 'start':  'end', padding: '0.5%'}} maxWidth={false}>
+          <Container key={message.parts + index} style={{display: 'flex', justifyContent: message.role === 'model'? 'start':  'end', padding: '0.5%', gap: 10, position: 'relative'}} maxWidth={false}>
+            {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
             <Container style={{border: `${StyleSheet.background.messages.message} 0.01px solid`, borderRadius: message.role === 'model'? '3px 15px 15px 15px':  '15px 3px 15px 15px', width: 'auto', padding: '0 3% 0 3%', margin: 0, color: StyleSheet.characters, backgroundColor: StyleSheet.background.messages.message, letterSpacing: '0.3px'}} maxWidth={false}>
               <ReactMarkdown>{message.parts}</ReactMarkdown>
             </Container>
+            {message.role === 'user'? <MessageIcon index={index} role='user' />: null}
           </Container>
           )
         })}

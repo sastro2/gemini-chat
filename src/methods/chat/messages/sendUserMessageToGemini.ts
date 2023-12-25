@@ -1,7 +1,9 @@
 import { History } from '../../../_types/History';
 import { SendUserMessageData } from '../../_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../_Bundles/chat/SendUserMessageMethods';
+import { changeDbTemperatureById } from './changeDbTemperatureById';
 import { messageGemini } from './messageGemini';
+import { saveMessageToDb } from './saveMessageToDb';
 
 export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessageData, sendUserMessageMethods: SendUserMessageMethods, keyCode: string) => {
   const { currentMessageHistory, aiResponseLoading, messageInput, typingOutResponse, loggedIn } = sendUserMessageData;
@@ -38,6 +40,8 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
     addHistory(parsedResponse.history);
   };
 
+  saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id});
+  changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature);
   messageGemini(messageInput, currentMessageHistory.temperature, currentMessageHistory, changeCurrentMessageHistory, changeAiReponseLoading, addMessageToHistory);
   changeMessageInput('');
 };
