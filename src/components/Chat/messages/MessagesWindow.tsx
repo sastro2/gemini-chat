@@ -2,11 +2,9 @@ import 'simplebar-react/dist/simplebar.min.css';
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
 import { Container } from '@mui/material';
 import { createRef, useEffect, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { StyleSheet } from '../../../styleSheet';
-import { MessageIcon } from './components/MessageIcon';
 import { TextBox } from './components/TextBox';
 import { TextBoxInitPrint } from './components/textBoxInitPrint';
 
@@ -14,7 +12,6 @@ interface IMessagesWindow {}
 
 export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   const [text, setText] = useState<string>('');
-
   const {currentMessageHistory, aiResponseLoading, changeCurrentMessageHistory, changeTypingOutResponse} = useMessagesStore();
 
   const scrollableNodeRef = createRef();
