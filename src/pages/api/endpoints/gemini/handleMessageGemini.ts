@@ -32,8 +32,6 @@ const handleMessageGeminiPrefetch = async(req: StartGeminiChatNextApiReq, res: N
 
       let aiRes;
 
-      console.log(req.body.history, req.body.message);
-
       try{
         const chat = model.startChat({
           history: [...req.body.history],
@@ -44,7 +42,7 @@ const handleMessageGeminiPrefetch = async(req: StartGeminiChatNextApiReq, res: N
 
         aiRes = await chat.sendMessageStream(req.body.message)
       }catch(error){
-        console.log(error)
+        //log error to db
         res.send({auth: true, message: 'Sorry, we have detected an unsafe response from the AI. Please try again with a different message or change the safety settings on your profile page.'})
         return;
       };

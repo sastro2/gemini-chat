@@ -20,7 +20,7 @@ const addMessage = async(req: AddMessageNextApiReq, res: NextApiResponse) => {
 
   insertMessage(message);
 
-  res.status(200).send('');
+  res.status(200).send({});
   return;
 };
 

@@ -26,7 +26,7 @@ const changeTemperatureById = async(req: AddHistoryNextApiReq, res: NextApiRespo
 
   await updateTemperatureById(userId, historyTemperature);
 
-  res.status(200).send(null);
+  res.status(200).send({});
   return;
 };
 

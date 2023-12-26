@@ -26,11 +26,6 @@ async function apiFetch(url: string, method: ApiMethods, options: ApiFetchOption
 async function apiFetch(url: string, method: ApiMethods, options: ApiFetchOptionsServer): Promise<any>;
 async function apiFetch(url: string, method: ApiMethods, options: FetchOptions): Promise<any> {
   if(prefetching(options)){
-    console.log(options.body, {
-      username: options.username,
-      accessToken: options.accessToken,
-      ...options.body,
-    })
     const response = await fetch(url, {
       method: method,
       headers: {
@@ -65,6 +60,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
     signal: options.singal,
     body: JSON.stringify({...options.body}),
   });
+
   const data = await response.json();
 
   // #region log errors

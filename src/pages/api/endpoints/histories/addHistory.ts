@@ -19,7 +19,7 @@ type AddHistoryResponseBody = {
 
 const addHistory = async(req: AddHistoryNextApiReq, res: NextApiResponse<AddHistoryResponseBody>) => {
   const resBody: AddHistoryResponseBody = {history: null};
-console.log('hihiihhiihih')
+
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
