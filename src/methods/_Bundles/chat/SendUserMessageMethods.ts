@@ -6,5 +6,7 @@ export type SendUserMessageMethods = {
   changeCurrentMessageHistory: (history: History) => void;
   changeAiReponseLoading: (loading: boolean) => void;
   addHistory: (history: History) => void;
-  addMessageToHistory: (message: Message) => void
+  addMessageToHistory: (message: Message) => void,
+  clearHistories: () => void;
+  changeLoggedIn: (loggedIn: boolean) => void;
 };

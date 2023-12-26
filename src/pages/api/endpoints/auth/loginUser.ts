@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { selectAccessTokenByUsername } from '../../dataAccess/users/SELECT/selectAccessTokenByUsername';
-import { selectPasswordByUsername } from '../../dataAccess/users/SELECT/selectPasswordByUsername';
+import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
+import { selectPasswordByUsername } from '../../../../methods/dataAccess/users/SELECT/selectPasswordByUsername';
 
 type LoginUserReqBody = {
   usernameInput: string;

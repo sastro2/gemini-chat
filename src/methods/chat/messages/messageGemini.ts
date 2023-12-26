@@ -1,15 +1,43 @@
-import { History } from '../../../_types/History';
 import { Message } from '../../../_types/Message';
-import changeTemperatureById from '../../../pages/api/endpoints/histories/changeTemperatureById';
 import { callGemini } from './callGemini';
 import { saveMessageToDb } from './saveMessageToDb';
+import {
+  MessageGeminiData,
+  MessageGeminiMethods,
+} from './sendUserMessageToGemini';
 
-export const messageGemini = async(messageInput: string, temp: number, currentMessageHistory: History, changeCurrentMessageHistory: (history: History) => void, changeAiResponseLoading: (loading: boolean) => void, addMessageToHistory: (message: Message) => void) => {
+export const messageGemini = async(messageGeminiData: MessageGeminiData, messageGeminiMethods: MessageGeminiMethods) => {
+  const { currentMessageHistory, messageInput } = messageGeminiData;
+  const { changeCurrentMessageHistory, changeAiResponseLoading, addMessageToHistory, clearHistories, changeLoggedIn } = messageGeminiMethods;
+
+   //all the messages to add in the following functions to make it more readable
+   const newMessages: Message[] = [
+    //0 - user message
+    {
+      role: 'user',
+      parts: messageInput,
+      initialPrint: true,
+      historyId: currentMessageHistory.id
+    },
+    //1 - model response to user
+    {
+      role: 'model',
+      parts: '',
+      initialPrint: true, historyId:
+      currentMessageHistory.id
+    },
+  ];
+
   changeAiResponseLoading(true);
-  changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, {role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}]});
-  addMessageToHistory({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id});
+  changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0]]});
+  addMessageToHistory(newMessages[0]);
 
-  const geminiResponse = await callGemini(currentMessageHistory, messageInput, temp);
+  const apiFetchFunctions = {
+    changeLoggedIn: changeLoggedIn,
+    clearHistories: clearHistories,
+    changeCurrentMessageHistory: changeCurrentMessageHistory,
+  };
+  const geminiResponse = await callGemini(currentMessageHistory, messageInput, currentMessageHistory.temperature, apiFetchFunctions);
 
   //if not logged in, send not logged in message
   if(!geminiResponse.auth){
@@ -19,9 +47,11 @@ export const messageGemini = async(messageInput: string, temp: number, currentMe
     return;
   };
 
-  saveMessageToDb({role: 'model', parts: geminiResponse.message, initialPrint: true, historyId: currentMessageHistory.id});
-  changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, {role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}, {role: 'model', parts: geminiResponse.message, initialPrint: false, historyId: currentMessageHistory.id}]})
-  addMessageToHistory({role: 'model', parts: geminiResponse.message, initialPrint: true, historyId: currentMessageHistory.id});
+  newMessages[1].parts = geminiResponse.message;
+
+  saveMessageToDb(newMessages[1], apiFetchFunctions);
+  changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]})
+  addMessageToHistory(newMessages[1]);
   changeAiResponseLoading(false);
   return;
 };

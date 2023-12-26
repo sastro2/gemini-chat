@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Message } from '../../../../_types/Message';
+import { insertMessage } from '../../../../methods/dataAccess/messages/INSERT/insertMessage';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
-import { insertMessage } from '../../dataAccess/messages/INSERT/insertMessage';
 
 type AddMessageReqBody = {
   message: Message;

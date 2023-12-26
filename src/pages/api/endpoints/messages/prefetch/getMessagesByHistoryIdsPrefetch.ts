@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Message } from '../../../../../_types/Message';
+import { selectMessagesByHistoryIds } from '../../../../../methods/dataAccess/messages/SELECT/selectMessagesByHistoryIds';
 import { validateAccessOptions } from '../../../../../methods/server/validateAccessOptions';
-import { selectMessagesByHistoryIds } from '../../../dataAccess/messages/SELECT/selectMessagesByHistoryIds';
 
 type GetAllMessagesReqBody = {
   accessToken: string;

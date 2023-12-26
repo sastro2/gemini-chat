@@ -15,10 +15,10 @@ import { login } from '../../methods/login/login';
 export const LoginDialog = () => {
   const {loginDialogOpen, passwordInput, usernameInput, changeLoginDialogOpen, changePasswordInput, changeUsernameInput, changeLoggedIn} = useLoginStore();
   const {changeCurrentMessageHistory} = useMessagesStore();
-  const {changeHistories} = useHistoryStore();
+  const {changeHistories, clearHistories} = useHistoryStore();
 
   const loginData: LoginData = {usernameInput, passwordInput};
-  const loginMethods: LoginMethods = {changeLoggedIn, changeLoginDialogOpen, changeCurrentMessageHistory, changeHistories};
+  const loginMethods: LoginMethods = {changeLoggedIn, changeLoginDialogOpen, changeCurrentMessageHistory, changeHistories, clearHistories};
 
   return (
       <Dialog open={loginDialogOpen} onClose={() => changeLoginDialogOpen(false)}>

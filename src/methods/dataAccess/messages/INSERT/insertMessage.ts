@@ -1,4 +1,4 @@
-import { Message } from '../../../../../_types/Message';
+import { Message } from '../../../../_types/Message';
 import databaseInstance from '../../db';
 
 export async function insertMessage(message: Message) {

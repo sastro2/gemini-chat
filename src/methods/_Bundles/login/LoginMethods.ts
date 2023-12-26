@@ -5,4 +5,5 @@ export type LoginMethods = {
   changeLoggedIn: (loggedIn: boolean) => void
   changeCurrentMessageHistory: (history: History) => void;
   changeHistories: (histories: History[]) => void;
+  clearHistories: () => void;
 };

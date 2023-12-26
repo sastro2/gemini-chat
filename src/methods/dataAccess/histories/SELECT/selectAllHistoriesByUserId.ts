@@ -1,4 +1,4 @@
-import { History } from '../../../../../_types/History';
+import { History } from '../../../../_types/History';
 import databaseInstance from '../../db';
 
 export async function selectAllHistoriesByUserId(userId: number): Promise<History[] | null> {

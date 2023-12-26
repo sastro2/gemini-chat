@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { selectAllUsers } from '../../dataAccess/users/SELECT/selectAllUsers';
+import { selectAllUsers } from '../../../../methods/dataAccess/users/SELECT/selectAllUsers';
 
 const getAllUsers = async(req: NextApiRequest, res: NextApiResponse) => {
   selectAllUsers();

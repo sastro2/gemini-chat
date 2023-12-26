@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { updateTemperatureById } from '../../../../methods/dataAccess/histories/UPDATE/updateTemperatureById';
+import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
-import { updateTemperatureById } from '../../dataAccess/histories/UPDATE/updateTemperatureById';
-import { selectUserIdByUsername } from '../../dataAccess/users/SELECT/selectUserIdByUsername';
 
 type AddHistoryReqBody = {
   historyTemperature: number;

@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { History } from '../../../../_types/History';
+import { insertHistory } from '../../../../methods/dataAccess/histories/INSERT/insertHistory';
+import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
+import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
-import { insertHistory } from '../../dataAccess/histories/INSERT/insertHistory';
-import { selectAccessTokenByUsername } from '../../dataAccess/users/SELECT/selectAccessTokenByUsername';
-import { selectUserIdByUsername } from '../../dataAccess/users/SELECT/selectUserIdByUsername';
 
 type AddHistoryReqBody = {
   historyTemperature: number;
@@ -19,7 +19,7 @@ type AddHistoryResponseBody = {
 
 const addHistory = async(req: AddHistoryNextApiReq, res: NextApiResponse<AddHistoryResponseBody>) => {
   const resBody: AddHistoryResponseBody = {history: null};
-
+console.log('hihiihhiihih')
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);

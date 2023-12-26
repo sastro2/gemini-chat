@@ -1,53 +1,38 @@
 import { defaultCurrentMessageHistory } from '../../_state/Chat/messageWindow/messagesStore';
+import { ApiFetchFunctions } from '../../_types/ApiFetchFunctions';
+import { ApiMethods } from '../../_types/ApiMethods';
 import { History } from '../../_types/History';
 import { Message } from '../../_types/Message';
 import { LoginData } from '../_Bundles/login/LoginData';
 import { LoginMethods } from '../_Bundles/login/LoginMethods';
+import apiFetch from '../general/apiFetch';
 
 export const login = async(loginData: LoginData, loginMethods: LoginMethods): Promise<undefined>=> {
-  if(!loginData.usernameInput || !loginData.passwordInput) return;
+  const { usernameInput, passwordInput } = loginData;
+  const { changeLoggedIn, clearHistories, changeCurrentMessageHistory, changeHistories, changeLoginDialogOpen } = loginMethods;
 
-  const res = await fetch('http://localhost:3000/api/endpoints/auth/loginUser', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      usernameInput: loginData.usernameInput,
-      passwordInput: loginData.passwordInput
-    })
-  });
+  if(!usernameInput || !passwordInput) return;
 
-  const parsedRes = await res.json();
+  const apiFetchFunctions: ApiFetchFunctions = {
+    changeLoggedIn: changeLoggedIn,
+    clearHistories: clearHistories,
+    changeCurrentMessageHistory: changeCurrentMessageHistory,
+  };
 
-  if(!parsedRes.auth) return;
+  const loginRes = await apiFetch('http://localhost:3000/api/endpoints/auth/loginUser', ApiMethods.POST, {functions: apiFetchFunctions, body: {usernameInput, passwordInput}});
 
-  const historyRes = await fetch('http://localhost:3000/api/endpoints/histories/getAllHistoriesByUserId', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-    }),
-  });
+  const authenticated = loginRes.auth;
+  if(!authenticated) return;
 
-  const parsedHistoryRes = await historyRes.json();
-  const historyIds = parsedHistoryRes.history.map((history: History) => history.id);
+  // #region fetch histories and messages
+  const historyRes = await apiFetch('http://localhost:3000/api/endpoints/histories/getAllHistoriesByUserId', ApiMethods.POST, {functions: apiFetchFunctions});
+  const historyIds = historyRes.history.map((history: History) => history.id);
 
-  const messagesRes = await fetch('http://localhost:3000/api/endpoints/messages/getMessagesByHistoryIds', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      historyIds,
-    }),
-  });
+  const messagesRes = await apiFetch('http://localhost:3000/api/endpoints/messages/getMessagesByHistoryIds', ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
+  // #endregion
 
-  const parsedMessagesRes = await messagesRes.json();
-
-  const histories: History[] = parsedHistoryRes.history;
-  const messages: Message[] = parsedMessagesRes.messages;
+  const histories: History[] = historyRes.history;
+  const messages: Message[] = messagesRes.messages;
 
   const newHistories: History[] = [];
   histories.forEach((history: History) => {
@@ -55,9 +40,13 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
     newHistories.push(history);
   });
 
-  loginMethods.changeHistories(newHistories);
-  loginMethods.changeCurrentMessageHistory(defaultCurrentMessageHistory);
-  loginMethods.changeLoggedIn(parsedRes.auth);
-  loginMethods.changeLoginDialogOpen(false);
+  console.log('qweqeqwqewqe')
+
+  // #region change states
+  changeHistories(newHistories);
+  changeCurrentMessageHistory(defaultCurrentMessageHistory);
+  changeLoggedIn(loginRes.auth);
+  changeLoginDialogOpen(false);
+  // #endregion
   return;
 };

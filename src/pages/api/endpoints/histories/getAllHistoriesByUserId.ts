@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { History } from '../../../../_types/History';
+import { selectAllHistoriesByUserId } from '../../../../methods/dataAccess/histories/SELECT/selectAllHistoriesByUserId';
+import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
-import { selectAllHistoriesByUserId } from '../../dataAccess/histories/SELECT/selectAllHistoriesByUserId';
-import { selectUserIdByUsername } from '../../dataAccess/users/SELECT/selectUserIdByUsername';
 
 type GetAllHistoriesReqBody = {
 };

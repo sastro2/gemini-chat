@@ -7,6 +7,8 @@ import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { StyleSheet } from '../../../styleSheet';
 import { MessageIcon } from './components/MessageIcon';
+import { TextBox } from './components/TextBox';
+import { TextBoxInitPrint } from './components/textBoxInitPrint';
 
 interface IMessagesWindow {}
 
@@ -58,27 +60,10 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
           };
 
           const textToRender = text;
+          return <TextBoxInitPrint key={message.parts + index} message={message} index={index} textToRender={textToRender} />
+        };
 
-          return(
-            <Container key={message.parts + index} style={{display: 'flex', justifyContent: message.role === 'model'? 'start':  'end', padding: '0.5%', position: 'relative'}} maxWidth={false}>
-              {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
-              <Container style={{border: `${StyleSheet.background.messages.message} 0.01px solid`, borderRadius: message.role === 'model'? '3px 15px 15px 15px':  '15px 3px 15px 15px', width: 'auto', padding: '0 3% 0 3%', margin: 0, color: StyleSheet.characters, backgroundColor: StyleSheet.background.messages.message, letterSpacing: '0.3px'}} maxWidth={false}>
-                <ReactMarkdown>{textToRender}</ReactMarkdown>
-              </Container>
-              {message.role === 'user'? <MessageIcon index={index} role='user' />: null}
-            </Container>
-          )
-        }
-
-        return(
-          <Container key={message.parts + index} style={{display: 'flex', justifyContent: message.role === 'model'? 'start':  'end', padding: '0.5%', gap: 10, position: 'relative'}} maxWidth={false}>
-            {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
-            <Container style={{border: `${StyleSheet.background.messages.message} 0.01px solid`, borderRadius: message.role === 'model'? '3px 15px 15px 15px':  '15px 3px 15px 15px', width: 'auto', padding: '0 3% 0 3%', margin: 0, color: StyleSheet.characters, backgroundColor: StyleSheet.background.messages.message, letterSpacing: '0.3px'}} maxWidth={false}>
-              <ReactMarkdown>{message.parts}</ReactMarkdown>
-            </Container>
-            {message.role === 'user'? <MessageIcon index={index} role='user' />: null}
-          </Container>
-          )
+        return <TextBox key={message.parts + index} message={message} index={index} />
         })}
       </Container>
     </SimpleBar>

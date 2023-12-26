@@ -8,6 +8,7 @@ interface IHistoryStore{
   addMessageToHistory: (message: Message) => void;
   changeHistoryTemp: (historyId: number, temperature: number) => void;
   changeHistories: (histories: History[]) => void;
+  clearHistories: () => void;
 };
 
 const changeHistoryTemp = (historyId: number, temperature: number, histories: History[]): History[] => {
@@ -46,4 +47,5 @@ addHistory: (history: History) => set(state => ({histories: [...state.histories,
 addMessageToHistory: (message: Message) => set(state => ({histories: addMessageToHistory(message, state.histories)})),
 changeHistories: (histories: History[]) => set({histories}),
 changeHistoryTemp: (historyId: number, temperature: number) => set(state => ({histories: changeHistoryTemp(historyId, temperature, state.histories)})),
+clearHistories: () => set({histories: []}),
 }));

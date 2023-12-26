@@ -3,7 +3,7 @@ import { StyleSheet } from '../../styleSheet';
 import { LoginButton } from '../Session/LoginButton';
 import { LoginDialog } from '../Session/LoginDialog';
 import { HistoryWindow } from './history/HistoryWindow';
-import { MessageInput } from './messages/components/MessageInput';
+import { MessageInput } from './messages/MessageInput';
 import { MessagesWindow } from './messages/MessagesWindow';
 
 interface IChatWindow {}

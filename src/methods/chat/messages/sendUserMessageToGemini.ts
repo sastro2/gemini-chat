@@ -1,13 +1,33 @@
+import { ApiFetchFunctions } from '../../../_types/ApiFetchFunctions';
+import { ApiMethods } from '../../../_types/ApiMethods';
 import { History } from '../../../_types/History';
+import { Message } from '../../../_types/Message';
 import { SendUserMessageData } from '../../_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../_Bundles/chat/SendUserMessageMethods';
+import apiFetch from '../../general/apiFetch';
 import { changeDbTemperatureById } from './changeDbTemperatureById';
 import { messageGemini } from './messageGemini';
 import { saveMessageToDb } from './saveMessageToDb';
 
+export type MessageGeminiData = {
+  messageInput: string;
+  currentMessageHistory: History;
+};
+export type MessageGeminiMethods = {
+  changeCurrentMessageHistory: (history: History) => void;
+  changeAiResponseLoading: (loading: boolean) => void;
+  addMessageToHistory: (message: Message) => void;
+  clearHistories: () => void;
+  changeLoggedIn: (loggedIn: boolean) => void;
+};
+export type MessageGeminiProps = {
+  messageGeminiData: MessageGeminiData;
+  messageGeminiMethods: MessageGeminiMethods;
+};
+
 export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessageData, sendUserMessageMethods: SendUserMessageMethods, keyCode: string) => {
   const { currentMessageHistory, aiResponseLoading, messageInput, typingOutResponse, loggedIn } = sendUserMessageData;
-  const { changeCurrentMessageHistory, changeAiReponseLoading, changeMessageInput, addHistory, addMessageToHistory } = sendUserMessageMethods;
+  const { changeCurrentMessageHistory, changeAiReponseLoading, changeMessageInput, addHistory, addMessageToHistory, clearHistories, changeLoggedIn } = sendUserMessageMethods;
 
   if(messageInput === '' || aiResponseLoading || keyCode !== 'Enter' || typingOutResponse) return;
 
@@ -19,29 +39,41 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
     return;
   };
 
+  const apiFetchFunctions: ApiFetchFunctions = {
+    changeLoggedIn: changeLoggedIn,
+    clearHistories: clearHistories,
+    changeCurrentMessageHistory: changeCurrentMessageHistory,
+  };
+
   //add new history if there is only the first auto generated message
   if(currentMessageHistory.messages.length === 1){
-    const response = await fetch('/api/endpoints/histories/addHistory', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({historyTemperature: currentMessageHistory.temperature})
-    });
+    const response = await apiFetch('/api/endpoints/histories/addHistory', ApiMethods.POST, {functions: apiFetchFunctions, body: {historyTemperature: currentMessageHistory.temperature}});
 
-    const parsedResponse: {history: History} = await response.json();
-
-    currentMessageHistory.messages[0].historyId = parsedResponse.history.id;
-    currentMessageHistory.id = parsedResponse.history.id;
+    currentMessageHistory.messages[0].historyId = response.history.id;
+    currentMessageHistory.id = response.history.id;
 
     changeCurrentMessageHistory({...currentMessageHistory, id: currentMessageHistory.id});
 
-    parsedResponse.history.messages = [...currentMessageHistory.messages];
-    addHistory(parsedResponse.history);
+    response.history.messages = [...currentMessageHistory.messages];
+    addHistory(response.history);
   };
 
-  saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id});
-  changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature);
-  messageGemini(messageInput, currentMessageHistory.temperature, currentMessageHistory, changeCurrentMessageHistory, changeAiReponseLoading, addMessageToHistory);
+  saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}, apiFetchFunctions);
+  changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature, apiFetchFunctions);
+
+  const messageGeminiProps: MessageGeminiProps = {
+    messageGeminiData: {
+      messageInput: messageInput,
+      currentMessageHistory: currentMessageHistory,
+    },
+    messageGeminiMethods: {
+      changeCurrentMessageHistory: changeCurrentMessageHistory,
+      changeAiResponseLoading: changeAiReponseLoading,
+      addMessageToHistory: addMessageToHistory,
+      clearHistories: clearHistories,
+      changeLoggedIn: changeLoggedIn,
+    },
+  };
+  messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);
   changeMessageInput('');
 };

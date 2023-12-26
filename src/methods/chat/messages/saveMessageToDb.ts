@@ -1,13 +1,8 @@
+import { ApiFetchFunctions } from '../../../_types/ApiFetchFunctions';
+import { ApiMethods } from '../../../_types/ApiMethods';
 import { Message } from '../../../_types/Message';
+import apiFetch from '../../general/apiFetch';
 
-export const saveMessageToDb = async(message: Message) => {
-  await fetch('/api/endpoints/messages/addMessage', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body:  JSON.stringify({
-      message: message
-    })
-  });
+export const saveMessageToDb = async(message: Message, apiFetchFunctions: ApiFetchFunctions) => {
+  await apiFetch('/api/endpoints/messages/addMessage',ApiMethods.POST, {functions: apiFetchFunctions, body: {message: message}});
 };

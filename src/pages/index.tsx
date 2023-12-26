@@ -6,9 +6,11 @@ import {
 import React, { useEffect } from 'react';
 import { useHistoryStore } from '../_state/Chat/historyWindow/historyStore';
 import { useLoginStore } from '../_state/Session/loginStore';
+import { ApiMethods } from '../_types/ApiMethods';
 import { History } from '../_types/History';
 import { Message } from '../_types/Message';
 import { ChatWindow } from '../components/Chat/ChatWindow';
+import apiFetch from '../methods/general/apiFetch';
 
 interface IEntry {
   auth: boolean;
@@ -31,9 +33,11 @@ export default function Entry(props: IEntry) {
   return <ChatWindow />;
 }
 
+
 export const getServerSideProps: GetServerSideProps<IEntry> = async(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<IEntry>> => {
   const accessOptions = context.req.cookies.accessOptions;
 
+  // if there is no cookie - not authenticated
   if(!accessOptions) {
     return {
       props: {
@@ -43,22 +47,12 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
     };
   };
 
+  //initial authentication with cookie
   const {accessToken, username} = JSON.parse(accessOptions);
+  const authRes = await apiFetch('http://localhost:3000/api/endpoints/auth/prefetch/authenticateUserPrefetch', ApiMethods.POST, {username, accessToken})
 
-  const authRes = await fetch('http://localhost:3000/api/endpoints/auth/prefetch/authenticateUserPrefetch', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      accessToken,
-      username
-    }),
-  });
-
-  const parsedAuthRes = await authRes.json();
-
-  if(!parsedAuthRes.auth) {
+  //if the cookie isnt valid - not authenticated
+  if(!authRes) {
     return {
       props: {
         auth: false,
@@ -67,37 +61,17 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
     };
   };
 
-  const historyRes = await fetch('http://localhost:3000/api/endpoints/histories/prefetch/getAllHistoriesPrefetch', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      accessToken,
-      username,
-    }),
-  });
+  // #region initial history/message fetch
+  const historyRes = await apiFetch('http://localhost:3000/api/endpoints/histories/prefetch/getAllHistoriesPrefetch', ApiMethods.POST, {username, accessToken})
+  const historyIds = historyRes.history.map((history: History) => history.id);
 
-  const parsedHistoryRes = await historyRes.json();
-  const historyIds = parsedHistoryRes.history.map((history: History) => history.id);
+  const messagesRes = await apiFetch('http://localhost:3000/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch', ApiMethods.POST, {username, accessToken, body: {historyIds}});
+  // #endregion
 
-  const messagesRes = await fetch('http://localhost:3000/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      accessToken,
-      username,
-      historyIds,
-    }),
-  });
+  const histories: History[] = historyRes.history;
+  const messages: Message[] = messagesRes.messages;
 
-  const parsedMessagesRes = await messagesRes.json();
-
-  const histories: History[] = parsedHistoryRes.history;
-  const messages: Message[] = parsedMessagesRes.messages;
-
+  // if theres either no histories or no messages - return with initial histories = []
   if(!histories || !messages) return {
     props: {
       auth: true,
@@ -111,6 +85,7 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
     newHistories.push(history);
   });
 
+  // return with initial histories
   return {
     props: {
       auth: true,

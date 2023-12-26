@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Message } from '../../../../_types/Message';
+import { selectMessagesByHistoryIds } from '../../../../methods/dataAccess/messages/SELECT/selectMessagesByHistoryIds';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
-import { selectMessagesByHistoryIds } from '../../dataAccess/messages/SELECT/selectMessagesByHistoryIds';
 
 type GetAllMessagesReqBody = {
   historyIds: number[];
@@ -15,7 +15,7 @@ type GetAllMessagesResponseBody = {
   messages: Message[] | null;
 };
 
-const getAllMessagesByHistoryIds = async(req: GetAllMessagesNextApiReq, res: NextApiResponse<GetAllMessagesResponseBody>) => {
+const getMessagesByHistoryIds = async(req: GetAllMessagesNextApiReq, res: NextApiResponse<GetAllMessagesResponseBody>) => {
   const resBody: GetAllMessagesResponseBody = {messages: null};
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
@@ -33,4 +33,4 @@ const getAllMessagesByHistoryIds = async(req: GetAllMessagesNextApiReq, res: Nex
   return;
 };
 
-export default getAllMessagesByHistoryIds;
+export default getMessagesByHistoryIds;
