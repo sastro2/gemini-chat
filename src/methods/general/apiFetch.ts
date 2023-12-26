@@ -2,13 +2,13 @@ import { defaultCurrentMessageHistory } from '../../_state/Chat/messageWindow/me
 import { ApiFetchFunctions } from '../../_types/ApiFetchFunctions';
 import { ApiMethods } from '../../_types/ApiMethods';
 
-type ApiFetchOptions = {
+export type ApiFetchOptions = {
   functions: ApiFetchFunctions;
   body?: Object,
   singal?: AbortSignal;
 };
 
-type ApiFetchOptionsServer = {
+export type ApiFetchOptionsServer = {
   username: string;
   accessToken: string;
   body?: Object,
@@ -42,7 +42,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
     const data = await response.json();
 
     // #region log errors
-    if(data.status !== 200) {
+    if(!response.ok) {
       //log error to db
     }
     // #endregion
@@ -70,7 +70,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
     changeCurrentMessageHistory(defaultCurrentMessageHistory);
   };
 
-  if(data.status !== 200) {
+  if(!response.ok) {
     //log error to db
   };
   // #endregion

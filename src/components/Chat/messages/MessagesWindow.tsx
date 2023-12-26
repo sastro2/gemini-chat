@@ -6,7 +6,7 @@ import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { StyleSheet } from '../../../styleSheet';
 import { TextBox } from './components/TextBox';
-import { TextBoxInitPrint } from './components/textBoxInitPrint';
+import { TextBoxInitPrint } from './components/TextBoxInitPrint';
 
 interface IMessagesWindow {}
 

@@ -1,29 +1,12 @@
 import { ApiFetchFunctions } from '../../../_types/ApiFetchFunctions';
 import { ApiMethods } from '../../../_types/ApiMethods';
-import { History } from '../../../_types/History';
-import { Message } from '../../../_types/Message';
+import { MessageGeminiProps } from '../../_Bundles/chat/MessageGeminiProps';
 import { SendUserMessageData } from '../../_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../_Bundles/chat/SendUserMessageMethods';
 import apiFetch from '../../general/apiFetch';
 import { changeDbTemperatureById } from './changeDbTemperatureById';
 import { messageGemini } from './messageGemini';
 import { saveMessageToDb } from './saveMessageToDb';
-
-export type MessageGeminiData = {
-  messageInput: string;
-  currentMessageHistory: History;
-};
-export type MessageGeminiMethods = {
-  changeCurrentMessageHistory: (history: History) => void;
-  changeAiResponseLoading: (loading: boolean) => void;
-  addMessageToHistory: (message: Message) => void;
-  clearHistories: () => void;
-  changeLoggedIn: (loggedIn: boolean) => void;
-};
-export type MessageGeminiProps = {
-  messageGeminiData: MessageGeminiData;
-  messageGeminiMethods: MessageGeminiMethods;
-};
 
 export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessageData, sendUserMessageMethods: SendUserMessageMethods, keyCode: string) => {
   const { currentMessageHistory, aiResponseLoading, messageInput, typingOutResponse, loggedIn } = sendUserMessageData;

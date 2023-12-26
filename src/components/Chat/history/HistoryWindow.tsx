@@ -1,7 +1,7 @@
 import { Container, Typography } from '@mui/material';
 import { useHistoryStore } from '../../../_state/Chat/historyWindow/historyStore';
 import { HistorySingle } from './components/HistorySingle';
-import { NewChatButton } from './components/newChatButton';
+import { NewChatButton } from './components/NewChatButton';
 
 interface IHistoryWindow {};
 
