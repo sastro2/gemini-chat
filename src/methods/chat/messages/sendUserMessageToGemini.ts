@@ -6,7 +6,6 @@ import { SendUserMessageMethods } from '../../_Bundles/chat/SendUserMessageMetho
 import apiFetch from '../../general/apiFetch';
 import { changeDbTemperatureById } from './changeDbTemperatureById';
 import { messageGemini } from './messageGemini';
-import { saveMessageToDb } from './saveMessageToDb';
 
 export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessageData, sendUserMessageMethods: SendUserMessageMethods, keyCode: string) => {
   const { currentMessageHistory, aiResponseLoading, messageInput, typingOutResponse, loggedIn } = sendUserMessageData;
@@ -41,7 +40,6 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
     addHistory(response.history);
   };
 
-  saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}, apiFetchFunctions);
   changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature, apiFetchFunctions);
 
   const messageGeminiProps: MessageGeminiProps = {

@@ -16,7 +16,7 @@ export const HistoryWindow: React.FC<IHistoryWindow> = () => {
           return (
             <HistorySingle key={history.id} history={history} index={index} />
           )
-        })};
+        })}
       </Container>
     </Container>
   );

@@ -55,9 +55,10 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
   newMessages[1].parts = geminiResponse.message;
   newMessages[2].parts = geminiResponse.message;
 
-  saveMessageToDb(newMessages[2], apiFetchFunctions);
   changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]})
   addMessageToHistory(newMessages[2]);
   changeAiResponseLoading(false);
+  await saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}, apiFetchFunctions);
+  await saveMessageToDb(newMessages[2], apiFetchFunctions);
   return;
 };

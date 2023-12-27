@@ -47,7 +47,7 @@ const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiRe
         return;
       };
 
-      res.send({auth: true, message: (await aiRes.response).text()? (await aiRes.response).text(): 'Sorry, we have detected an unsafe response from the AI. Please try again with a different message or change the safety settings on your profile page.'});
+      res.send({auth: true, message: (await aiRes.response).candidates? (await aiRes.response).text(): 'Sorry, we have detected an unsafe response from the AI. Please try again with a different message or change the safety settings on your profile page.'});
       return;
     }else{
       res.status(405).end();
