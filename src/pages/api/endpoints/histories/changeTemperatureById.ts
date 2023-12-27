@@ -4,6 +4,7 @@ import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SEL
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
 type AddHistoryReqBody = {
+  id: number;
   historyTemperature: number;
 };
 
@@ -18,13 +19,9 @@ const changeTemperatureById = async(req: AddHistoryNextApiReq, res: NextApiRespo
 
   if(!accessOptions) {res.status(401).send(null); return;}
 
-  const { historyTemperature } = req.body;
+  const { historyTemperature, id } = req.body;
 
-  const userId = await selectUserIdByUsername(accessOptions.username);
-
-  if(!userId) {res.status(401).send(null); return;}
-
-  await updateTemperatureById(userId, historyTemperature);
+  await updateTemperatureById(id, historyTemperature);
 
   res.status(200).send({});
   return;
