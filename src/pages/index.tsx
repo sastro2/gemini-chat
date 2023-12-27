@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
 
   const newHistories: History[] = [];
   histories.forEach((history: History) => {
-    if(history.messages.length <= 1) return;
+    if(!messages.find((message: Message) => message.historyId === history.id)) return;
 
     history.messages = messages.filter((message: Message) => message.historyId === history.id);
     newHistories.push(history);
