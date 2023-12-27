@@ -36,7 +36,7 @@ export const ChatWindow: React.FC<IChatWindow> = () => {
         <Snackbar open={errorSnackbarOpen} autoHideDuration={6000} onClose={(event, reason) => handleClose(changeErrorSnackbarOpen, changeError, event, reason)}>
           <Alert variant='filled' severity='error'>
             <Container style={{margin: 0, padding: 0, gap: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <span>An error has occured ID: {error.errorId}{error.errorCode}. Please grab the id and report it <a href='#'>here</a></span>
+              <span>An error has occured ID: {error.errorId}{error.errorCode}. Please grab the id and report it <a about='_blanc' href={`https://docs.google.com/forms/d/e/1FAIpQLSdeYGmzArgg5yrtOgAGf9bDxvIHQIpZ_EfeEluEPOQVy-jfzg/viewform#${error.errorId}${error.errorCode}`}>here</a></span>
               <IconButton style={{margin: 0, padding: 0}} onClick={() => handleClose(changeErrorSnackbarOpen, changeError)}>
                 <CloseIcon />
               </IconButton>
