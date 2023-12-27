@@ -21,7 +21,7 @@ type StartGeminiChatResponseBody = {
 
 const AI = new GoogleGenerativeAI(process.env.GOOGLE_AI_APIKEY!);
 
-const handleMessageGeminiPrefetch = async(req: StartGeminiChatNextApiReq, res: NextApiResponse<StartGeminiChatResponseBody>) => {
+const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiResponse<StartGeminiChatResponseBody>) => {
     if(req.method === 'POST'){
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Content-Type', 'application/json');
@@ -55,4 +55,4 @@ const handleMessageGeminiPrefetch = async(req: StartGeminiChatNextApiReq, res: N
     };
 };
 
-export default handleMessageGeminiPrefetch;
+export default handleMessageGemini;
