@@ -62,17 +62,28 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
   };
 
   // #region initial history/message fetch
-  const historyRes = await apiFetch(`/api/endpoints/histories/prefetch/getAllHistoriesPrefetch`, ApiMethods.POST, {username, accessToken})
+  const historyRes = await apiFetch(`/api/endpoints/histories/prefetch/getAllHistoriesPrefetch`, ApiMethods.POST, {username, accessToken});
+
+  // if theres no histories - return with initial histories []
+  if(!historyRes.history || historyRes.history.length) {
+    return {
+      props: {
+        auth: true,
+        histories: [],
+      },
+    };
+  };
+
   const historyIds = historyRes.history.map((history: History) => history.id);
 
   const messagesRes = await apiFetch(`/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch`, ApiMethods.POST, {username, accessToken, body: {historyIds}});
   // #endregion
 
   const histories: History[] = historyRes.history;
-  const messages: Message[] = messagesRes.messages;
+  const messages: Message[] = messagesRes?.messages? messagesRes.messages: [];
 
-  // if theres either no histories or no messages - return with initial histories = []
-  if(!histories || !messages) return {
+  // if theres no messages - return with initial histories = []
+  if(messages.length === 0) return {
     props: {
       auth: true,
       histories: [],
