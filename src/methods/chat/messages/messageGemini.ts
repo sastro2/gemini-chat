@@ -17,12 +17,19 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
       initialPrint: true,
       historyId: currentMessageHistory.id
     },
-    //1 - model response to user
+    //1 - model response to user to be rendered immediately
     {
       role: 'model',
       parts: '',
-      initialPrint: true, historyId:
-      currentMessageHistory.id
+      initialPrint: false,
+      historyId: currentMessageHistory.id
+    },
+    //2 - model response to user to be saved in db and history
+    {
+      role: 'model',
+      parts: '',
+      initialPrint: true,
+      historyId: currentMessageHistory.id
     },
   ];
 
@@ -47,9 +54,9 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
 
   newMessages[1].parts = geminiResponse.message;
 
-  saveMessageToDb(newMessages[1], apiFetchFunctions);
+  saveMessageToDb(newMessages[2], apiFetchFunctions);
   changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]})
-  addMessageToHistory(newMessages[1]);
+  addMessageToHistory(newMessages[2]);
   changeAiResponseLoading(false);
   return;
 };
