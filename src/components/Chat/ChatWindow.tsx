@@ -1,5 +1,7 @@
-import { Alert, Container, Grid, Snackbar } from '@mui/material';
-import { useErrorStore } from '../../_state/Error/errorStore';
+import CloseIcon from '@mui/icons-material/Close';
+import { Alert, Container, Grid, IconButton, Snackbar } from '@mui/material';
+import { defaultError, useErrorStore } from '../../_state/Error/errorStore';
+import { Error } from '../../_types/Error';
 import { StyleSheet } from '../../styleSheet';
 import { LoginButton } from '../Session/LoginButton';
 import { LoginDialog } from '../Session/LoginDialog';
@@ -9,18 +11,17 @@ import { MessagesWindow } from './messages/MessagesWindow';
 
 interface IChatWindow {}
 
-const handleClose = (changeErrorSnackbarOpen: (boolean: boolean) => void, changeErrorCode: (code: number) => void, changeErrorId: (id: number) => void, event?: React.SyntheticEvent | Event, reason?: string) => {
+const handleClose = (changeErrorSnackbarOpen: (boolean: boolean) => void, changeError: (error: Error) => void, event?: React.SyntheticEvent | Event, reason?: string) => {
   if (reason === 'clickaway') {
     return;
   }
 
-  changeErrorCode(0);
-  changeErrorId(0);
+  changeError(defaultError);
   changeErrorSnackbarOpen(false);
 };
 
 export const ChatWindow: React.FC<IChatWindow> = () => {
-  const { errorSnackbarOpen, changeErrorSnackbarOpen, changeErrorCode, changeErrorId } = useErrorStore();
+  const { errorSnackbarOpen, error, changeErrorSnackbarOpen, changeError } = useErrorStore();
 
   return (
     <Grid columns={2} style={{ height: '100vh', width: '100vw', padding: '1.5% 1.5% 1.5% 1.5%', display: 'flex', backgroundColor: StyleSheet.background.base }} >
@@ -32,8 +33,15 @@ export const ChatWindow: React.FC<IChatWindow> = () => {
         </Container>
         <MessagesWindow />
         <MessageInput />
-        <Snackbar open={errorSnackbarOpen} onClose={(event, reason) => handleClose(changeErrorSnackbarOpen, changeErrorCode, changeErrorId, event, reason)}>
-          <Alert severity='error'>This is an error message!</Alert>
+        <Snackbar open={errorSnackbarOpen} autoHideDuration={6000} onClose={(event, reason) => handleClose(changeErrorSnackbarOpen, changeError, event, reason)}>
+          <Alert variant='filled' severity='error'>
+            <Container style={{margin: 0, padding: 0, gap: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              <span>An error has occured ID: {error.errorId}{error.errorCode}. Please grab the id and report it <a href='#'>here</a></span>
+              <IconButton style={{margin: 0, padding: 0}} onClick={() => handleClose(changeErrorSnackbarOpen, changeError)}>
+                <CloseIcon />
+              </IconButton>
+            </Container>
+          </Alert>
         </Snackbar>
       </Container>
     </Grid>

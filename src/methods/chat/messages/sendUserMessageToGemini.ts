@@ -9,7 +9,7 @@ import { messageGemini } from './messageGemini';
 
 export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessageData, sendUserMessageMethods: SendUserMessageMethods, keyCode: string) => {
   const { currentMessageHistory, aiResponseLoading, messageInput, typingOutResponse, loggedIn } = sendUserMessageData;
-  const { changeCurrentMessageHistory, changeAiReponseLoading, changeMessageInput, addHistory, addMessageToHistory, clearHistories, changeLoggedIn } = sendUserMessageMethods;
+  const { changeCurrentMessageHistory, changeAiReponseLoading, changeMessageInput, addHistory, addMessageToHistory, clearHistories, changeLoggedIn, changeError, changeErrorSnackbarOpen } = sendUserMessageMethods;
 
   if(messageInput === '' || aiResponseLoading || keyCode !== 'Enter' || typingOutResponse) return;
 
@@ -25,6 +25,8 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
     changeLoggedIn: changeLoggedIn,
     clearHistories: clearHistories,
     changeCurrentMessageHistory: changeCurrentMessageHistory,
+    changeError: changeError,
+    changeErrorSnackbarOpen: changeErrorSnackbarOpen,
   };
 
   //add new history if there is only the first auto generated message
@@ -53,6 +55,8 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
       addMessageToHistory: addMessageToHistory,
       clearHistories: clearHistories,
       changeLoggedIn: changeLoggedIn,
+      changeError: changeError,
+      changeErrorSnackbarOpen: changeErrorSnackbarOpen,
     },
   };
   messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);

@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { AccessOptions } from '../../../../_types/AccessOptions';
+import { Error } from '../../../../_types/Error';
 import { History } from '../../../../_types/History';
+import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { insertHistory } from '../../../../methods/dataAccess/histories/INSERT/insertHistory';
 import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
 import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
+import { checkUserAccessToken } from '../../../../methods/server/checkUserAccessToken';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
 type AddHistoryReqBody = {
@@ -14,24 +18,25 @@ type AddHistoryNextApiReq = Omit<NextApiRequest, 'body'> & {
 };
 
 type AddHistoryResponseBody = {
+  error: Error;
   history: History | null;
 };
 
 const addHistory = async(req: AddHistoryNextApiReq, res: NextApiResponse<AddHistoryResponseBody>) => {
-  const resBody: AddHistoryResponseBody = {history: null};
+  const resBody: AddHistoryResponseBody = {history: null, error: {errorCode: 0, errorId: 0}};
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
 
-  if(!accessOptions) {res.status(401).send(resBody); return;}
-
-  const { historyTemperature } = req.body;
+  if(!accessOptions?.accessToken ||!accessOptions.username) {
+    return;
+  }
 
   const userAccessToken = await selectAccessTokenByUsername(accessOptions.username);
+  await checkUserAccessToken(userAccessToken, res, accessOptions);
 
-  if(!userAccessToken) {res.status(401).send(resBody); return;}
-  if(userAccessToken !== accessOptions?.accessToken) {res.status(401).send(resBody); return;}
+  const { historyTemperature } = req.body;
 
   const userId = await selectUserIdByUsername(accessOptions.username);
 

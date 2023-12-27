@@ -43,16 +43,10 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
 
     const data = await response.json();
 
-    // #region log errors
-    if(!response.ok) {
-      //log error to db
-    }
-    // #endregion
-
     return data;
   };
 
-  const { changeLoggedIn, clearHistories, changeCurrentMessageHistory } = options.functions;
+  const { changeLoggedIn, clearHistories, changeCurrentMessageHistory, changeError, changeErrorSnackbarOpen } = options.functions;
 
   const response = await fetch(url, {
     method: method,
@@ -64,18 +58,26 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
   });
 
   const data = await response.json();
+  console.log(data.error);
 
   // #region log errors
   if(data.status === 401) {
     changeLoggedIn(false);
     clearHistories();
     changeCurrentMessageHistory(defaultCurrentMessageHistory);
+
+    if(data.error.errorId !== 0){
+      changeError(data.error);
+      changeErrorSnackbarOpen(true);
+    };
+
+    return;
   };
 
-  if(!response.ok) {
-    //log error to db
+  if(data.error.errorId !== 0){
+    changeError(data.error);
+    changeErrorSnackbarOpen(true);
   };
-  // #endregion
 
   return data;
 };

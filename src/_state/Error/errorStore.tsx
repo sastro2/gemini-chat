@@ -1,19 +1,18 @@
 import { create } from 'zustand';
+import { Error } from '../../_types/Error';
 
 interface IErrorStore{
   errorSnackbarOpen: boolean;
-  errorId: number;
-  errorCode: number;
+  error: Error
   changeErrorSnackbarOpen: (boolean: boolean) => void;
-  changeErrorId: (id: number) => void;
-  changeErrorCode: (code: number) => void;
+  changeError: (error: Error) => void;
 };
+
+export const defaultError: Error = {errorCode: 0, errorId: 0};
 
 export const useErrorStore = create<IErrorStore>(set => ({
   errorSnackbarOpen: false,
-  errorId: 0,
-  errorCode: 0,
+  error: defaultError,
   changeErrorSnackbarOpen: (boolean: boolean) => set({errorSnackbarOpen: boolean}),
-  changeErrorId: (id: number) => set({errorId: id}),
-  changeErrorCode: (code: number) => set({errorCode: code}),
+  changeError: (error: Error) => set({error: error})
 }));

@@ -6,7 +6,7 @@ import { saveMessageToDb } from './saveMessageToDb';
 
 export const messageGemini = async(messageGeminiData: MessageGeminiData, messageGeminiMethods: MessageGeminiMethods) => {
   const { currentMessageHistory, messageInput } = messageGeminiData;
-  const { changeCurrentMessageHistory, changeAiResponseLoading, addMessageToHistory, clearHistories, changeLoggedIn } = messageGeminiMethods;
+  const { changeCurrentMessageHistory, changeAiResponseLoading, addMessageToHistory, clearHistories, changeLoggedIn, changeError, changeErrorSnackbarOpen } = messageGeminiMethods;
 
    //all the messages to add in the following functions to make it more readable
    const newMessages: Message[] = [
@@ -41,6 +41,8 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
     changeLoggedIn: changeLoggedIn,
     clearHistories: clearHistories,
     changeCurrentMessageHistory: changeCurrentMessageHistory,
+    changeError: changeError,
+    changeErrorSnackbarOpen: changeErrorSnackbarOpen,
   };
   const geminiResponse = await callGemini(currentMessageHistory, messageInput, currentMessageHistory.temperature, apiFetchFunctions);
 

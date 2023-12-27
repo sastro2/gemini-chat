@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { History } from '../../../../_types/History';
+import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAllHistoriesByUserId } from '../../../../methods/dataAccess/histories/SELECT/selectAllHistoriesByUserId';
 import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
@@ -22,7 +23,9 @@ const getAllHistoriesByUserId = async(req: GetAllHistoriesNextApiReq, res: NextA
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
 
-  if(!accessOptions?.accessToken ||!accessOptions.username) {res.status(401).send(resBody); return;}
+  if(!accessOptions?.accessToken ||!accessOptions.username) {
+    return;
+  }
 
   const userId = await selectUserIdByUsername(accessOptions.username);
 

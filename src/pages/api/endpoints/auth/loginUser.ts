@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { Error } from '../../../../_types/Error';
+import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
 import { selectPasswordByUsername } from '../../../../methods/dataAccess/users/SELECT/selectPasswordByUsername';
 
@@ -14,6 +16,7 @@ type LoginUserNextApiReq = Omit<NextApiRequest, 'body'> & {
 
 type LoginUserResponseBody = {
   auth: boolean;
+  error: Error
 };
 
 const verifyPassword = async(inputPassword: string, hashedPassword: string): Promise<boolean> => {
@@ -21,25 +24,40 @@ const verifyPassword = async(inputPassword: string, hashedPassword: string): Pro
 };
 
 const loginUser = async(req: LoginUserNextApiReq, res: NextApiResponse<LoginUserResponseBody>) => {
-  const resBody = {auth: false};
+  const resBody = {auth: false, error: {errorCode: 0, errorId: 0}};
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
 
   const { usernameInput, passwordInput } = req.body;
 
-  if(!usernameInput || !passwordInput) {res.status(400).send(resBody); return;};
+  // check if username and password are provided
+  if(!usernameInput || !passwordInput) {
+    const errorId = await insertError(23400, 'Username or password not provided.');
+    resBody.error = {errorCode: 23, errorId: errorId? errorId: 0};
+
+    res.status(400).send(resBody);
+     return;
+  };
 
   const hashedPassword = await selectPasswordByUsername(usernameInput);
 
+  // check if username exists
   if(!hashedPassword) {res.status(401).send(resBody); return;};
 
+  // check if password is correct
   const passwordCorrect = await verifyPassword(passwordInput, hashedPassword);
 
   if(!passwordCorrect) {res.status(401).send(resBody); return;};
 
   const accessToken = await selectAccessTokenByUsername(usernameInput);
 
-  if(!accessToken) {res.status(401).send(resBody); return;};
+  if(!accessToken) {
+    const errorId = await insertError(24401, 'Access token not found.');
+    resBody.error = {errorCode: 24, errorId: errorId? errorId: 0};
+
+    res.status(401).send(resBody);
+    return;
+  };
 
   resBody.auth = true;
 

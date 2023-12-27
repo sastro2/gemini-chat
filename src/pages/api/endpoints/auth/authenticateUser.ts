@@ -17,7 +17,11 @@ const authenticateUser = async(req: AuthenticateUserNextApiReq, res: NextApiResp
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;};
 
-  await validateAccessOptions(req.headers.cookie, res, false);
+  const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
+
+  if(!accessOptions?.accessToken ||!accessOptions.username) {
+    return;
+  }
 
   resBody.auth = true;
   res.status(200).send(resBody);
