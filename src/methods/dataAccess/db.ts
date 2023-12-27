@@ -1,6 +1,6 @@
 import postgres from 'postgres';
 
-const databaseInstance = postgres(`${process.env.DATABASE_URL}`, {ssl: {require: true, rejectUnauthorized: false}});
+const databaseInstance = postgres(`${process.env.DATABASE_URL}`);
 
 
 export default databaseInstance;

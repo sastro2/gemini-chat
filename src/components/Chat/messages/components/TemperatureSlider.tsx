@@ -26,7 +26,7 @@ export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [showTempInput]);
 
   return(
     <Container ref={sliderContainerRef} style={{position: 'relative', height: '100%', width: 'auto', padding: 0, margin: 0, alignItems: 'center', justifyContent: 'center'}} maxWidth={false}>
