@@ -1,5 +1,13 @@
 <h1>Error Codes</h1>
 
+<br/>
+<br/>
+
+<h3>The first 2 digits of the error code correspond to its id in the database the last 2 to one of the codes below</h3>
+
+<br/>
+<br/>
+
 <h2># 10 Gemini call failed</h2>
 <i>This error occurs if the endpoint for sending a message to Google Gemini fails</i>
 
