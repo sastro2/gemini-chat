@@ -19,14 +19,15 @@ export type FetchOptions = ApiFetchOptions | ApiFetchOptionsServer;
 
 //type guard to check whether the options are for server side prefetching
 const prefetching = (options: FetchOptions): options is ApiFetchOptionsServer => {
-  return true;
+  const prefetch = typeof (options as ApiFetchOptionsServer).username === 'string';
+
+  return prefetch;
 };
 
 async function apiFetch(url: string, method: ApiMethods, options: ApiFetchOptions): Promise<any>;
 async function apiFetch(url: string, method: ApiMethods, options: ApiFetchOptionsServer): Promise<any>;
 async function apiFetch(url: string, method: ApiMethods, options: FetchOptions): Promise<any> {
   if(prefetching(options)){
-    console.log(process.env.DOMAIN_URL + url);
     const response = await fetch(process.env.DOMAIN_URL + url, {
       method: method,
       headers: {
@@ -50,6 +51,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
 
     return data;
   };
+  console.log(url, 'hihihihihhihihihih2');
 
   const { changeLoggedIn, clearHistories, changeCurrentMessageHistory } = options.functions;
 
