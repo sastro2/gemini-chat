@@ -34,7 +34,7 @@ export const useMessagesStore = create<IMessagesStore>(set => ({
   messageInput: '',
   typingOutResponse: false,
   showTempInput: false,
-  changeCurrentMessageHistory: (history: History) => [set(({currentMessageHistory: history})), console.log(history.id)],
+  changeCurrentMessageHistory: (history: History) => [set(({currentMessageHistory: history})), console.log(history.id, 'is the current message historyId')],
   changeAiReponseLoading: (loading: boolean) => set({aiResponseLoading: loading}),
   changeMessageInput: (input: string) => set({messageInput: input}),
   changeShowTempInput: (boolean: boolean) => set({showTempInput: boolean}),
