@@ -28,7 +28,7 @@ export const LoginDialog = () => {
         <DialogContent>
           <Container style={{display: 'flex', flexDirection: 'column', gap: 2}}>
             <TextField onChange={(e) => [changeUsernameInput(e.currentTarget.value)]} autoFocus placeholder='Username' />
-            <TextField onChange={(e) => [changePasswordInput(e.currentTarget.value)]} placeholder='Password' type='password' onKeyDown={async(e) => {e.code === 'Enter'? [await login(loginData, loginMethods), console.log('hi')]: null}} />
+            <TextField onChange={(e) => [changePasswordInput(e.currentTarget.value)]} placeholder='Password' type='password' onKeyDown={async(e) => {e.code === 'Enter'? await login(loginData, loginMethods): null}} />
           </Container>
         </DialogContent>
         <DialogActions>
