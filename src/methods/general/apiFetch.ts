@@ -77,6 +77,8 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
   if(data.error.errorId !== 0){
     changeError(data.error);
     changeErrorSnackbarOpen(true);
+
+    return;
   };
 
   return data;
