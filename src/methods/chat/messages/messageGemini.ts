@@ -1,10 +1,8 @@
 import { Message } from '../../../_types/Message';
+import { MessageGeminiData } from '../../_Bundles/chat/MessageGeminiData';
+import { MessageGeminiMethods } from '../../_Bundles/chat/MessageGeminiMethods';
 import { callGemini } from './callGemini';
 import { saveMessageToDb } from './saveMessageToDb';
-import {
-  MessageGeminiData,
-  MessageGeminiMethods,
-} from './sendUserMessageToGemini';
 
 export const messageGemini = async(messageGeminiData: MessageGeminiData, messageGeminiMethods: MessageGeminiMethods) => {
   const { currentMessageHistory, messageInput } = messageGeminiData;

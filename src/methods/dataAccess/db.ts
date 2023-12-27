@@ -1,6 +1,6 @@
 import postgres from 'postgres';
 
-const databaseInstance = postgres(`postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`);
+const databaseInstance = postgres(`${process.env.DATABASE_URL}`);
 
 
 export default databaseInstance;
