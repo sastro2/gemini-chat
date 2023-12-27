@@ -51,7 +51,6 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
 
     return data;
   };
-  console.log(url, 'hihihihihhihihihih2');
 
   const { changeLoggedIn, clearHistories, changeCurrentMessageHistory } = options.functions;
 
