@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
 
   //initial authentication with cookie
   const {accessToken, username} = JSON.parse(accessOptions);
-  const authRes = await apiFetch('http://localhost:3000/api/endpoints/auth/prefetch/authenticateUserPrefetch', ApiMethods.POST, {username, accessToken})
+  const authRes = await apiFetch(`/api/endpoints/auth/prefetch/authenticateUserPrefetch`, ApiMethods.POST, {username, accessToken})
 
   //if the cookie isnt valid - not authenticated
   if(!authRes) {
@@ -62,10 +62,10 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
   };
 
   // #region initial history/message fetch
-  const historyRes = await apiFetch('http://localhost:3000/api/endpoints/histories/prefetch/getAllHistoriesPrefetch', ApiMethods.POST, {username, accessToken})
+  const historyRes = await apiFetch(`/api/endpoints/histories/prefetch/getAllHistoriesPrefetch`, ApiMethods.POST, {username, accessToken})
   const historyIds = historyRes.history.map((history: History) => history.id);
 
-  const messagesRes = await apiFetch('http://localhost:3000/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch', ApiMethods.POST, {username, accessToken, body: {historyIds}});
+  const messagesRes = await apiFetch(`/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch`, ApiMethods.POST, {username, accessToken, body: {historyIds}});
   // #endregion
 
   const histories: History[] = historyRes.history;

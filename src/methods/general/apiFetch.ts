@@ -26,7 +26,7 @@ async function apiFetch(url: string, method: ApiMethods, options: ApiFetchOption
 async function apiFetch(url: string, method: ApiMethods, options: ApiFetchOptionsServer): Promise<any>;
 async function apiFetch(url: string, method: ApiMethods, options: FetchOptions): Promise<any> {
   if(prefetching(options)){
-    const response = await fetch(url, {
+    const response = await fetch(process.env.DOMAIN_URL + url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
 
   const { changeLoggedIn, clearHistories, changeCurrentMessageHistory } = options.functions;
 
-  const response = await fetch(url, {
+  const response = await fetch(process.env.DOMAIN_URL + url, {
     method: method,
     headers: {
       'Content-Type': 'application/json',

@@ -19,16 +19,16 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
     changeCurrentMessageHistory: changeCurrentMessageHistory,
   };
 
-  const loginRes = await apiFetch('http://localhost:3000/api/endpoints/auth/loginUser', ApiMethods.POST, {functions: apiFetchFunctions, body: {usernameInput, passwordInput}});
+  const loginRes = await apiFetch(`/api/endpoints/auth/loginUser`, ApiMethods.POST, {functions: apiFetchFunctions, body: {usernameInput, passwordInput}});
 
   const authenticated = loginRes.auth;
   if(!authenticated) return;
 
   // #region fetch histories and messages
-  const historyRes = await apiFetch('http://localhost:3000/api/endpoints/histories/getAllHistoriesByUserId', ApiMethods.POST, {functions: apiFetchFunctions});
+  const historyRes = await apiFetch(`/api/endpoints/histories/getAllHistoriesByUserId`, ApiMethods.POST, {functions: apiFetchFunctions});
   const historyIds = historyRes.history.map((history: History) => history.id);
 
-  const messagesRes = await apiFetch('http://localhost:3000/api/endpoints/messages/getMessagesByHistoryIds', ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
+  const messagesRes = await apiFetch(`/api/endpoints/messages/getMessagesByHistoryIds`, ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
   // #endregion
 
   const histories: History[] = historyRes.history;
@@ -39,8 +39,6 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
     history.messages = messages.filter((message: Message) => message.historyId === history.id);
     newHistories.push(history);
   });
-
-  console.log('qweqeqwqewqe')
 
   // #region change states
   changeHistories(newHistories);
