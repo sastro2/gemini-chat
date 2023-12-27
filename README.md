@@ -3,7 +3,7 @@
 <br/>
 <br/>
 
-<h3>The first 2 digits of the error code correspond to its id in the database the last 2 to one of the codes below</h3>
+<h3>The last 2 digits of the error code correspond to one of the codes below</h3>
 
 <br/>
 <br/>
