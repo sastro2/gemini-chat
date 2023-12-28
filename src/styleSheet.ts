@@ -14,4 +14,3 @@ export const StyleSheet = {
   borders: '#bed4e9',
   buttons: '#3373b0',
 };
-//test
