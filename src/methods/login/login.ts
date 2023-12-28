@@ -6,7 +6,7 @@ import { Message } from '../../_types/Message';
 import { LoginData } from '../_Bundles/login/LoginData';
 import { LoginMethods } from '../_Bundles/login/LoginMethods';
 import apiFetch, { ApiFetchBody } from '../general/apiFetch';
-import { historyGuard } from '../Typeguards/historyGuard';
+import { dbHistoryGuard } from '../Typeguards/dbHistoryGuard';
 import { loginUserResponseBodyGuard } from '../Typeguards/loginUserResponseBodyGuard';
 import { messageGuard } from '../Typeguards/messageGuard';
 
@@ -36,7 +36,7 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
 
   if(Array.isArray(historiesRes.histories)) {
     historiesRes.histories.forEach((history: History) => {
-      if(historyGuard(history)){
+      if(dbHistoryGuard(history)){
         confirmedHistories.push(history);
       }
     });
@@ -46,7 +46,7 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
 
   const messagesRes: ApiFetchBody = await apiFetch(`/api/endpoints/messages/getMessagesByHistoryIds`, ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
   const confirmedMessages: Message[] = [];
-
+  console.log(messagesRes, confirmedMessages);
   if(Array.isArray(messagesRes.messages)) {
     messagesRes.messages.forEach((message: Message) => {
       if(messageGuard(message)){
@@ -61,6 +61,8 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
 
   const newHistories: History[] = [];
   histories.forEach((history: History) => {
+    if(!messages.find((message: Message) => message.historyId === history.id)) return;
+
     history.messages = messages.filter((message: Message) => message.historyId === history.id);
     newHistories.push(history);
   });

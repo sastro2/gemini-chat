@@ -13,7 +13,6 @@ import { ChatWindow } from '../components/Chat/ChatWindow';
 import apiFetch from '../methods/general/apiFetch';
 import { accessOptionsGuard } from '../methods/Typeguards/accessOptionsGuard';
 import { dbHistoryGuard } from '../methods/Typeguards/dbHistoryGuard';
-import { historyGuard } from '../methods/Typeguards/historyGuard';
 import { messageGuard } from '../methods/Typeguards/messageGuard';
 
 interface IEntry {

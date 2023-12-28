@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
-import { History } from '../../../../_types/History';
+import { DbHistory } from '../../../../methods/dataAccess/_models/dbHistory';
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAllHistoriesByUserId } from '../../../../methods/dataAccess/histories/SELECT/selectAllHistoriesByUserId';
 import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
 export type GetAllHistoriesResponseBody = DefaultApiResponseBody & {
-  histories?: History[];
+  histories?: DbHistory[];
 };
 
 const getAllHistoriesByUserId = async(req: NextApiRequest, res: NextApiResponse<GetAllHistoriesResponseBody>) => {
