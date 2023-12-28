@@ -39,6 +39,6 @@ export const MessageInputTextField: React.FC<IMessageInputTextField> = () => {
   // #endregion
 
   return(
-    <TextField onKeyDown={(e) => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} style={{ width: '100%', backgroundColor: StyleSheet.background.messages.messageWindowContainer }} sx={{ input: {color: StyleSheet.characters, borderColor: StyleSheet.borders} }} autoFocus placeholder='Message Gemini' />
+    <TextField onKeyDown={(e) => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} style={{ width: '100%', backgroundColor: StyleSheet.background.messages.messageWindowContainer, boxShadow: StyleSheet.shadow }} sx={{ input: {color: StyleSheet.characters, borderColor: StyleSheet.borders} }} autoFocus placeholder='Message Gemini' />
   )
 };

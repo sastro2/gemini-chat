@@ -38,6 +38,6 @@ export const SendButton: React.FC<ISendButton> = () => {
   // #endregion
 
   return(
-    <Button onClick={() => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, 'Enter')} style={{justifyContent: 'center', alignItems: 'center', lineHeight: 0, backgroundColor: StyleSheet.buttons}} variant='contained'>Send</Button>
+    <Button onClick={() => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, 'Enter')} style={{justifyContent: 'center', alignItems: 'center', lineHeight: 0, backgroundColor: StyleSheet.buttons, boxShadow: StyleSheet.shadow}} variant='contained'>Send</Button>
   )
 };

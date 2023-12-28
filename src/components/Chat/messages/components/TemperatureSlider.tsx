@@ -5,6 +5,7 @@ import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historySt
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
 import { getTempButtonColor } from '../../../../methods/chat/messages/getTempButtonColor';
 import { getTempButtonSize } from '../../../../methods/chat/messages/getTempButtonSize';
+import { StyleSheet } from '../../../../styleSheet';
 
 interface ITemperatureSlider {}
 
@@ -29,7 +30,7 @@ export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
   }, [showTempInput, changeShowTempInput]);
 
   return(
-    <Container ref={sliderContainerRef} style={{position: 'relative', height: '100%', width: 'auto', padding: 0, margin: 0, alignItems: 'center', justifyContent: 'center'}} maxWidth={false}>
+    <Container ref={sliderContainerRef} style={{position: 'relative', height: '100%', width: 'auto', padding: 0, margin: 0, alignItems: 'center', justifyContent: 'center', boxShadow: StyleSheet.shadow}} maxWidth={false}>
         {showTempInput
           ?<Slider orientation='vertical' color={getTempButtonColor(currentMessageHistory.temperature)} value={currentMessageHistory.temperature} onChange={(e, newValue) => [changeCurrentMessageHistory({...currentMessageHistory, temperature: newValue as number}), changeHistoryTemp(currentMessageHistory.id, newValue as number)]} defaultValue={currentMessageHistory.temperature} min={0} max={1} step={0.1} style={{position: 'absolute', bottom: 66, left: 15, height: '200%'}} valueLabelDisplay='auto'/>
           : null}

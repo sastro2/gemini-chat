@@ -44,16 +44,16 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(
-    <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 17% 5% 17%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer}}>
-      <Container style={{height: '100%', display: 'flex', flexDirection: 'column'}} maxWidth={false}>
-      {currentMessageHistory.messages.map((message, index) => {
-        if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
-          return <AutorenewOutlinedIcon key={message.parts + index} />
-        }
+    <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 17% 5% 17%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer, boxShadow: StyleSheet.shadow}}>
+        <Container style={{height: '100%', display: 'flex', flexDirection: 'column'}} maxWidth={false}>
+        {currentMessageHistory.messages.map((message, index) => {
+          if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
+            return <AutorenewOutlinedIcon key={message.parts + index} />
+            }
 
-        if(!message.initialPrint){
-          if(message.parts.length === text.length){
-            message.initialPrint = true;
+          if(!message.initialPrint){
+            if(message.parts.length === text.length){
+              message.initialPrint = true;
           }
 
           const textToRender = text;
