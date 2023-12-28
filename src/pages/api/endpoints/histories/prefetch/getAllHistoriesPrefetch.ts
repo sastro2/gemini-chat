@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultApiResponseBody } from '../../../../../_types/DefaultApiResponseBody';
-import { History } from '../../../../../_types/History';
 import { DbHistory } from '../../../../../methods/dataAccess/_models/dbHistory';
 import { insertError } from '../../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAllHistoriesByUserId } from '../../../../../methods/dataAccess/histories/SELECT/selectAllHistoriesByUserId';
