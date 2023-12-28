@@ -5,11 +5,14 @@ import { History } from '../../_types/History';
 import { Message } from '../../_types/Message';
 import { LoginData } from '../_Bundles/login/LoginData';
 import { LoginMethods } from '../_Bundles/login/LoginMethods';
-import apiFetch from '../general/apiFetch';
+import apiFetch, { ApiFetchBody } from '../general/apiFetch';
+import { historyGuard } from '../Typeguards/historyGuard';
+import { loginUserResponseBodyGuard } from '../Typeguards/loginUserResponseBodyGuard';
+import { messageGuard } from '../Typeguards/messageGuard';
 
 export const login = async(loginData: LoginData, loginMethods: LoginMethods): Promise<undefined>=> {
   const { usernameInput, passwordInput } = loginData;
-  const { changeLoggedIn, clearHistories, changeCurrentMessageHistory, changeHistories, changeLoginDialogOpen } = loginMethods;
+  const { changeLoggedIn, clearHistories, changeCurrentMessageHistory, changeHistories, changeLoginDialogOpen, changeError, changeErrorSnackbarOpen } = loginMethods;
 
   if(!usernameInput || !passwordInput) return;
 
@@ -17,22 +20,44 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
     changeLoggedIn: changeLoggedIn,
     clearHistories: clearHistories,
     changeCurrentMessageHistory: changeCurrentMessageHistory,
+    changeError: changeError,
+    changeErrorSnackbarOpen: changeErrorSnackbarOpen
   };
 
-  const loginRes = await apiFetch(`/api/endpoints/auth/loginUser`, ApiMethods.POST, {functions: apiFetchFunctions, body: {usernameInput, passwordInput}});
-
+  const loginRes: ApiFetchBody = await apiFetch(`/api/endpoints/auth/loginUser`, ApiMethods.POST, {functions: apiFetchFunctions, body: {usernameInput, passwordInput}});
   const authenticated = loginRes.auth;
-  if(!authenticated) return;
+
+  if(!loginUserResponseBodyGuard(loginRes) || !authenticated) return;
 
   // #region fetch histories and messages
-  const historyRes = await apiFetch(`/api/endpoints/histories/getAllHistoriesByUserId`, ApiMethods.POST, {functions: apiFetchFunctions});
-  const historyIds = historyRes.history.map((history: History) => history.id);
+  const historiesRes: ApiFetchBody = await apiFetch(`/api/endpoints/histories/getAllHistoriesByUserId`, ApiMethods.POST, {functions: apiFetchFunctions});
+  const confirmedHistories: History[] = [];
 
-  const messagesRes = await apiFetch(`/api/endpoints/messages/getMessagesByHistoryIds`, ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
+
+  if(Array.isArray(historiesRes.histories)) {
+    historiesRes.histories.forEach((history: History) => {
+      if(historyGuard(history)){
+        confirmedHistories.push(history);
+      }
+    });
+  }
+
+  const historyIds = confirmedHistories.map((history: History) => history.id);
+
+  const messagesRes: ApiFetchBody = await apiFetch(`/api/endpoints/messages/getMessagesByHistoryIds`, ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
+  const confirmedMessages: Message[] = [];
+
+  if(Array.isArray(messagesRes.messages)) {
+    messagesRes.messages.forEach((message: Message) => {
+      if(messageGuard(message)){
+        confirmedMessages.push(message);
+      }
+    });
+  }
   // #endregion
 
-  const histories: History[] = historyRes.history;
-  const messages: Message[] = messagesRes.messages;
+  const histories: History[] = confirmedHistories;
+  const messages: Message[] = confirmedMessages;
 
   const newHistories: History[] = [];
   histories.forEach((history: History) => {

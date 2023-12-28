@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import { HistoriesList } from './components/historiesList';
 import { NewChatButton } from './components/NewChatButton';
 
-interface IHistoryWindow {};
+interface IHistoryWindow {}
 
 export const HistoryWindow: React.FC<IHistoryWindow> = () => {
   return (

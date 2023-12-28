@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { TextField } from '@mui/material';
 import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historyStore';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
@@ -8,7 +9,7 @@ import { SendUserMessageMethods } from '../../../../methods/_Bundles/chat/SendUs
 import { sendUserMessageToGemini } from '../../../../methods/chat/messages/sendUserMessageToGemini';
 import { StyleSheet } from '../../../../styleSheet';
 
-interface IMessageInputTextField {};
+interface IMessageInputTextField {}
 
 export const MessageInputTextField: React.FC<IMessageInputTextField> = () => {
   const {messageInput, aiResponseLoading, currentMessageHistory, typingOutResponse, changeMessageInput, changeCurrentMessageHistory, changeAiReponseLoading} = useMessagesStore();

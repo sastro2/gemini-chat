@@ -8,7 +8,7 @@ interface ITextBoxInitPrint {
   message: Message;
   index: number;
   textToRender: string;
-};
+}
 
 export const TextBoxInitPrint: React.FC<ITextBoxInitPrint> = (props) => {
   const {message, index, textToRender} = props;

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Error } from '../../../../../_types/Error';
+import { DefaultApiResponseBody } from '../../../../../_types/DefaultApiResponseBody';
 import { History } from '../../../../../_types/History';
+import { DbHistory } from '../../../../../methods/dataAccess/_models/dbHistory';
 import { insertError } from '../../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAllHistoriesByUserId } from '../../../../../methods/dataAccess/histories/SELECT/selectAllHistoriesByUserId';
 import { selectAccessTokenByUsername } from '../../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
@@ -17,15 +18,14 @@ type GetAllHistoriesNextApiReq = Omit<NextApiRequest, 'body'> & {
   body: GetAllHistoriesReqBody;
 };
 
-type GetAllHistoriesResponseBody = {
-  error: Error;
-  history: History[] | null;
+type GetAllHistoriesResponseBody = DefaultApiResponseBody & {
+  history?: DbHistory[] | null;
 };
 
 const getAllHistoriesPrefetch = async(req: GetAllHistoriesNextApiReq, res: NextApiResponse<GetAllHistoriesResponseBody>) => {
-  const resBody: GetAllHistoriesResponseBody = {history: null, error: {errorCode: 0, errorId: 0}};
+  const resBody: GetAllHistoriesResponseBody = {auth: false, history: null, error: {errorCode: 0, errorId: 0}};
 
-  if(req.method !== 'POST') {res.status(405).send(resBody); return;};
+  if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
   const accessOptions = await validateAccessOptions(req.body.accessToken, res, true, req.body.username);
 
@@ -41,7 +41,7 @@ const getAllHistoriesPrefetch = async(req: GetAllHistoriesNextApiReq, res: NextA
 
     res.status(400).send(resBody);
     return;
-};
+}
 
   const userAccessToken = await selectAccessTokenByUsername(username);
 
@@ -59,6 +59,7 @@ const getAllHistoriesPrefetch = async(req: GetAllHistoriesNextApiReq, res: NextA
 
   const histories = await selectAllHistoriesByUserId(userId);
 
+  resBody.auth = true;
   if(!histories) {res.status(200).send(resBody); return;}
 
   resBody.history = histories;

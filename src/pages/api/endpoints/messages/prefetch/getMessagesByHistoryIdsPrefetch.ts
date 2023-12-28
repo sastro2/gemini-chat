@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Error } from '../../../../../_types/Error';
+import { DefaultApiResponseBody } from '../../../../../_types/DefaultApiResponseBody';
 import { Message } from '../../../../../_types/Message';
 import { insertError } from '../../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectMessagesByHistoryIds } from '../../../../../methods/dataAccess/messages/SELECT/selectMessagesByHistoryIds';
@@ -15,21 +15,22 @@ type GetAllMessagesNextApiReq = Omit<NextApiRequest, 'body'> & {
   body: GetAllMessagesReqBody;
 };
 
-type GetAllMessagesResponseBody = {
-  error: Error;
-  messages: Message[] | null;
+type GetAllMessagesResponseBody = DefaultApiResponseBody & {
+  messages?: Message[] | null;
 };
 
 const getAllMessagesByHistoryIdsPrefetch = async(req: GetAllMessagesNextApiReq, res: NextApiResponse<GetAllMessagesResponseBody>) => {
-  const resBody: GetAllMessagesResponseBody = {messages: null, error: {errorCode: 0, errorId: 0}};
+  const resBody: GetAllMessagesResponseBody = {auth: false, messages: null, error: {errorCode: 0, errorId: 0}};
 
-  if(req.method !== 'POST') {res.status(405).send(resBody); return;};
+  if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
   const accessOptions = await validateAccessOptions(req.body.accessToken, res, true, req.body.username);
 
   if(!accessOptions?.accessToken ||!accessOptions.username) {
     return;
   }
+
+  resBody.auth = true;
 
   const { historyIds } = req.body;
 
@@ -39,7 +40,7 @@ const getAllMessagesByHistoryIdsPrefetch = async(req: GetAllMessagesNextApiReq, 
 
     res.status(400).send(resBody);
     return;
-  };
+  }
 
   const userMessages = await selectMessagesByHistoryIds(historyIds);
 

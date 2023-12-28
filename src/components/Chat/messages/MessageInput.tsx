@@ -3,7 +3,7 @@ import { MessageInputTextField } from './components/MessageInputTextField';
 import { SendButton } from './components/SendButton';
 import { TemperatureSlider } from './components/TemperatureSlider';
 
-interface IMessageInput {};
+interface IMessageInput {}
 
 export const MessageInput: React.FC<IMessageInput> = () => {
 

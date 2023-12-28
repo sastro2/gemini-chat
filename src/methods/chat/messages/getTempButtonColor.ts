@@ -7,5 +7,5 @@ export const getTempButtonColor = (temperatureInput: number) => {
     return 'error';
   } else {
     return 'success';
-  };
+  }
 };

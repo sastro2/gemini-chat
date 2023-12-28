@@ -1,10 +1,11 @@
 import { parse } from 'cookie';
 import { NextApiResponse } from 'next';
-import { AccessOptions } from '../../_types/AccessOptions';
+import { DefaultApiResponseBody } from '../../_types/DefaultApiResponseBody';
 import { insertError } from '../dataAccess/errors/INSERT/insertError';
 import { selectAccessTokenByUsername } from '../dataAccess/users/SELECT/selectAccessTokenByUsername';
+import { accessOptionsGuard } from '../Typeguards/accessOptionsGuard';
 
-export const validateAccessOptions = async(cookie: string | undefined, res: NextApiResponse<any>, prefetch: boolean, name?: string) => {
+export const validateAccessOptions = async(cookie: string | undefined, res: NextApiResponse<DefaultApiResponseBody>, prefetch: boolean, name?: string) => {
   const cookies = parse(cookie || '' );
   const stringifiedAccessOptions = cookies['accessOptions'];
 
@@ -15,7 +16,14 @@ export const validateAccessOptions = async(cookie: string | undefined, res: Next
      return;
   }
 
-  const accessOptions: AccessOptions = prefetch? {accessToken: cookie, username: name}: JSON.parse(stringifiedAccessOptions);
+  const accessOptions: unknown = prefetch? {accessToken: cookie, username: name}: JSON.parse(stringifiedAccessOptions);
+
+  if(!accessOptionsGuard(accessOptions)) {
+    const errorId = await insertError(21401, 'Access options not valid.');
+
+    res.status(401).end().send({auth: false, error: {errorCode: 21, errorId: errorId? errorId: 0}});
+     return;
+  }
 
   const { accessToken, username } = accessOptions;
 
@@ -26,13 +34,13 @@ export const validateAccessOptions = async(cookie: string | undefined, res: Next
 
     res.status(401).end().send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
      return;
-  };
+  }
   if(userAccessToken !== accessToken) {
     const errorId = await insertError(21401, 'Access token not valid.');
 
     res.status(401).end().send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
      return;
-  };
+  }
 
   return {accessToken, username};
 };

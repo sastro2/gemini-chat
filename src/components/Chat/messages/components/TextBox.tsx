@@ -7,7 +7,7 @@ import { MessageIcon } from './MessageIcon';
 interface ITexBox {
   message: Message;
   index: number;
-};
+}
 
 export const TextBox: React.FC<ITexBox> = (props) => {
   const {message, index} = props;

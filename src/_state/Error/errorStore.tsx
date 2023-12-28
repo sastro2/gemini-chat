@@ -6,7 +6,7 @@ interface IErrorStore{
   error: Error
   changeErrorSnackbarOpen: (boolean: boolean) => void;
   changeError: (error: Error) => void;
-};
+}
 
 export const defaultError: Error = {errorCode: 0, errorId: 0};
 

@@ -8,4 +8,4 @@ export async function selectAllUsers() {
   `
 
   return users
-};
+}

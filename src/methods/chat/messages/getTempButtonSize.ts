@@ -7,5 +7,5 @@ export const getTempButtonSize = (temperatureInput: number) => {
     return 'large';
   } else {
     return 'small';
-  };
+  }
 };

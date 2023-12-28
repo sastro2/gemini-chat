@@ -9,4 +9,4 @@ export async function selectUserByUsername(username: string) {
   `
 
   return user
-};
+}

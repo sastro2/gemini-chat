@@ -19,8 +19,14 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "next": "^14.0.4",
     "postgres": "^3.4.3",
     "react": "^18.2.0",
@@ -38,7 +44,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -57,5 +65,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "ai based chat tool",
+  "main": "index.tsx",
+  "repository": "https://github.com/sastro2/gemini-chat",
+  "author": "Sascha Stropek",
+  "license": "MIT"
 }

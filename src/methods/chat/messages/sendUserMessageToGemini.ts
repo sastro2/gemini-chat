@@ -1,9 +1,11 @@
 import { ApiFetchFunctions } from '../../../_types/ApiFetchFunctions';
 import { ApiMethods } from '../../../_types/ApiMethods';
+import { History } from '../../../_types/History';
 import { MessageGeminiProps } from '../../_Bundles/chat/MessageGeminiProps';
 import { SendUserMessageData } from '../../_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../_Bundles/chat/SendUserMessageMethods';
-import apiFetch from '../../general/apiFetch';
+import apiFetch, { ApiFetchBody } from '../../general/apiFetch';
+import { dbHistoryGuard } from '../../Typeguards/dbHistoryGuard';
 import { changeDbTemperatureById } from './changeDbTemperatureById';
 import { messageGemini } from './messageGemini';
 
@@ -19,7 +21,7 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
     changeMessageInput('');
     changeAiReponseLoading(false);
     return;
-  };
+  }
 
   const apiFetchFunctions: ApiFetchFunctions = {
     changeLoggedIn: changeLoggedIn,
@@ -31,18 +33,25 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
 
   //add new history if there is only the first auto generated message
   if(currentMessageHistory.messages.length === 1){
-    const response = await apiFetch('/api/endpoints/histories/addHistory', ApiMethods.POST, {functions: apiFetchFunctions, body: {historyTemperature: currentMessageHistory.temperature}});
+    const response: ApiFetchBody = await apiFetch('/api/endpoints/histories/addHistory', ApiMethods.POST, {functions: apiFetchFunctions, body: {historyTemperature: currentMessageHistory.temperature}});
+
+    if(!dbHistoryGuard(response.history)){
+      // frontend error logging
+      return;
+    }
+    if(!response.history){
+      // frontend error logging
+      return;
+    }
 
     currentMessageHistory.messages[0].historyId = response.history.id;
     currentMessageHistory.id = response.history.id;
 
     changeCurrentMessageHistory({...currentMessageHistory, id: currentMessageHistory.id});
 
-    response.history.messages = [...currentMessageHistory.messages];
-    addHistory(response.history);
-  };
-
-  changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature, apiFetchFunctions);
+    const newHistory: History = {...response.history, messages: [...currentMessageHistory.messages, {role: 'user', parts: messageInput, initialPrint: true, historyId: response.history.id} ]};
+    addHistory(newHistory);
+  }
 
   const messageGeminiProps: MessageGeminiProps = {
     messageGeminiData: {
@@ -59,6 +68,8 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
       changeErrorSnackbarOpen: changeErrorSnackbarOpen,
     },
   };
-  messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);
+
   changeMessageInput('');
+  await messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);
+  await changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature, apiFetchFunctions);
 };

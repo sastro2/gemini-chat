@@ -6,4 +6,4 @@ export async function updateTemperatureById(id: number, temperature: number) {
     SET temperature = ${temperature}
     WHERE id = ${id}
   `
-};
+}

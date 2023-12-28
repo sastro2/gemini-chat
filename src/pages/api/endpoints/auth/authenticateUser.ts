@@ -1,21 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
-type AuthenticateUserReqBody = {
-};
+type AuthenticateUserResponseBody = DefaultApiResponseBody
 
-type AuthenticateUserNextApiReq = Omit<NextApiRequest, 'body'> & {
-  body: AuthenticateUserReqBody;
-};
+const authenticateUser = async(req: NextApiRequest, res: NextApiResponse<AuthenticateUserResponseBody>) => {
+  const resBody: AuthenticateUserResponseBody = {auth: false, error: {errorId: 0, errorCode: 0}};
 
-type AuthenticateUserResponseBody = {
-  auth: boolean;
-};
-
-const authenticateUser = async(req: AuthenticateUserNextApiReq, res: NextApiResponse<AuthenticateUserResponseBody>) => {
-  const resBody: AuthenticateUserResponseBody = {auth: false};
-
-  if(req.method !== 'POST') {res.status(405).send(resBody); return;};
+  if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
 

@@ -41,7 +41,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
         changeTypingOutResponse(false);
       }
     }, 1000/(currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length * 3));
-  }, [currentMessageHistory]);
+  }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(
     <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 17% 5% 17%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer}}>
@@ -49,16 +49,16 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
       {currentMessageHistory.messages.map((message, index) => {
         if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
           return <AutorenewOutlinedIcon key={message.parts + index} />
-        };
+        }
 
         if(!message.initialPrint){
           if(message.parts.length === text.length){
             message.initialPrint = true;
-          };
+          }
 
           const textToRender = text;
           return <TextBoxInitPrint key={message.parts + index} message={message} index={index} textToRender={textToRender} />
-        };
+        }
 
         return <TextBox key={message.parts + index} message={message} index={index} />
         })}

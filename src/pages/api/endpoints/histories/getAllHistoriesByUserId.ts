@@ -1,25 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
 import { History } from '../../../../_types/History';
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAllHistoriesByUserId } from '../../../../methods/dataAccess/histories/SELECT/selectAllHistoriesByUserId';
 import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
-type GetAllHistoriesReqBody = {
+export type GetAllHistoriesResponseBody = DefaultApiResponseBody & {
+  histories?: History[];
 };
 
-type GetAllHistoriesNextApiReq = Omit<NextApiRequest, 'body'> & {
-  body: GetAllHistoriesReqBody;
-};
+const getAllHistoriesByUserId = async(req: NextApiRequest, res: NextApiResponse<GetAllHistoriesResponseBody>) => {
+  const resBody: GetAllHistoriesResponseBody = {auth: false, error: {errorCode: 0, errorId: 0}, histories: []};
 
-type GetAllHistoriesResponseBody = {
-  history: History[] | null;
-};
-
-const getAllHistoriesByUserId = async(req: GetAllHistoriesNextApiReq, res: NextApiResponse<GetAllHistoriesResponseBody>) => {
-  const resBody: GetAllHistoriesResponseBody = {history: null};
-
-  if(req.method !== 'POST') {res.status(405).send(resBody); return;};
+  if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
 
@@ -29,13 +23,19 @@ const getAllHistoriesByUserId = async(req: GetAllHistoriesNextApiReq, res: NextA
 
   const userId = await selectUserIdByUsername(accessOptions.username);
 
-  if(!userId) {res.status(401).send(resBody); return;}
+  if(!userId) {
+    const errorId = await insertError(30401, 'User not found.');
+    resBody.error = {errorCode: 30, errorId: errorId? errorId: 0};
+
+    res.status(401).send(resBody);
+    return;
+  }
+
+  resBody.auth = true;
 
   const histories = await selectAllHistoriesByUserId(userId);
 
-  if(!histories) {res.status(500).send(resBody); return;}
-
-  resBody.history = histories;
+  resBody.histories = histories;
   res.status(200).send(resBody);
   return;
 };

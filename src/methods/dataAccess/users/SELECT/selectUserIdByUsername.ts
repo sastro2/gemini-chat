@@ -10,8 +10,10 @@ export async function selectUserIdByUsername(username: string): Promise<number |
 
   if(result.length > 0) {
     const { id } = result[0];
+    if(typeof id !== 'number') return null;
+
     return id;
   } else {
     return null;
   }
-};
+}

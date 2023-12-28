@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Error } from '../../../../_types/Error';
+import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
 import { selectPasswordByUsername } from '../../../../methods/dataAccess/users/SELECT/selectPasswordByUsername';
@@ -14,10 +14,7 @@ type LoginUserNextApiReq = Omit<NextApiRequest, 'body'> & {
   body: LoginUserReqBody;
 };
 
-type LoginUserResponseBody = {
-  auth: boolean;
-  error: Error
-};
+export type LoginUserResponseBody = DefaultApiResponseBody;
 
 const verifyPassword = async(inputPassword: string, hashedPassword: string): Promise<boolean> => {
   return bcrypt.compare(inputPassword, hashedPassword);
@@ -26,28 +23,28 @@ const verifyPassword = async(inputPassword: string, hashedPassword: string): Pro
 const loginUser = async(req: LoginUserNextApiReq, res: NextApiResponse<LoginUserResponseBody>) => {
   const resBody = {auth: false, error: {errorCode: 0, errorId: 0}};
 
-  if(req.method !== 'POST') {res.status(405).send(resBody); return;};
+  if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
   const { usernameInput, passwordInput } = req.body;
 
   // check if username and password are provided
   if(!usernameInput || !passwordInput) {
-    const errorId = await insertError(23400, 'Username or password not provided.');
-    resBody.error = {errorCode: 23, errorId: errorId? errorId: 0};
+    const errorId = await insertError(40400, 'Bad request.');
+    resBody.error = {errorCode: 40, errorId: errorId? errorId: 0};
 
     res.status(400).send(resBody);
      return;
-  };
+  }
 
   const hashedPassword = await selectPasswordByUsername(usernameInput);
 
   // check if username exists
-  if(!hashedPassword) {res.status(401).send(resBody); return;};
+  if(!hashedPassword) {res.status(401).send(resBody); return;}
 
   // check if password is correct
   const passwordCorrect = await verifyPassword(passwordInput, hashedPassword);
 
-  if(!passwordCorrect) {res.status(401).send(resBody); return;};
+  if(!passwordCorrect) {res.status(401).send(resBody); return;}
 
   const accessToken = await selectAccessTokenByUsername(usernameInput);
 
@@ -57,7 +54,7 @@ const loginUser = async(req: LoginUserNextApiReq, res: NextApiResponse<LoginUser
 
     res.status(401).send(resBody);
     return;
-  };
+  }
 
   resBody.auth = true;
 

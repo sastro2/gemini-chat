@@ -10,8 +10,10 @@ export async function selectAccessTokenByUsername(username: string): Promise<str
 
   if (result.length > 0) {
     const { accesstoken } = result[0];
+    if(typeof accesstoken !== 'string') return null;
+
     return accesstoken;
   } else {
     return null;
   }
-};
+}

@@ -1,4 +1,5 @@
 import { Message } from '../../../_types/Message';
+import { StartGeminiChatResponseBody } from '../../../pages/api/endpoints/gemini/handleMessageGemini';
 import { MessageGeminiData } from '../../_Bundles/chat/MessageGeminiData';
 import { MessageGeminiMethods } from '../../_Bundles/chat/MessageGeminiMethods';
 import { callGemini } from './callGemini';
@@ -44,7 +45,7 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
     changeError: changeError,
     changeErrorSnackbarOpen: changeErrorSnackbarOpen,
   };
-  const geminiResponse = await callGemini(currentMessageHistory, messageInput, currentMessageHistory.temperature, apiFetchFunctions);
+  const geminiResponse: Omit<StartGeminiChatResponseBody, 'error'> = await callGemini(currentMessageHistory, messageInput, currentMessageHistory.temperature, apiFetchFunctions);
 
   //if not logged in, send not logged in message
   if(!geminiResponse.auth){
@@ -52,10 +53,10 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
     changeAiResponseLoading(false);
 
     return;
-  };
+  }
 
-  newMessages[1].parts = geminiResponse.message;
-  newMessages[2].parts = geminiResponse.message;
+  newMessages[1].parts = geminiResponse.message? geminiResponse.message: 'Sorry, I did not understand that.';
+  newMessages[2].parts = geminiResponse.message? geminiResponse.message: 'Sorry, I did not understand that.';
 
   changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]})
   addMessageToHistory(newMessages[2]);

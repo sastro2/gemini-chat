@@ -6,7 +6,7 @@ import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messages
 import { getTempButtonColor } from '../../../../methods/chat/messages/getTempButtonColor';
 import { getTempButtonSize } from '../../../../methods/chat/messages/getTempButtonSize';
 
-interface ITemperatureSlider {};
+interface ITemperatureSlider {}
 
 export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
   const {currentMessageHistory, changeCurrentMessageHistory, showTempInput, changeShowTempInput} = useMessagesStore();
@@ -26,7 +26,7 @@ export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [showTempInput]);
+  }, [showTempInput, changeShowTempInput]);
 
   return(
     <Container ref={sliderContainerRef} style={{position: 'relative', height: '100%', width: 'auto', padding: 0, margin: 0, alignItems: 'center', justifyContent: 'center'}} maxWidth={false}>

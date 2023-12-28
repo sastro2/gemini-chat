@@ -12,7 +12,7 @@ interface IMessagesStore{
   changeMessageInput:  (input: string) =>  void;
   changeShowTempInput: (boolean: boolean) => void;
   changeTypingOutResponse: (boolean: boolean) =>  void;
-};
+}
 
 export const defaultCurrentMessageHistory: History = {
   id: 0,

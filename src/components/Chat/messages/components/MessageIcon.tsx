@@ -5,7 +5,7 @@ import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messages
 interface IMessageIcon {
   index: number;
   role: 'model' | 'user'
-};
+}
 
 export const MessageIcon: React.FC<IMessageIcon> = (props) => {
   const {currentMessageHistory} = useMessagesStore();

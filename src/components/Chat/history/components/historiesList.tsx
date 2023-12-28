@@ -6,7 +6,7 @@ import { getTimeBracket } from '../../../../methods/chat/histories/getTimeBracke
 import { HistoryDateDivider } from './HistoryDateDivider';
 import { HistorySingle } from './HistorySingle';
 
-interface IHistoriesList {};
+interface IHistoriesList {}
 
 export const HistoriesList: React.FC<IHistoriesList> = () => {
   const {histories} = useHistoryStore();
@@ -21,14 +21,14 @@ export const HistoriesList: React.FC<IHistoriesList> = () => {
         componentArray.push(<HistoryDateDivider key={timeBracket} timeBracket={timeBracket} />);
         componentArray.push(<HistorySingle key={new Date(history.created).getTime()} history={history} index={0} />);
         return;
-      };
+      }
       const lastHistory = sortedHistories[index - 1];
       const lastHistoryDate = new Date(lastHistory.created);
 
       if(getTimeBracket(new Date(history.created)) === getTimeBracket(lastHistoryDate)){
         componentArray.push(<HistorySingle key={new Date(history.created).getTime()} history={history} index={index} />);
         return;
-      };
+      }
 
       componentArray.push(<HistoryDateDivider key={timeBracket} timeBracket={timeBracket} />);
       componentArray.push(<HistorySingle key={new Date(history.created).getTime()} history={history} index={index} />);

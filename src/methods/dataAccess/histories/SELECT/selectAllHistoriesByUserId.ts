@@ -1,16 +1,22 @@
-import { History } from '../../../../_types/History';
+import { dbHistoryGuard } from '../../../Typeguards/dbHistoryGuard';
+import { DbHistory } from '../../_models/dbHistory';
 import databaseInstance from '../../db';
 
-export async function selectAllHistoriesByUserId(userId: number): Promise<History[] | null> {
+export async function selectAllHistoriesByUserId(userId: number): Promise<DbHistory[]> {
   const result = await databaseInstance`
     SELECT
-      *
+      id, temperature, created
     FROM histories
     WHERE "userId" = ${userId}
   `
 
-  const histories = result.map(history => {
-    return {id: history.id, temperature: history.temperature, messages: [], created: history.created};
-  });
+  if(result.count === 0) return [];
+
+  const histories: DbHistory[] = []
+
+  result.forEach((row) => {
+    if(dbHistoryGuard(row)) histories.push(row);
+  })
+
   return histories;
-};
+}

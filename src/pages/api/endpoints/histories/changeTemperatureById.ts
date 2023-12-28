@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Error } from '../../../../_types/Error';
+import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
 import { updateTemperatureById } from '../../../../methods/dataAccess/histories/UPDATE/updateTemperatureById';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
@@ -12,20 +12,20 @@ type ChangeTempNextApiReq = Omit<NextApiRequest, 'body'> & {
   body: ChangeTempByIdReqBody;
 };
 
-type ChangeTempByIdNextApiResponseBody = {
-  error: Error;
-};
+type ChangeTempByIdNextApiResponseBody = DefaultApiResponseBody;
 
 const changeTemperatureById = async(req: ChangeTempNextApiReq, res: NextApiResponse<ChangeTempByIdNextApiResponseBody>) => {
-  const resBody: ChangeTempByIdNextApiResponseBody = {error: {errorId: 0, errorCode: 0}};
+  const resBody: ChangeTempByIdNextApiResponseBody = {auth: false, error: {errorId: 0, errorCode: 0}};
 
-  if(req.method !== 'PATCH') {res.status(405); return;};
+  if(req.method !== 'PATCH') {res.status(405); return;}
 
   const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
 
   if(!accessOptions?.accessToken ||!accessOptions.username) {
     return;
   }
+
+  resBody.auth = true;
 
   const { historyTemperature, id } = req.body;
 

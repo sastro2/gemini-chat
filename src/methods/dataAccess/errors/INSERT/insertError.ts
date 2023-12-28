@@ -7,5 +7,7 @@ export async function insertError(errorCode: number, message: string): Promise<n
     RETURNING id;
   `
 
+  if(typeof result[0].id !== 'number') return null;
+
   return result[0].id? result[0].id: null;
-};
+}

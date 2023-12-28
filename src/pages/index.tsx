@@ -11,11 +11,15 @@ import { History } from '../_types/History';
 import { Message } from '../_types/Message';
 import { ChatWindow } from '../components/Chat/ChatWindow';
 import apiFetch from '../methods/general/apiFetch';
+import { accessOptionsGuard } from '../methods/Typeguards/accessOptionsGuard';
+import { dbHistoryGuard } from '../methods/Typeguards/dbHistoryGuard';
+import { historyGuard } from '../methods/Typeguards/historyGuard';
+import { messageGuard } from '../methods/Typeguards/messageGuard';
 
 interface IEntry {
   auth: boolean;
   histories: History[];
-};
+}
 
 export default function Entry(props: IEntry) {
   const {changeLoggedIn} = useLoginStore();
@@ -27,8 +31,8 @@ export default function Entry(props: IEntry) {
       changeHistories(props.histories);
     }else{
       changeLoggedIn(false);
-    };
-  }, [])
+    }
+  }, [changeLoggedIn, changeHistories, props.auth, props.histories]);
 
   return <ChatWindow />;
 }
@@ -45,39 +49,68 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
         histories: [],
       },
     };
-  };
+  }
 
   //initial authentication with cookie
-  const {accessToken, username} = JSON.parse(accessOptions);
-  const authRes = await apiFetch(`/api/endpoints/auth/prefetch/authenticateUserPrefetch`, ApiMethods.POST, {username, accessToken})
+  const parsedAccessOptions: unknown = JSON.parse(accessOptions);
 
-  //if the cookie isnt valid - not authenticated
-  if(!authRes) {
+  if(!accessOptionsGuard(parsedAccessOptions)) {
     return {
       props: {
         auth: false,
         histories: [],
       },
     };
-  };
+  }
+
+  const {username, accessToken} = parsedAccessOptions;
+
+  const authRes = await apiFetch(`/api/endpoints/auth/prefetch/authenticateUserPrefetch`, ApiMethods.POST, {username, accessToken})
+
+  //if the cookie isnt valid - not authenticated
+  if(!authRes.auth) {
+    return {
+      props: {
+        auth: false,
+        histories: [],
+      },
+    };
+  }
 
   // #region initial history/message fetch
   const historyRes = await apiFetch(`/api/endpoints/histories/prefetch/getAllHistoriesPrefetch`, ApiMethods.POST, {username, accessToken})
-  const historyIds = historyRes.history.map((history: History) => history.id);
+  const confirmedHistories: History[] = [];
+
+  if(Array.isArray(historyRes.history)){
+    historyRes.history.forEach((history: History) => {
+      if(dbHistoryGuard(history)) confirmedHistories.push(history);
+    });
+  }
+
+  const historyIds = confirmedHistories.map((history: History) => history.id);
 
   const messagesRes = await apiFetch(`/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch`, ApiMethods.POST, {username, accessToken, body: {historyIds}});
+  const confirmedMessages: Message[] = [];
+
+  if(Array.isArray(messagesRes.messages)){
+    messagesRes.messages.forEach((message: Message) => {
+      if(messageGuard(message)) confirmedMessages.push(message);
+    });
+  }
   // #endregion
 
-  const histories: History[] = historyRes.history;
-  const messages: Message[] = messagesRes.messages;
+  const histories: History[] = confirmedHistories;
+  const messages: Message[] = confirmedMessages;
 
   // if theres either no histories or no messages - return with initial histories = []
-  if(!histories || !messages) return {
-    props: {
-      auth: true,
-      histories: [],
-    },
-  };
+  if(!histories || !messages){
+    return {
+      props: {
+        auth: true,
+        histories: [],
+      },
+    };
+  }
 
   const newHistories: History[] = [];
   histories.forEach((history: History) => {

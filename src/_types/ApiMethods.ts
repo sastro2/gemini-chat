@@ -4,4 +4,4 @@ export enum ApiMethods {
   PUT = 'PUT',
   DELETE = 'DELETE',
   PATCH = 'PATCH',
-};
+}

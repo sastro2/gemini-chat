@@ -10,8 +10,10 @@ export async function selectPasswordByUsername(username: string): Promise<string
 
   if (result.length > 0) {
     const { password } = result[0];
+    if(typeof password !== 'string') return null;
+
     return password;
   } else {
     return null;
   }
-};
+}

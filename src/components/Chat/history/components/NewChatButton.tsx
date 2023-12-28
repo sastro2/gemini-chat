@@ -5,7 +5,7 @@ import {
   useMessagesStore,
 } from '../../../../_state/Chat/messageWindow/messagesStore';
 
-interface INewChatButton {};
+interface INewChatButton {}
 
 export const NewChatButton: React.FC<INewChatButton> = () => {
   const {changeCurrentMessageHistory, aiResponseLoading, typingOutResponse} = useMessagesStore();

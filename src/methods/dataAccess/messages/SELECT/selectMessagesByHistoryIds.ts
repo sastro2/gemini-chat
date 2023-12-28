@@ -1,4 +1,5 @@
 import { Message } from '../../../../_types/Message';
+import { messageGuard } from '../../../Typeguards/messageGuard';
 import databaseInstance from '../../db';
 
 export async function selectMessagesByHistoryIds(historyIds: number[]) {
@@ -9,8 +10,13 @@ export async function selectMessagesByHistoryIds(historyIds: number[]) {
     WHERE "historyId" IN ${ databaseInstance(historyIds) }
   `
 
-  const messages: Message[] = result.map((message) => {
-    return {historyId: message.historyId, parts: message.parts, role: message.role, initialPrint: message.initialPrint}
+  const messages: Message[] = [];
+
+  result.forEach((message) => {
+    if(messageGuard(message)){
+      messages.push(message)
+    }
   })
+
   return messages
-};
+}

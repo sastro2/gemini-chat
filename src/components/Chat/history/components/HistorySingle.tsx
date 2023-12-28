@@ -1,11 +1,12 @@
 import { Container, Typography } from '@mui/material';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
+import { History } from '../../../../_types/History';
 import { StyleSheet } from '../../../../styleSheet';
 
 interface IHistory {
-  history: any;
+  history: History;
   index: number;
-};
+}
 
 export const HistorySingle: React.FC<IHistory> = (props) => {
   const {history, index} = props;

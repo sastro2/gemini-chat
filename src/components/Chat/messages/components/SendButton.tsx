@@ -8,7 +8,7 @@ import { SendUserMessageMethods } from '../../../../methods/_Bundles/chat/SendUs
 import { sendUserMessageToGemini } from '../../../../methods/chat/messages/sendUserMessageToGemini';
 import { StyleSheet } from '../../../../styleSheet';
 
-interface ISendButton {};
+interface ISendButton {}
 
 export const SendButton: React.FC<ISendButton> = () => {
   const {messageInput, aiResponseLoading, currentMessageHistory, typingOutResponse, changeMessageInput, changeCurrentMessageHistory, changeAiReponseLoading} = useMessagesStore();

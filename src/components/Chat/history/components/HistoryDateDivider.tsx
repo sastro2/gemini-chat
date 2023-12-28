@@ -3,7 +3,7 @@ import { StyleSheet } from '../../../../styleSheet';
 
 interface IHistoryDateDivider {
   timeBracket: 'today' | 'yesterday' | 'week' | 'month' | 'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'okt' | 'nov' | 'dec' | 'year';
-};
+}
 
 export const HistoryDateDivider: React.FC<IHistoryDateDivider> = ({timeBracket}) => {
   let text = '';
@@ -62,7 +62,7 @@ export const HistoryDateDivider: React.FC<IHistoryDateDivider> = ({timeBracket})
       break;
     default:
       text = 'Today';
-  };
+  }
 
   return (
     <Container style={{color: StyleSheet.characters, paddingLeft: '4px', marginBottom: '10px', marginTop: '20px'}}>

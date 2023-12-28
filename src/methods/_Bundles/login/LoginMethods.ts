@@ -1,3 +1,4 @@
+import { Error } from '../../../_types/Error';
 import { History } from '../../../_types/History';
 
 export type LoginMethods = {
@@ -6,4 +7,6 @@ export type LoginMethods = {
   changeCurrentMessageHistory: (history: History) => void;
   changeHistories: (histories: History[]) => void;
   clearHistories: () => void;
+  changeError: (error: Error) => void;
+  changeErrorSnackbarOpen: (errorSnackbarOpen: boolean) => void;
 };

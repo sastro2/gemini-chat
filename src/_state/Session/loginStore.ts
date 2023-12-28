@@ -9,7 +9,7 @@ interface ILoginStore{
   changeLoginDialogOpen: (loginDialogOpen: boolean) => void;
   changeUsernameInput: (username: string) => void;
   changePasswordInput: (password: string) => void;
-};
+}
 
 export const useLoginStore = create<ILoginStore>(set => ({
   loggedIn: true,
