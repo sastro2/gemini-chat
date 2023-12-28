@@ -51,11 +51,13 @@
     "lint-staged": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": ["lint"]
+    "*.{js,jsx,ts,tsx}": [
+      "lint"
+    ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged"
+      "pre-commit": "yarn lint-staged"
     }
   },
   "eslintConfig": {
