@@ -45,4 +45,5 @@
 <br/>
 <br/>
 
-
+<h2># 50 Response of incorrect type</h2>
+<i>This error occurs if the client successfully calls the api but recieves an incorrect response</i>
