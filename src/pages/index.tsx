@@ -1,3 +1,4 @@
+import '@mui/material/styles';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
