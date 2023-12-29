@@ -14,8 +14,8 @@ export const MessageIcon: React.FC<IMessageIcon> = (props) => {
   if((props.index !== currentMessageHistory.messages.length - 1) && (props.index !== currentMessageHistory.messages.length - 2)) return null;
 
   if(props.role === 'model'){
-    return <SmartToyOutlined className={styles.messageIconModel} fontSize='large'/>
+    return <SmartToyOutlined id={styles.messageIconModel} fontSize='large'/>
   }
 
-  return <SentimentSatisfiedAltOutlinedIcon className={styles.messageIconUser} fontSize='large' />
+  return <SentimentSatisfiedAltOutlinedIcon id={styles.messageIconUser} fontSize='large' />
 }

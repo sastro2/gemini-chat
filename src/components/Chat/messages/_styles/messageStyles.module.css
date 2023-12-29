@@ -1,17 +1,17 @@
 /* MessageIcon */
-.messageIconModel {
+#messageIconModel {
   position: absolute;
   left: -40px;
   top: 5px;
 }
-.messageIconUser {
+#messageIconUser {
   position: absolute;
   right: -40px;
   top: 5px;
 }
 
 /* MessageInputTextField*/
-.messageInputTextField {
+#messageInputTextField {
   color: var(--historyColor);
   width: 100%;
   background-color: var(messageWindowBackground);
@@ -19,7 +19,7 @@
 }
 
 /* SendButton */
-.sendButton {
+#sendButton {
   justify-content: center;
   align-items: center;
   line-height: 0;
@@ -28,7 +28,7 @@
 }
 
 /* TemperatureSlider */
-.temperatureSliderContainer {
+#temperatureSliderContainer {
   position: relative;
   height: 100%;
   width: auto;
@@ -38,32 +38,32 @@
   justify-content: center;
   box-shadow: var(--shadow);
 }
-.temperatureSlider {
+#temperatureSlider {
   position: absolute;
   bottom: 66px;
   left: 15px;
   height: 200%;
 }
-.temperatureButton {
+#temperatureButton {
   height: 100%;
   padding: 0;
 }
 
 /* TextBox */
-.textBoxModel {
+#textBoxModel {
   display: flex;
   justify-content: flex-start;
   padding: 0.5%;
   position: relative;
 }
-.textBoxUser {
+#textBoxUser {
   display: flex;
   white-space: pre-wrap;
   justify-content: flex-end;
   padding: 0.5%;
   position: relative;
 }
-.textBoxTextModel {
+#textBoxTextModel {
   border: 0.01px solid var(--baseBackground);
   border-radius: 2px 15px 15px 15px;
   max-width: 100%;
@@ -76,7 +76,7 @@
   box-shadow: var(--shadow);
   max-width: '';
 }
-.textBoxTextUser {
+#textBoxTextUser {
   border: 0.01px solid var(--baseBackground);
   border-radius: 15px 2px 15px 15px;
   max-width: 100%;
@@ -89,12 +89,12 @@
   box-shadow: var(--shadow);
   max-width: '';
 }
-.text {
+#text {
   overflow-wrap: break-word;
 }
 
 /* MessageInput */
-.messageInput {
+#messageInput {
   width: 100%;
   display: flex;
   padding: 0;
@@ -103,12 +103,12 @@
 }
 
 /* MessagesWindow */
-.messagesWindow {
+#messagesWindow {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-.simpleBar {
+#simpleBar {
   height: 100%;
   border: var(--messageWindowBackground) 0.01px solid;
   border-radius: 20px;

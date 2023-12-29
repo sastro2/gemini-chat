@@ -32,9 +32,9 @@ export const ChatWindow: React.FC<IChatWindow> = () => {
   const { errorSnackbarOpen, error, changeErrorSnackbarOpen, changeError } = useErrorStore();
 
   return (
-    <Grid className={styles.grid} columns={2} >
+    <Grid id={styles.grid} columns={2} >
       <HistoryWindow />
-      <Container className={styles.chatWindow} disableGutters maxWidth={false} >
+      <Container id={styles.chatWindow} disableGutters maxWidth={false} >
         <Container style={{display: 'flex', justifyContent: 'end', width: '100%', margin: 0,  padding: 0}} maxWidth={false}>
           <LoginDialog />
           <LoginButton />
@@ -43,17 +43,17 @@ export const ChatWindow: React.FC<IChatWindow> = () => {
         <MessageInput />
         <Snackbar open={errorSnackbarOpen} autoHideDuration={6000} onClose={(event, reason) => handleClose(changeErrorSnackbarOpen, changeError, event, reason)}>
           <Alert variant='filled' severity='error'>
-            <Container className={styles.errorContainer}>
+            <Container id={styles.errorContainer}>
               <span>An error has occured ID: {error.errorId}{error.errorCode}. Please grab the id and report it <a target='_blank' href={`https://docs.google.com/forms/d/e/1FAIpQLSdeYGmzArgg5yrtOgAGf9bDxvIHQIpZ_EfeEluEPOQVy-jfzg/viewform#${error.errorId}${error.errorCode}`}>here</a></span>
-              <IconButton className={styles.closeIcon} onClick={() => handleClose(changeErrorSnackbarOpen, changeError)}>
+              <IconButton id={styles.closeIcon} onClick={() => handleClose(changeErrorSnackbarOpen, changeError)}>
                 <CloseIcon />
               </IconButton>
             </Container>
           </Alert>
         </Snackbar>
-         <Container className={styles.bugReportContainer}>
-          <Link className={styles.bugReportLink} target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLSdeYGmzArgg5yrtOgAGf9bDxvIHQIpZ_EfeEluEPOQVy-jfzg/viewform?usp=sf_link'>
-            <BugReportIcon className={styles.bugReportIcon} />
+         <Container id={styles.bugReportContainer}>
+          <Link id={styles.bugReportLink} target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLSdeYGmzArgg5yrtOgAGf9bDxvIHQIpZ_EfeEluEPOQVy-jfzg/viewform?usp=sf_link'>
+            <BugReportIcon id={styles.bugReportIcon} />
           </Link>
         </Container>
       </Container>

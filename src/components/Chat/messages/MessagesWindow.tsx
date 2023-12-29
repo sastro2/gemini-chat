@@ -44,8 +44,8 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(
-    <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }} style={{}}>
-        <Container className={styles.messagesWindow} maxWidth={false}>
+    <SimpleBar id={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }} style={{}}>
+        <Container id={styles.messagesWindow} maxWidth={false}>
         {currentMessageHistory.messages.map((message, index) => {
           if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
             return <AutorenewOutlinedIcon key={message.parts + index} />

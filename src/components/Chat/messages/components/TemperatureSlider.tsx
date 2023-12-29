@@ -30,12 +30,12 @@ export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
   }, [showTempInput, changeShowTempInput]);
 
   return(
-    <Container className={styles.temperatureSliderContainer} ref={sliderContainerRef} maxWidth={false}>
+    <Container id={styles.temperatureSliderContainer} ref={sliderContainerRef} maxWidth={false}>
         {showTempInput
-          ?<Slider className={styles.temperatureSlider} orientation='vertical' color={getTempButtonColor(currentMessageHistory.temperature)} value={currentMessageHistory.temperature} onChange={(e, newValue) => [changeCurrentMessageHistory({...currentMessageHistory, temperature: newValue as number}), changeHistoryTemp(currentMessageHistory.id, newValue as number)]} defaultValue={currentMessageHistory.temperature} min={0} max={1} step={0.1}  valueLabelDisplay='auto'/>
+          ?<Slider id={styles.temperatureSlider} orientation='vertical' color={getTempButtonColor(currentMessageHistory.temperature)} value={currentMessageHistory.temperature} onChange={(e, newValue) => [changeCurrentMessageHistory({...currentMessageHistory, temperature: newValue as number}), changeHistoryTemp(currentMessageHistory.id, newValue as number)]} defaultValue={currentMessageHistory.temperature} min={0} max={1} step={0.1}  valueLabelDisplay='auto'/>
           : null}
         <Tooltip title={<div>Adjust the temperature to increase randomness in Geminis responses making it more or less creative. Learn more about <a target='blanc' href={'https://ai.google.dev/docs/concepts#model_parameters'}>temperature</a></div>} placement='left' arrow>
-          <Button className={styles.temperatureButton} variant='contained' color={getTempButtonColor(currentMessageHistory.temperature)}  onClick={() => changeShowTempInput(!showTempInput)}>
+          <Button id={styles.temperatureButton} variant='contained' color={getTempButtonColor(currentMessageHistory.temperature)}  onClick={() => changeShowTempInput(!showTempInput)}>
             <LocalFireDepartmentOutlinedIcon fontSize={getTempButtonSize(currentMessageHistory.temperature)} />
           </Button>
         </Tooltip>

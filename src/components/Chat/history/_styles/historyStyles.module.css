@@ -1,5 +1,5 @@
 /* HistoryWindow */
-.historyWindow {
+#historyWindow {
   width: 15%;
   min-width: 200px;;
   display: flex;
@@ -12,7 +12,7 @@
 }
 
 /* HistoriesList */
-.historiesList {
+#historiesList {
   gap: 5px;
   display: flex;
   justify-content: flex-start;
@@ -22,14 +22,14 @@
   padding: 0;
   padding-right: 20px;
 }
-.simplebar {
+#simplebar {
   display: flex;
   width: 100%;
   overflow: auto;
 }
 
 /* HistoryDateDivider */
-.historyDateDivider {
+#historyDateDivider {
   color: var(--textColor);
   padding-left: 4px;
   margin-bottom: 10px;
@@ -37,7 +37,7 @@
 }
 
 /* NewChatButton */
-.newChatButton {
+#newChatButton {
   justify-content: 'center';
   align-items: 'center';
   line-height: 0;
@@ -46,7 +46,7 @@
 }
 
 /* HistorySingle */
-.historySingle {
+#historySingle {
   border: 2px solid var(--historyBackground);
   border-radius: 10px;
   padding: 0.5% 3.5% 0.5% 3.5%;
@@ -60,7 +60,7 @@
   position: relative;
   width: 100%;
 }
-.historySingleSelected {
+#historySingleSelected {
   border: 2px solid var(--buttonColor);
   border-radius: 10px;
   padding: 0.5% 3.5% 0.5% 3.5%;
@@ -74,13 +74,13 @@
   position: relative;
   width: 100%;
 }
-.fadeContainer {
+#fadeContainer {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: flex-end
 }
-.fade {
+#fade {
   position: absolute;
   background: linear-gradient(to right, transparent, var(--historyBackground) 60%);
   width: 25%;
@@ -91,7 +91,7 @@
   align-items: center;
   padding: 0;
 }
-.verticalMenuContainer {
+#verticalMenuContainer {
   color: var(--historyColor);
   padding: 0;
   margin: 0;
@@ -101,6 +101,6 @@
   justify-content: flex-end;
   align-items: center;
 }
-.verticalMenu {
+#verticalMenu {
   padding-bottom: 2px;
 }

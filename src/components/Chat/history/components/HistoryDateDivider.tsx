@@ -65,7 +65,7 @@ export const HistoryDateDivider: React.FC<IHistoryDateDivider> = ({timeBracket})
   }
 
   return (
-    <Container className={styles.historyDateDivider}>
+    <Container id={styles.historyDateDivider}>
       <Typography fontSize='small'>{text}</Typography>
     </Container>
   )

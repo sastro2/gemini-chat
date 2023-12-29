@@ -30,7 +30,7 @@ export const LoginDialog = () => {
             Login
         </DialogTitle>
         <DialogContent>
-          <Container className={styles.loginDialog}>
+          <Container id={styles.loginDialog}>
             <TextField onChange={(e) => [changeUsernameInput(e.currentTarget.value)]} autoFocus placeholder='Username' />
             <TextField onChange={(e) => [changePasswordInput(e.currentTarget.value)]} placeholder='Password' type='password' onKeyDown={async(e) => {e.code === 'Enter'? await login(loginData, loginMethods): null}} />
           </Container>

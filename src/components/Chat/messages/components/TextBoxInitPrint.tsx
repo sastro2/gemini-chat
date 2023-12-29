@@ -14,9 +14,9 @@ export const TextBoxInitPrint: React.FC<ITextBoxInitPrint> = (props) => {
   const {message, index, textToRender} = props;
 
   return(
-    <Container className={message.role === 'model'? styles.textBoxModel: styles.textBoxUser}>
+    <Container id={message.role === 'model'? styles.textBoxModel: styles.textBoxUser}>
       {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
-      <Container className={message.role === 'model'? styles.textBoxTextModel: styles.textBoxTextUser}>
+      <Container id={message.role === 'model'? styles.textBoxTextModel: styles.textBoxTextUser}>
         <ReactMarkdown>{textToRender}</ReactMarkdown>
       </Container>
       {message.role === 'user'? <MessageIcon index={index} role='user' />: null}

@@ -12,6 +12,6 @@ export const NewChatButton: React.FC<INewChatButton> = () => {
   const {changeCurrentMessageHistory, aiResponseLoading, typingOutResponse} = useMessagesStore();
 
   return (
-    <Button className={styles.newChatButton} onClick={() => (!aiResponseLoading && !typingOutResponse)? changeCurrentMessageHistory(defaultCurrentMessageHistory): null}variant='contained' size='small'>New Chat &nbsp; <AddCircleOutlineOutlinedIcon /></Button>
+    <Button id={styles.newChatButton} onClick={() => (!aiResponseLoading && !typingOutResponse)? changeCurrentMessageHistory(defaultCurrentMessageHistory): null}variant='contained' size='small'>New Chat &nbsp; <AddCircleOutlineOutlinedIcon /></Button>
   )
 };

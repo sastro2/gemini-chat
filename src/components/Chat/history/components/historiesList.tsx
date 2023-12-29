@@ -37,8 +37,8 @@ export const HistoriesList: React.FC<IHistoriesList> = () => {
     // #endregion
 
   return(
-    <SimpleBar className={styles.simplebar}>
-      <Container className={styles.historiesList}  maxWidth={false}>
+    <SimpleBar id={styles.simplebar}>
+      <Container id={styles.historiesList}  maxWidth={false}>
         {componentArray.map((component) => {return  component})}
       </Container>
     </SimpleBar>

@@ -7,7 +7,7 @@ interface IHistoryWindow {}
 
 export const HistoryWindow: React.FC<IHistoryWindow> = () => {
   return (
-    <Container className={styles.historyWindow} maxWidth='xs'>
+    <Container id={styles.historyWindow} maxWidth='xs'>
       <NewChatButton />
       <HistoriesList />
     </Container>

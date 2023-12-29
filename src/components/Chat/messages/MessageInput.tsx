@@ -9,7 +9,7 @@ interface IMessageInput {}
 export const MessageInput: React.FC<IMessageInput> = () => {
 
   return (
-    <Container className={styles.messageInput} maxWidth={false}>
+    <Container id={styles.messageInput} maxWidth={false}>
       <MessageInputTextField />
       <TemperatureSlider />
       <SendButton />
