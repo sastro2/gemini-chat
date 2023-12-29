@@ -41,9 +41,18 @@ const addMessageToHistory = (message: Message, histories: History[]): History[] 
   return newHistory
 };
 
+const addHistory = (history: History, histories: History[]): History[] => {
+  const newHistories = [...histories, history];
+  const sortedHistories = newHistories.sort((a, b) => {
+    return new Date(b.created).getTime() - new Date(a.created).getTime();
+  });
+
+  return sortedHistories
+}
+
 export const useHistoryStore = create<IHistoryStore>(set => ({
 histories: [],
-addHistory: (history: History) => set(state => ({histories: [...state.histories, history]})),
+addHistory: (history: History) => set(state => ({histories: addHistory(history, state.histories)})),
 addMessageToHistory: (message: Message) => set(state => ({histories: addMessageToHistory(message, state.histories)})),
 changeHistories: (histories: History[]) => set({histories}),
 changeHistoryTemp: (historyId: number, temperature: number) => set(state => ({histories: changeHistoryTemp(historyId, temperature, state.histories)})),

@@ -119,12 +119,13 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
     history.messages = messages.filter((message: Message) => message.historyId === history.id);
     newHistories.push(history);
   });
+  const sortedHistories = newHistories.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
 
   // return with initial histories
   return {
     props: {
       auth: true,
-      histories: newHistories,
+      histories: sortedHistories,
     },
   };
 };

@@ -66,9 +66,10 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
     history.messages = messages.filter((message: Message) => message.historyId === history.id);
     newHistories.push(history);
   });
+  const sortedHistories = newHistories.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
 
   // #region change states
-  changeHistories(newHistories);
+  changeHistories(sortedHistories);
   changeCurrentMessageHistory(defaultCurrentMessageHistory);
   changeLoggedIn(loginRes.auth);
   changeLoginDialogOpen(false);

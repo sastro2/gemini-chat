@@ -13,6 +13,7 @@ import { useLoginStore } from '../../_state/Session/loginStore';
 import { LoginData } from '../../methods/_Bundles/login/LoginData';
 import { LoginMethods } from '../../methods/_Bundles/login/LoginMethods';
 import { login } from '../../methods/login/login';
+import styles from './_styles/loginStyles.module.css';
 
 export const LoginDialog = () => {
   const {loginDialogOpen, passwordInput, usernameInput, changeLoginDialogOpen, changePasswordInput, changeUsernameInput, changeLoggedIn} = useLoginStore();
@@ -29,7 +30,7 @@ export const LoginDialog = () => {
             Login
         </DialogTitle>
         <DialogContent>
-          <Container style={{display: 'flex', flexDirection: 'column', gap: 2}}>
+          <Container className={styles.loginDialog}>
             <TextField onChange={(e) => [changeUsernameInput(e.currentTarget.value)]} autoFocus placeholder='Username' />
             <TextField onChange={(e) => [changePasswordInput(e.currentTarget.value)]} placeholder='Password' type='password' onKeyDown={async(e) => {e.code === 'Enter'? await login(loginData, loginMethods): null}} />
           </Container>

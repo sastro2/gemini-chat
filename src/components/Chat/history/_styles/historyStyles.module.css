@@ -1,0 +1,106 @@
+/* HistoryWindow */
+.historyWindow {
+  width: 15%;
+  min-width: 200px;;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.5%;
+  gap: 2%;
+  position: relative;
+}
+
+/* HistoriesList */
+.historiesList {
+  gap: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  padding-right: 20px;
+}
+.simplebar {
+  display: flex;
+  width: 100%;
+  overflow: auto;
+}
+
+/* HistoryDateDivider */
+.historyDateDivider {
+  color: var(--textColor);
+  padding-left: 4px;
+  margin-bottom: 10px;
+  margin-top: 20px
+}
+
+/* NewChatButton */
+.newChatButton {
+  justify-content: 'center';
+  align-items: 'center';
+  line-height: 0;
+  min-height: '35px';
+  box-shadow: var((--shadow));
+}
+
+/* HistorySingle */
+.historySingle {
+  border: 2px solid var(--historyBackground);
+  border-radius: 10px;
+  padding: 0.5% 3.5% 0.5% 3.5%;
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  background: var(--historyBackground);
+  min-width: 0;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  position: relative;
+  width: 100%;
+}
+.historySingleSelected {
+  border: 2px solid var(--buttonColor);
+  border-radius: 10px;
+  padding: 0.5% 3.5% 0.5% 3.5%;
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  background: var(--historyBackground);
+  min-width: 0;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  position: relative;
+  width: 100%;
+}
+.fadeContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end
+}
+.fade {
+  position: absolute;
+  background: linear-gradient(to right, transparent, var(--historyBackground) 60%);
+  width: 25%;
+  height: 100%;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+}
+.verticalMenuContainer {
+  color: var(--historyColor);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  height: auto;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+}
+.verticalMenu {
+  padding-bottom: 2px;
+}

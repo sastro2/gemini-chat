@@ -6,7 +6,7 @@ import { useLoginStore } from '../../../../_state/Session/loginStore';
 import { SendUserMessageData } from '../../../../methods/_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../../../methods/_Bundles/chat/SendUserMessageMethods';
 import { sendUserMessageToGemini } from '../../../../methods/chat/messages/sendUserMessageToGemini';
-import { StyleSheet } from '../../../../styleSheet';
+import styles from '../_styles/messageStyles.module.css';
 
 interface ISendButton {}
 
@@ -38,6 +38,6 @@ export const SendButton: React.FC<ISendButton> = () => {
   // #endregion
 
   return(
-    <Button onClick={() => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, 'Enter')} style={{justifyContent: 'center', alignItems: 'center', lineHeight: 0, backgroundColor: StyleSheet.buttons, boxShadow: StyleSheet.shadow}} variant='contained'>Send</Button>
+    <Button className={styles.sendButton} onClick={() => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, 'Enter')} variant='contained'>Send</Button>
   )
 };

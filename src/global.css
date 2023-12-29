@@ -1,10 +1,17 @@
+:root {
+  --baseBackground: #1A1A1D;
+  --historyBackground: #363538;
+  --historyColor: lightGray;
+  --messageWindowBackground: #232326;
+  --textColor: white;
+  --borderColor: #bed4e9;
+  --buttonColor: #3373b0;
+  --shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 3px 3px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+
 body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
   height: 100vh;
-}
-
-.simplebar-scrollbar:before {
-  background: white;
 }

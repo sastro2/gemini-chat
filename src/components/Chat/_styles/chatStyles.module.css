@@ -1,0 +1,47 @@
+/* ChatWindow */
+.grid {
+  height: 100vh;
+  width: 100vw;
+  padding: 1.5% 1.5% 1.5% 1.5%;
+  display: flex;
+  background-color: var(--baseBackground);
+  overflow: hidden;
+}
+.chatWindow {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+}
+.errorContainer {
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.closeIcon{
+  margin: 0;
+  padding: 0;
+}
+.bugReportContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  background: var(--baseBackground);
+}
+.bugReportIcon {
+  color: #030303;
+}
+.bugReportIcon:hover {
+  opacity: 0.8;
+}
+.bugReportLink {
+  padding: 0;
+}

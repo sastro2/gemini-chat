@@ -7,7 +7,7 @@ import { useLoginStore } from '../../../../_state/Session/loginStore';
 import { SendUserMessageData } from '../../../../methods/_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../../../methods/_Bundles/chat/SendUserMessageMethods';
 import { sendUserMessageToGemini } from '../../../../methods/chat/messages/sendUserMessageToGemini';
-import { StyleSheet } from '../../../../styleSheet';
+import styles from '../_styles/messageStyles.module.css';
 
 interface IMessageInputTextField {}
 
@@ -39,6 +39,6 @@ export const MessageInputTextField: React.FC<IMessageInputTextField> = () => {
   // #endregion
 
   return(
-    <TextField onKeyDown={(e) => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} style={{ width: '100%', backgroundColor: StyleSheet.background.messages.messageWindowContainer, boxShadow: StyleSheet.shadow }} sx={{ input: {color: StyleSheet.characters, borderColor: StyleSheet.borders} }} autoFocus placeholder='Message Gemini' />
+    <TextField className={styles.messageInputTextField} onKeyDown={(e) => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} sx={{ input: {color: 'white'} }} autoFocus placeholder='Message Gemini' />
   )
 };

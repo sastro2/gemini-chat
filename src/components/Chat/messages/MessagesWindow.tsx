@@ -4,7 +4,7 @@ import { Container } from '@mui/material';
 import { createRef, useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
-import { StyleSheet } from '../../../styleSheet';
+import styles from './_styles/messageStyles.module.css';
 import { TextBox } from './components/TextBox';
 import { TextBoxInitPrint } from './components/TextBoxInitPrint';
 
@@ -44,8 +44,8 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(
-    <SimpleBar scrollableNodeProps={{ ref: scrollableNodeRef }} style={{height: '100%', border: `${StyleSheet.background.messages.messageWindowContainer} 0.01px solid`, borderRadius: '20px', padding: '5% 17% 5% 17%', overflow: 'auto', overflowX: 'hidden', backgroundColor: StyleSheet.background.messages.messageWindowContainer, boxShadow: StyleSheet.shadow}}>
-        <Container style={{height: '100%', display: 'flex', flexDirection: 'column'}} maxWidth={false}>
+    <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }} style={{}}>
+        <Container className={styles.messagesWindow} maxWidth={false}>
         {currentMessageHistory.messages.map((message, index) => {
           if((index === currentMessageHistory.messages.length - 1) && message.role === 'model' && aiResponseLoading){
             return <AutorenewOutlinedIcon key={message.parts + index} />

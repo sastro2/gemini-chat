@@ -1,4 +1,5 @@
 import { Container } from '@mui/material';
+import styles from './_styles/messageStyles.module.css';
 import { MessageInputTextField } from './components/MessageInputTextField';
 import { SendButton } from './components/SendButton';
 import { TemperatureSlider } from './components/TemperatureSlider';
@@ -8,7 +9,7 @@ interface IMessageInput {}
 export const MessageInput: React.FC<IMessageInput> = () => {
 
   return (
-    <Container style={{ width: '100%', display: 'flex', padding: 0, margin: 0, gap: '0.5%'}} maxWidth={false}>
+    <Container className={styles.messageInput} maxWidth={false}>
       <MessageInputTextField />
       <TemperatureSlider />
       <SendButton />

@@ -1,7 +1,9 @@
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Container, Typography } from '@mui/material';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
 import { History } from '../../../../_types/History';
 import { StyleSheet } from '../../../../styleSheet';
+import styles from '../_styles/historyStyles.module.css';
 
 interface IHistory {
   history: History;
@@ -13,8 +15,19 @@ export const HistorySingle: React.FC<IHistory> = (props) => {
   const {aiResponseLoading, typingOutResponse, currentMessageHistory, changeCurrentMessageHistory} = useMessagesStore();
 
   return(
-    <Container key={history.messages[1].parts + index} onClick={() => (!aiResponseLoading && !typingOutResponse)? [changeCurrentMessageHistory(history)]: null} style={{border: `${currentMessageHistory.id === history.id? '#2196F3': StyleSheet.background.history.historyContainer} 2px solid`, borderRadius: '10px', padding: '0.5% 3.5% 0.5% 3.5%', display: 'flex', whiteSpace: 'nowrap', overflow: 'hidden', backgroundColor: StyleSheet.background.history.historyContainer, minWidth: 0, cursor: 'pointer', boxShadow: StyleSheet.shadow}}>
-      <Typography style={{color: StyleSheet.background.history.historyColor}}>{history.messages[0].role === 'user'? history.messages[0].parts: history.messages[1].parts}</Typography>
+    <Container key={history.messages[1].parts + index} onClick={() => (!aiResponseLoading && !typingOutResponse)? [changeCurrentMessageHistory(history)]: null} className={currentMessageHistory.id === history.id? styles.historySingleSelected: styles.historySingle}>
+      <Typography style={{color: StyleSheet.background.history.historyColor}}>
+        {history.messages[0].role === 'user'? history.messages[0].parts: history.messages[1].parts}
+      </Typography>
+      <Container className={styles.fadeContainer} maxWidth={false}>
+        <Container className={styles.fade}>
+          {currentMessageHistory.id === history.id
+            ? <Container className={styles.verticalMenuContainer} maxWidth={false}>
+                <MoreVertIcon className={styles.verticalMenu} fontSize='small' />
+              </Container>
+            : null}
+        </Container>
+      </Container>
     </Container>
   )
 };

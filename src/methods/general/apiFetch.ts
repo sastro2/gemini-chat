@@ -1,4 +1,3 @@
-import { defaultCurrentMessageHistory } from '../../_state/Chat/messageWindow/messagesStore';
 import { ApiFetchFunctions } from '../../_types/ApiFetchFunctions';
 import { ApiMethods } from '../../_types/ApiMethods';
 import { Error } from '../../_types/Error';
@@ -6,6 +5,7 @@ import { apiFetchResultGuard } from '../Typeguards/apiFetchBodyGuard';
 import { apiFetchOptionsServerGuard } from '../Typeguards/apiFetchOptionsServerGuard';
 
 export type ApiFetchBody = {
+  error?: Error;
   [key: string]: unknown;
 };
 
@@ -83,19 +83,16 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
   if(response.status === 401) {
     changeLoggedIn(false);
     clearHistories();
-    changeCurrentMessageHistory(defaultCurrentMessageHistory);
+    changeCurrentMessageHistory({id: 0, temperature: 0.2, messages: [{parts: 'Please login to use Chat Gemini', initialPrint: true, historyId: 0, role: 'model'}], created: new Date()});
 
-    if(error.errorId !== 0){
-      changeError(error);
-      changeErrorSnackbarOpen(true);
-    }
-
-    return {error: {errorId: 0, errorCode: 0}, body: {}};
+    return {error: {errorId: 0, errorCode: 800}, body: {}};
   }
 
   if(error.errorId !== 0){
     changeError(data.error);
     changeErrorSnackbarOpen(true);
+
+    return {error: {errorId: 0, errorCode: 0}, body: {}};
   }
   // #endregion
 

@@ -12,7 +12,8 @@ export const validateAccessOptions = async(cookie: string | undefined, res: Next
   if(!stringifiedAccessOptions && !prefetch) {
     const errorId = await insertError(20401, 'Access options not found in cookie.');
 
-    res.status(401).end().send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
+    res.status(401).send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
+    res.end();
      return;
   }
 
@@ -21,7 +22,8 @@ export const validateAccessOptions = async(cookie: string | undefined, res: Next
   if(!accessOptionsGuard(accessOptions)) {
     const errorId = await insertError(21401, 'Access options not valid.');
 
-    res.status(401).end().send({auth: false, error: {errorCode: 21, errorId: errorId? errorId: 0}});
+    res.status(401).send({auth: false, error: {errorCode: 21, errorId: errorId? errorId: 0}});
+    res.end();
      return;
   }
 
@@ -32,13 +34,15 @@ export const validateAccessOptions = async(cookie: string | undefined, res: Next
   if(!userAccessToken) {
     const errorId = await insertError(21401, 'Access token not valid.');
 
-    res.status(401).end().send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
+    res.status(401).send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
+    res.end();
      return;
   }
   if(userAccessToken !== accessToken) {
     const errorId = await insertError(21401, 'Access token not valid.');
 
-    res.status(401).end().send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
+    res.status(401).send({auth: false, error: {errorCode: 20, errorId: errorId? errorId: 0}});
+    res.end();
      return;
   }
 

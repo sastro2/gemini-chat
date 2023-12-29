@@ -6,7 +6,7 @@ import { StartGeminiChatResponseBody } from '../../../pages/api/endpoints/gemini
 import apiFetch, { ApiFetchBody } from '../../general/apiFetch';
 import { clientStartGeminiChatResponseBodyGuard } from '../../Typeguards/clientStartGeminiChatResponseBodyGuard';
 
-export const callGemini = async(currentMessageHistory: History, messageInput: string, temp: number, apiFetchFunctions: ApiFetchFunctions): Promise<Omit<StartGeminiChatResponseBody, 'error'>> => {
+export const callGemini = async(currentMessageHistory: History, messageInput: string, temp: number, apiFetchFunctions: ApiFetchFunctions): Promise<Omit<StartGeminiChatResponseBody, 'error'> | 'logout'> => {
   const geminiHistory: GeminiMessage[] = currentMessageHistory.messages.map((message) => {
 
     return {role: message.role, parts: message.parts};
@@ -15,9 +15,12 @@ export const callGemini = async(currentMessageHistory: History, messageInput: st
 
   const res: ApiFetchBody = await apiFetch('/api/endpoints/gemini/handleMessageGemini', ApiMethods.POST, {body: {message: messageInput, history:  geminiHistory, temp: temp}, functions: apiFetchFunctions});
 
-  if(!clientStartGeminiChatResponseBodyGuard(res)){
+  if(res.error?.errorCode === 800)  return 'logout';
 
-    return {message: 'Sorry there has been an error please relog.', auth: false};
+  if(!clientStartGeminiChatResponseBodyGuard(res)){
+    if(res.error) return {message: `Sorry there has been an error please relog and consider reporting it in the bug report form in the bottom left. ${res.error.errorId? `ID: ${res.error.errorId}`: ''}`, auth: false};
+
+    return {message: 'Sorry there has been an unknown error please relog.', auth: false};
   }
 
   return res;

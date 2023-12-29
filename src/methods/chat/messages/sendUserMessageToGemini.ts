@@ -36,11 +36,14 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
     const response: ApiFetchBody = await apiFetch('/api/endpoints/histories/addHistory', ApiMethods.POST, {functions: apiFetchFunctions, body: {historyTemperature: currentMessageHistory.temperature}});
 
     if(!dbHistoryGuard(response.history)){
-      // frontend error logging
-      return;
-    }
-    if(!response.history){
-      // frontend error logging
+      if(response.error){
+        changeMessageInput('');
+        return;
+      }
+
+      changeError({errorId: 0, errorCode: 50});
+      changeMessageInput('');
+
       return;
     }
 
@@ -70,6 +73,8 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
   };
 
   changeMessageInput('');
-  await messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);
+  const authorized = await messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);
+  if(!authorized) return;
+  console.log('hi')
   await changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature, apiFetchFunctions);
 };

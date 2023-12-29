@@ -5,7 +5,7 @@ import { MessageGeminiMethods } from '../../_Bundles/chat/MessageGeminiMethods';
 import { callGemini } from './callGemini';
 import { saveMessageToDb } from './saveMessageToDb';
 
-export const messageGemini = async(messageGeminiData: MessageGeminiData, messageGeminiMethods: MessageGeminiMethods) => {
+export const messageGemini = async(messageGeminiData: MessageGeminiData, messageGeminiMethods: MessageGeminiMethods): Promise<boolean> => {
   const { currentMessageHistory, messageInput } = messageGeminiData;
   const { changeCurrentMessageHistory, changeAiResponseLoading, addMessageToHistory, clearHistories, changeLoggedIn, changeError, changeErrorSnackbarOpen } = messageGeminiMethods;
 
@@ -32,6 +32,13 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
       initialPrint: true,
       historyId: currentMessageHistory.id
     },
+    //3 - in case user is not logged in anymore
+    {
+      role: 'model',
+      parts: 'Please login to use Chat Gemini',
+      initialPrint: true,
+      historyId: 0
+    }
   ];
 
   changeAiResponseLoading(true);
@@ -45,23 +52,32 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
     changeError: changeError,
     changeErrorSnackbarOpen: changeErrorSnackbarOpen,
   };
-  const geminiResponse: Omit<StartGeminiChatResponseBody, 'error'> = await callGemini(currentMessageHistory, messageInput, currentMessageHistory.temperature, apiFetchFunctions);
+  const geminiResponse: Omit<StartGeminiChatResponseBody, 'error'> | 'logout' = await callGemini(currentMessageHistory, messageInput, currentMessageHistory.temperature, apiFetchFunctions);
+
+  //if the user is not logged in anymore, log them out
+  if(geminiResponse === 'logout'){
+    changeAiResponseLoading(false);
+    changeCurrentMessageHistory({...currentMessageHistory, messages: [newMessages[3]]});
+
+    return false
+  }
+
+  newMessages[1].parts = geminiResponse.message? geminiResponse.message: 'Sorry, there has been an unknown error.';
+  newMessages[2].parts = geminiResponse.message? geminiResponse.message: 'Sorry, there has been an unknown error.';
 
   //if not logged in, send not logged in message
   if(!geminiResponse.auth){
-    changeCurrentMessageHistory({...currentMessageHistory, messages: [{role: 'user', parts: messageInput, initialPrint: true, historyId: 0}, {role: 'model', parts: 'Please login to use Chat Gemini', initialPrint: false, historyId: 0}]})
+    changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]});
+    addMessageToHistory(newMessages[2]);
     changeAiResponseLoading(false);
 
-    return;
+    return false;
   }
-
-  newMessages[1].parts = geminiResponse.message? geminiResponse.message: 'Sorry, I did not understand that.';
-  newMessages[2].parts = geminiResponse.message? geminiResponse.message: 'Sorry, I did not understand that.';
 
   changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]})
   addMessageToHistory(newMessages[2]);
   changeAiResponseLoading(false);
   await saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}, apiFetchFunctions);
   await saveMessageToDb(newMessages[2], apiFetchFunctions);
-  return;
+  return true;
 };
