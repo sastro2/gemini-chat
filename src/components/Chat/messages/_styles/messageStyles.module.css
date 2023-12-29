@@ -89,7 +89,7 @@
   box-shadow: var(--shadow);
   max-width: '';
 }
-#text {
+.text {
   overflow-wrap: break-word;
 }
 

@@ -16,7 +16,7 @@ export const TextBox: React.FC<ITexBox> = (props) => {
     <Container id={message.role === 'model'? styles.textBoxModel: styles.textBoxUser} key={message.parts + index}>
       {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
       <Container id={message.role === 'model'? styles.textBoxTextModel: styles.textBoxTextUser}>
-        <ReactMarkdown id={styles.text}>{message.parts}</ReactMarkdown>
+        <ReactMarkdown className={styles.text}>{message.parts}</ReactMarkdown>
       </Container>
       {message.role === 'user'? <MessageIcon index={index} role='user' />: null}
     </Container>
