@@ -1,4 +1,5 @@
 import '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -21,6 +22,16 @@ interface IEntry {
   histories: History[];
 }
 
+const theme = createTheme({
+  overrides: {
+    MuiTextField: {
+      root: {
+        width: '100%', // Set the width to 100%
+      },
+    },
+  },
+});
+
 export default function Entry(props: IEntry) {
   const {changeLoggedIn} = useLoginStore();
   const {changeHistories} = useHistoryStore();
@@ -34,7 +45,11 @@ export default function Entry(props: IEntry) {
     }
   }, [changeLoggedIn, changeHistories, props.auth, props.histories]);
 
-  return <ChatWindow />;
+  return (
+    <ThemeProvider theme={theme}>
+      <ChatWindow />
+    </ThemeProvider>
+  );
 }
 
 

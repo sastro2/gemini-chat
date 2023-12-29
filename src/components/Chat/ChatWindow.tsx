@@ -35,7 +35,7 @@ export const ChatWindow: React.FC<IChatWindow> = () => {
     <Grid id={styles.grid} columns={2} >
       <HistoryWindow />
       <Container id={styles.chatWindow} disableGutters maxWidth={false} >
-        <Container style={{display: 'flex', justifyContent: 'end', width: '100%', margin: 0,  padding: 0}} maxWidth={false}>
+        <Container style={{display: 'flex', justifyContent: 'end', width: '100%', margin: 0}} maxWidth={false} disableGutters>
           <LoginDialog />
           <LoginButton />
         </Container>
