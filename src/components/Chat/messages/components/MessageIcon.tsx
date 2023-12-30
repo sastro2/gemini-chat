@@ -9,9 +9,10 @@ interface IMessageIcon {
 }
 
 export const MessageIcon: React.FC<IMessageIcon> = (props) => {
-  const {currentMessageHistory} = useMessagesStore();
+  const {currentMessageHistory, aiResponseLoading} = useMessagesStore();
 
   if((props.index !== currentMessageHistory.messages.length - 1) && (props.index !== currentMessageHistory.messages.length - 2)) return null;
+  if(aiResponseLoading && props.role === 'model') return null;
 
   if(props.role === 'model'){
     return <SmartToyOutlined id={styles.messageIconModel} fontSize='large'/>

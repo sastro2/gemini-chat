@@ -40,7 +40,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
         changeCurrentMessageHistory(newHistory);
         changeTypingOutResponse(false);
       }
-    }, 800 / currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length);
+    }, 800 / currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length > 0.8? 0.8: 800 / currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length);
   }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(
@@ -56,7 +56,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
           }
 
           // if model response is currently loading render typing indicator below last message
-          if(index === currentMessageHistory.messages.length - 1 && aiResponseLoading){
+          if(index === currentMessageHistory.messages.length - 1 && aiResponseLoading && message.role === 'user'){
             return(
               <Container id={styles.typingIndicatorTextBoxContainer} key={message.parts + index}>
                 <TextBox message={message} index={index} />
