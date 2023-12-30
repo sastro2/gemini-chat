@@ -1,8 +1,13 @@
-import { Button } from '@mui/material';
+import { Button, ButtonOwnProps } from '@mui/material';
 import { useLoginStore } from '../../_state/Session/loginStore';
 
-interface ILoginButton {
+interface ILoginButton {}
 
+const buttonProps: ButtonOwnProps = {
+  variant: "contained",
+  color: "primary",
+  size: 'small',
+  sx: {backgroundColor: '#363538', ':hover': {opacity: '90%', backgroundColor: '#363538'}}
 }
 
 export const LoginButton: React.FC<ILoginButton> = () => {
@@ -11,7 +16,7 @@ export const LoginButton: React.FC<ILoginButton> = () => {
   if(loggedIn) return null;
 
   return (
-    <Button variant="contained" color="primary" onClick={() => changeLoginDialogOpen(true)}>
+    <Button {...buttonProps} onClick={() => changeLoginDialogOpen(true)}>
       Login
     </Button>
   );

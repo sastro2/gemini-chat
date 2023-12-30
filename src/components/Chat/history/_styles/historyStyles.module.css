@@ -104,3 +104,6 @@
 #verticalMenu {
   padding-bottom: 2px;
 }
+#text {
+  color: var(--historyColor);
+}

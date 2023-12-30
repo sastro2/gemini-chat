@@ -1,4 +1,5 @@
 import '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -6,6 +7,7 @@ import {
 } from 'next';
 import React, { useEffect } from 'react';
 import { useHistoryStore } from '../_state/Chat/historyWindow/historyStore';
+import { useMediaQueryStore } from '../_state/Page/mediaQueryStore';
 import { useLoginStore } from '../_state/Session/loginStore';
 import { ApiMethods } from '../_types/ApiMethods';
 import { History } from '../_types/History';
@@ -24,6 +26,17 @@ interface IEntry {
 export default function Entry(props: IEntry) {
   const {changeLoggedIn} = useLoginStore();
   const {changeHistories} = useHistoryStore();
+  const { changeFrameSize } = useMediaQueryStore();
+
+  const desktopSizeBoolean = useMediaQuery('(min-width: 850px)' );
+  const tabletSizeBoolean = useMediaQuery('(min-width: 300px) and (max-width: 849px)');
+
+  useEffect(() => {
+    if(desktopSizeBoolean) changeFrameSize('desktop');
+    if(tabletSizeBoolean) changeFrameSize('tablet');
+    if(!desktopSizeBoolean && !tabletSizeBoolean) changeFrameSize('mobile');
+
+  }, [desktopSizeBoolean, tabletSizeBoolean, changeFrameSize])
 
   useEffect(() => {
     if(props.auth){

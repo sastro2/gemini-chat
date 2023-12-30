@@ -1,0 +1,12 @@
+/* Header */
+#drawerContainer {
+  display: flex;
+  background-color: var(--baseBackground);
+  width: 220px;
+  height: 100vh;
+}
+#simplebar {
+  display: flex;
+  width: 100%;
+  overflow: auto;
+}
