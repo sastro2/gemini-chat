@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { TextField } from '@mui/material';
+import { TextField, TextFieldProps } from '@mui/material';
 import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historyStore';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
 import { useErrorStore } from '../../../../_state/Error/errorStore';
@@ -10,6 +9,12 @@ import { sendUserMessageToGemini } from '../../../../methods/chat/messages/sendU
 import styles from '../_styles/messageStyles.module.css';
 
 interface IMessageInputTextField {}
+
+const textFieldProps: TextFieldProps = {
+  sx: { color: 'white', width: '100%' },
+  autoFocus: true,
+  placeholder: 'Message Gemini',
+}
 
 export const MessageInputTextField: React.FC<IMessageInputTextField> = () => {
   const {messageInput, aiResponseLoading, currentMessageHistory, typingOutResponse, changeMessageInput, changeCurrentMessageHistory, changeAiReponseLoading} = useMessagesStore();
@@ -39,6 +44,6 @@ export const MessageInputTextField: React.FC<IMessageInputTextField> = () => {
   // #endregion
 
   return(
-    <TextField id={styles.messageInputTextField} onKeyDown={(e) => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} sx={{ color: 'white', width: '100%' }} autoFocus placeholder='Message Gemini' />
+    <TextField id={styles.messageInputTextField} {...textFieldProps} onKeyDown={(e) => sendUserMessageToGemini(sendUserMessageData, SendUserMessageMethods, e.code)} onChange={(e) => {changeMessageInput(e.currentTarget.value)}} value={messageInput} />
   )
 };

@@ -1,17 +1,16 @@
 import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
-import { Button, Container, Slider, Tooltip } from '@mui/material';
+import { Button, Container, Tooltip } from '@mui/material';
 import { useEffect, useRef } from 'react';
-import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historyStore';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
 import { getTempButtonColor } from '../../../../methods/chat/messages/getTempButtonColor';
 import { getTempButtonSize } from '../../../../methods/chat/messages/getTempButtonSize';
 import styles from '../_styles/messageStyles.module.css';
+import { SliderComponent } from './SliderComponent';
 
 interface ITemperatureSlider {}
 
 export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
-  const {currentMessageHistory, changeCurrentMessageHistory, showTempInput, changeShowTempInput} = useMessagesStore();
-  const {changeHistoryTemp} = useHistoryStore();
+  const {currentMessageHistory, showTempInput, changeShowTempInput} = useMessagesStore();
 
   const sliderContainerRef = useRef<HTMLDivElement>(null);
   //handle click outside of slider
@@ -31,9 +30,7 @@ export const TemperatureSlider: React.FC<ITemperatureSlider> = () => {
 
   return(
     <Container id={styles.temperatureSliderContainer} ref={sliderContainerRef} maxWidth={false}>
-        {showTempInput
-          ?<Slider id={styles.temperatureSlider} orientation='vertical' color={getTempButtonColor(currentMessageHistory.temperature)} value={currentMessageHistory.temperature} onChange={(e, newValue) => [changeCurrentMessageHistory({...currentMessageHistory, temperature: newValue as number}), changeHistoryTemp(currentMessageHistory.id, newValue as number)]} defaultValue={currentMessageHistory.temperature} min={0} max={1} step={0.1}  valueLabelDisplay='auto'/>
-          : null}
+        <SliderComponent showTempInput={showTempInput} />
         <Tooltip title={<div>Adjust the temperature to increase randomness in Geminis responses making it more or less creative. Learn more about <a target='blanc' href={'https://ai.google.dev/docs/concepts#model_parameters'}>temperature</a></div>} placement='left' arrow>
           <Button id={styles.temperatureButton} variant='contained' color={getTempButtonColor(currentMessageHistory.temperature)}  onClick={() => changeShowTempInput(!showTempInput)}>
             <LocalFireDepartmentOutlinedIcon fontSize={getTempButtonSize(currentMessageHistory.temperature)} />
