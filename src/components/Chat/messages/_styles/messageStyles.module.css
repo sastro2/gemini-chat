@@ -118,3 +118,30 @@
   background-color: var(--messageWindowBackground);
   box-shadow: var(--shadow);
 }
+#typingIndicatorTextBoxContainer {
+  display: flex;
+  flex-direction: column;
+  white-space: pre-wrap;
+  justify-content: flex-end;
+  padding: 0.5%;
+  position: relative;
+}
+
+/* TypingIndicator */
+@keyframes typing {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+#typingIndicator {
+  display: inline-block;
+  font-size: 1.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 1s infinite;
+}
