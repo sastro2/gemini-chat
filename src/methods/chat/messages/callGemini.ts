@@ -18,7 +18,11 @@ export const callGemini = async(currentMessageHistory: History, messageInput: st
   if(res.error?.errorCode === 800)  return 'logout';
 
   if(!clientStartGeminiChatResponseBodyGuard(res)){
-    if(res.error) return {message: `Sorry there has been an error please relog and consider reporting it in the bug report form in the bottom left. ${res.error.errorId? `ID: ${res.error.errorId}`: ''}`, auth: false};
+    if(res.error){
+      if(res.error.errorCode !== 10) return {message: `Sorry there has been an error please relog and consider reporting it in the bug report form in the bottom left. ${res.error.errorId? `ID: ${res.error.errorId}`: ''}`, auth: false};
+
+      return {message: 'Sorry, we are having trouble communicating with Gemini please try sending your message again.', auth: true};
+    }
 
     return {message: 'Sorry there has been an unknown error please relog.', auth: false};
   }

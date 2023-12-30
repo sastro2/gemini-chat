@@ -11,8 +11,7 @@ import {
   Snackbar,
 } from '@mui/material';
 import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react';
-import { defaultError, useErrorStore } from '../../_state/Error/errorStore';
-import { Error } from '../../_types/Error';
+import { useErrorStore } from '../../_state/Error/errorStore';
 import { LoginButton } from '../Session/LoginButton';
 import { LoginDialog } from '../Session/LoginDialog';
 import styles from './_styles/chatStyles.module.css';
@@ -22,12 +21,11 @@ import { MessagesWindow } from './messages/MessagesWindow';
 
 interface IChatWindow {}
 
-const handleErrorClose = (changeErrorSnackbarOpen: (boolean: boolean) => void, changeError: (error: Error) => void, event?: React.SyntheticEvent | Event, reason?: string) => {
+const handleErrorClose = (changeErrorSnackbarOpen: (boolean: boolean) => void, reason?: string) => {
   if (reason === 'clickaway') {
     return;
   }
 
-  changeError(defaultError);
   changeErrorSnackbarOpen(false);
 };
 
@@ -42,12 +40,12 @@ const alertLinkProps: DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>,
 }
 const bugLinkProps: LinkProps = {
   target: '_blank',
-  href: 'https://docs.google.com/forms/d/e/1FAIpQLSdeYGmzArgg5yrtOgAGf9bDxvIHQIpZ_EfeEluEPOQVy-jfzg/viewform?usp=sf_link'
+  href: 'https://docs.google.com/forms/d/e/1FAIpQLSdeYGmzArgg5yrtOgAGf9bDxvIHQIpZ_EfeEluEPOQVy-jfzg/viewform?usp=sf_link#'
 }
 // #endregion
 
 export const ChatWindow: React.FC<IChatWindow> = () => {
-  const { errorSnackbarOpen, error, changeErrorSnackbarOpen, changeError } = useErrorStore();
+  const { errorSnackbarOpen, error, changeErrorSnackbarOpen } = useErrorStore();
 
   return (
     <Grid id={styles.grid} columns={2} >
@@ -59,20 +57,20 @@ export const ChatWindow: React.FC<IChatWindow> = () => {
         </Container>
         <MessagesWindow />
         <MessageInput />
-        <Snackbar open={errorSnackbarOpen} autoHideDuration={6000} onClose={(event, reason) => handleErrorClose(changeErrorSnackbarOpen, changeError, event, reason)}>
+        <Snackbar open={errorSnackbarOpen} autoHideDuration={6000} onClose={(_, reason) => handleErrorClose(changeErrorSnackbarOpen, reason)}>
           <Alert {...alertProps}>
             <Container id={styles.errorContainer}>
               <span>
                 An error has occured ID: {error.errorId}{error.errorCode}. Please grab the id and report it <a {...alertLinkProps} href={`${alertLinkProps.href}${error.errorId}${error.errorCode}`}>here</a>
               </span>
-              <IconButton id={styles.closeIcon} onClick={() => handleErrorClose(changeErrorSnackbarOpen, changeError)}>
+              <IconButton id={styles.closeIcon} onClick={() => handleErrorClose(changeErrorSnackbarOpen)}>
                 <CloseIcon />
               </IconButton>
             </Container>
           </Alert>
         </Snackbar>
          <Container id={styles.bugReportContainer}>
-          <Link id={styles.bugReportLink} {...bugLinkProps}>
+          <Link id={styles.bugReportLink} {...bugLinkProps} href={`${bugLinkProps.href}${error.errorId}${error.errorCode}`}>
             <BugReportIcon id={styles.bugReportIcon} />
           </Link>
         </Container>

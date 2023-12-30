@@ -46,7 +46,7 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
 
   const messagesRes: ApiFetchBody = await apiFetch(`/api/endpoints/messages/getMessagesByHistoryIds`, ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
   const confirmedMessages: Message[] = [];
-  console.log(messagesRes, confirmedMessages);
+
   if(Array.isArray(messagesRes.messages)) {
     messagesRes.messages.forEach((message: Message) => {
       if(messageGuard(message)){

@@ -75,6 +75,6 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
   changeMessageInput('');
   const authorized = await messageGemini(messageGeminiProps.messageGeminiData, messageGeminiProps.messageGeminiMethods);
   if(!authorized) return;
-  console.log('hi')
+
   await changeDbTemperatureById(currentMessageHistory.id, currentMessageHistory.temperature, apiFetchFunctions);
 };

@@ -92,7 +92,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
     changeError(data.error);
     changeErrorSnackbarOpen(true);
 
-    return {error: {errorId: 0, errorCode: 0}, body: {}};
+    return {error: {errorId: 0, errorCode: error.errorCode}, body: {}};
   }
   // #endregion
 
