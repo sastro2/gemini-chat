@@ -29,7 +29,7 @@ export default function Entry(props: IEntry) {
   const { changeFrameSize } = useMediaQueryStore();
 
   const desktopSizeBoolean = useMediaQuery('(min-width: 850px)' );
-  const tabletSizeBoolean = useMediaQuery('(min-width: 300px) and (max-width: 849px)');
+  const tabletSizeBoolean = useMediaQuery('(min-width: 400px) and (max-width: 849px)');
 
   useEffect(() => {
     if(desktopSizeBoolean) changeFrameSize('desktop');

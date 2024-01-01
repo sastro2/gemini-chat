@@ -55,7 +55,6 @@ const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiRe
         return;
       }
 
-
       resBody.auth = true;
 
       if((await aiRes.response).candidates){

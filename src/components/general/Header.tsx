@@ -38,7 +38,7 @@ export const Header: React.FC<IHeader> = () => {
       <IconButton {...iconButtonProps} onClick={() => changeDrawerOpen(true)}>
         <MenuIcon />
       </IconButton>
-        <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => changeDrawerOpen(false)} onOpen={() => changeDrawerOpen(true)}>
+        <SwipeableDrawer anchor='right' swipeAreaWidth={frameSize !== 'desktop'? 25: 0} open={drawerOpen} onClose={() => changeDrawerOpen(false)} onOpen={() => changeDrawerOpen(true)}>
           <SimpleBar id={genStyles.simplebar}>
             <Container id={genStyles.drawerContainer}>
               {loggedIn? <DrawerContent />: <DrawerContentLogin />}

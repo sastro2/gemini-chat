@@ -18,11 +18,11 @@ export const TextBoxInitPrint: React.FC<ITextBoxInitPrint> = (props) => {
   return(
     <Container id={message.role === 'model'? styles.textBoxModel: styles.textBoxUser}>
       {message.role === 'model'? <MessageIcon index={index} role='model' />: null}
-      <Container id={message.role === 'model'? styles.textBoxTextModel: styles.textBoxTextUser}>
-        <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
-          {textToRender}
-        </Markdown>
-      </Container>
+        <Container id={message.role === 'model'? styles.textBoxTextModel: styles.textBoxTextUser}>
+          <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
+            {textToRender}
+          </Markdown>
+        </Container>
       {message.role === 'user'? <MessageIcon index={index} role='user' />: null}
     </Container>
   )

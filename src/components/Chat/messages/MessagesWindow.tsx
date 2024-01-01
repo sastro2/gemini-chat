@@ -3,6 +3,7 @@ import { Container } from '@mui/material';
 import { createRef, useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
+import { useMediaQueryStore } from '../../../_state/Page/mediaQueryStore';
 import styles from './_styles/messageStyles.module.css';
 import { TextBox } from './components/TextBox';
 import { TextBoxInitPrint } from './components/TextBoxInitPrint';
@@ -13,6 +14,7 @@ interface IMessagesWindow {}
 export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   const [text, setText] = useState<string>('');
   const {currentMessageHistory, aiResponseLoading, changeCurrentMessageHistory, changeTypingOutResponse} = useMessagesStore();
+  const { frameSize } = useMediaQueryStore();
 
   const scrollableNodeRef = createRef();
 
@@ -44,7 +46,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(
-    <SimpleBar id={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
+    <SimpleBar id={frameSize !== 'desktop'? styles.simpleBarMobile: styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
         <Container id={styles.messagesWindow} maxWidth={false}>
         {currentMessageHistory.messages.map((message, index) => {
           // if message hasnt been printed type it out

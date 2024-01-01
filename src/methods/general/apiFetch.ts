@@ -69,6 +69,14 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
     body: JSON.stringify({...options.body}),
   });
 
+  // handle this error before parsing res to avoid crashing
+  if(response.status === 500){
+    changeError({errorId: 0, errorCode: 10});
+    changeErrorSnackbarOpen(true);
+
+    return {error: {errorId: 0, errorCode: 10}, body: {}};
+  }
+
   const data: unknown = await response.json();
 
   //if the data is not of type ApiFetchBody, then return an empty object
