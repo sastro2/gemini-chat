@@ -31,6 +31,7 @@ export const Header: React.FC<IHeader> = () => {
   const { loggedIn } = useLoginStore();
 
   return (
+    // move login styles to genStyles at some point
     <Container id={frameSize === 'desktop'? styles.loginDialogContainer: styles.loginDialogContainerTablet} maxWidth={false} disableGutters>
       <LoginDialog />
       <LoginButton />

@@ -1,11 +1,13 @@
 export const getTimeBracket = (date: Date): 'today' | 'yesterday' | 'week' | 'month' | 'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'okt' | 'nov' | 'dec' | 'year' => {
   const now = new Date();
   const secondsInYear = 60 * 60 * 24 * 365;
+  const lessThanYearOld = now.getTime() / 1000 - date.getTime() / 1000 < secondsInYear;
+  const lessThanMonthOld = now.getTime() / 1000 - date.getTime() / 1000 < secondsInYear / 12;
 
-  if(now.getDate() === date.getDate() && now.getMonth() === date.getMonth() && now.getFullYear() === date.getFullYear()) return 'today';
-  if(now.getDate() - date.getDate() === 1 && now.getMonth() === date.getMonth() && now.getFullYear() === date.getFullYear()) return 'yesterday';
-  if(now.getDate() - date.getDate() < 7 && now.getMonth() === date.getMonth() && now.getFullYear() === date.getFullYear()) return 'week';
-  if(now.getMonth() === date.getMonth() && now.getFullYear() === date.getFullYear()) return 'month';
+  if(now.getDate() === date.getDate() && lessThanYearOld && lessThanMonthOld) return 'today';
+  if(now.getDate() - date.getDate() === 1 && lessThanYearOld && lessThanMonthOld) return 'yesterday';
+  if(now.getDate() - date.getDate() < 7 && lessThanYearOld && lessThanMonthOld) return 'week';
+  if(now.getMonth() === date.getMonth() && lessThanYearOld) return 'month';
   if((now.getTime() / 1000 - date.getTime() / 1000) > secondsInYear) return 'year';
   if(date.getMonth() === 0) return 'jan';
   if(date.getMonth() === 1) return 'feb';
