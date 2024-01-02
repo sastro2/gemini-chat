@@ -52,7 +52,7 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
 
     changeCurrentMessageHistory({...currentMessageHistory, id: currentMessageHistory.id});
 
-    const newHistory: History = {...response.history, messages: [...currentMessageHistory.messages]};
+    const newHistory: History = {...response.history, messages: [...currentMessageHistory.messages], temperature: parseInt(response.history.temperature)};
     addHistory(newHistory);
   }
 
