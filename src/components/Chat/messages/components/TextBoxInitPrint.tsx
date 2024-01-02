@@ -48,7 +48,6 @@ export const TextBoxInitPrint: React.FC<ITextBoxInitPrint> = (props) => {
     if(scrollbarInAutoScrollRange && scrollbarElement && !userScrolling){
       scrollbarElement.scrollTo({
         top: scrollbarElement.scrollHeight,
-        behavior: 'instant'
       });
     }
 
@@ -80,7 +79,7 @@ export const TextBoxInitPrint: React.FC<ITextBoxInitPrint> = (props) => {
         changeCurrentMessageHistory(newHistory);
         changeTypingOutResponse(false);
       }
-    }, 0.4);
+    }, 800/currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length > 10? 10: 800/currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length);
   }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
 
   return(

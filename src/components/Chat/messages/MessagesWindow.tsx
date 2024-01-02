@@ -1,6 +1,6 @@
 import 'simplebar-react/dist/simplebar.min.css';
 import { Container } from '@mui/material';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { useMediaQueryStore } from '../../../_state/Page/mediaQueryStore';
@@ -16,6 +16,14 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
   const { frameSize } = useMediaQueryStore();
 
   const scrollableNodeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if(scrollableNodeRef.current){
+      scrollableNodeRef.current.scrollTo({
+        top: scrollableNodeRef.current.scrollHeight,
+      });
+    }
+  }, [aiResponseLoading])
 
   return(
     <SimpleBar id={frameSize !== 'desktop'? styles.simpleBarMobile: styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
