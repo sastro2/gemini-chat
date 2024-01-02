@@ -41,7 +41,7 @@ export default function Saved(props: ISaved) {
 export const getServerSideProps: GetServerSideProps<ISaved> = async(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<ISaved>> => {
   const accessString = context.params?.accessString;
 
-  const result = await apiFetch('/api/endpoints/savedHistories/prefetch/getSavedHistory', ApiMethods.POST, {body: {accessString}, username: 'sascha', accessToken: 'ttrsrG4bnWuLCLmYkZvIsQtfzjjUKutI'});
+  const result = await apiFetch('/api/endpoints/savedHistories/prefetch/getSavedHistory', ApiMethods.POST, {body: {accessString}, username: 'sascha', accessToken: process.env.ACCESS_TOKEN? process.env.ACCESS_TOKEN: ''});
 
   if(!result.messages) {
     return {

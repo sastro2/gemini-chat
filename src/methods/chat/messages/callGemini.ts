@@ -19,6 +19,7 @@ export const callGemini = async(currentMessageHistory: History, messageInput: st
 
   if(!clientStartGeminiChatResponseBodyGuard(res)){
     if(res.error){
+      if(res.error.errorCode === 11) return {message: 'Sorry, we have detected an unsafe response from Gemini. Please try again with a different message or change the safety settings on your profile page.', auth: false};
       if(res.error.errorCode !== 10) return {message: `Sorry there has been an error please consider reporting it in the bug report form in the bottom left. ${res.error.errorId? `ID: ${res.error.errorId}`: ''}`, auth: false};
 
       return {message: 'Sorry, we are having trouble communicating with Gemini please try sending your message again.', auth: true};
