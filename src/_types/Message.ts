@@ -3,4 +3,5 @@ export type Message = {
   parts: string;
   initialPrint: boolean;
   historyId: number;
+  created: Date;
 }

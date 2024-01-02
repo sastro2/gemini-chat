@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
 import { Message } from '../../../../_types/Message';
-import { insertMessage } from '../../../../methods/dataAccess/messages/INSERT/insertMessage';
+import { insertMessages } from '../../../../methods/dataAccess/messages/INSERT/insertMessage';
 import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
 
 type AddMessageReqBody = {
-  message: Message;
+  messages: Message[];
+  created: number [];
 };
 
 type AddMessageNextApiReq = Omit<NextApiRequest, 'body'> & {
@@ -14,7 +15,7 @@ type AddMessageNextApiReq = Omit<NextApiRequest, 'body'> & {
 
 type AddMessageNextApiResponseBody = DefaultApiResponseBody;
 
-const addMessage = async(req: AddMessageNextApiReq, res: NextApiResponse<AddMessageNextApiResponseBody>) => {
+const addMessages = async(req: AddMessageNextApiReq, res: NextApiResponse<AddMessageNextApiResponseBody>) => {
   const resBody: AddMessageNextApiResponseBody = {auth: false, error: {errorId: 0, errorCode: 0}};
 
   if(req.method !== 'POST') {res.status(405); return;}
@@ -27,12 +28,12 @@ const addMessage = async(req: AddMessageNextApiReq, res: NextApiResponse<AddMess
 
   resBody.auth = true;
 
-  const { message } = req.body;
+  const { messages, created } = req.body;
 
-  await insertMessage(message);
+  await insertMessages(messages, created);
 
   res.status(200).send(resBody);
   return;
 };
 
-export default addMessage;
+export default addMessages;

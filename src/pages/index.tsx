@@ -1,5 +1,4 @@
 import '@mui/material/styles';
-import { useMediaQuery } from '@mui/material';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -7,12 +6,13 @@ import {
 } from 'next';
 import React, { useEffect } from 'react';
 import { useHistoryStore } from '../_state/Chat/historyWindow/historyStore';
-import { useMediaQueryStore } from '../_state/Page/mediaQueryStore';
 import { useLoginStore } from '../_state/Session/loginStore';
 import { ApiMethods } from '../_types/ApiMethods';
 import { History } from '../_types/History';
 import { Message } from '../_types/Message';
 import { ChatWindow } from '../components/Chat/ChatWindow';
+import { AlertDialog } from '../components/general/AlertDialog';
+import { DbHistory } from '../methods/dataAccess/_models/dbHistory';
 import apiFetch from '../methods/general/apiFetch';
 import { accessOptionsGuard } from '../methods/Typeguards/accessOptionsGuard';
 import { dbHistoryGuard } from '../methods/Typeguards/dbHistoryGuard';
@@ -26,28 +26,30 @@ interface IEntry {
 export default function Entry(props: IEntry) {
   const {changeLoggedIn} = useLoginStore();
   const {changeHistories} = useHistoryStore();
-  const { changeFrameSize } = useMediaQueryStore();
-
-  const desktopSizeBoolean = useMediaQuery('(min-width: 850px)' );
-  const tabletSizeBoolean = useMediaQuery('(min-width: 400px) and (max-width: 849px)');
-
-  useEffect(() => {
-    if(desktopSizeBoolean) changeFrameSize('desktop');
-    if(tabletSizeBoolean) changeFrameSize('tablet');
-    if(!desktopSizeBoolean && !tabletSizeBoolean) changeFrameSize('mobile');
-
-  }, [desktopSizeBoolean, tabletSizeBoolean, changeFrameSize])
 
   useEffect(() => {
     if(props.auth){
       changeLoggedIn(true);
-      changeHistories(props.histories);
+
+      const newHistories = props.histories.map((history: History) => {
+        const newMessages = history.messages.map((message: Message) => {
+          return {...message, created: new Date(message.created)}
+        })
+
+        return {...history, messages: newMessages}
+      });
+      changeHistories(newHistories);
     }else{
       changeLoggedIn(false);
     }
   }, [changeLoggedIn, changeHistories, props.auth, props.histories]);
 
-  return <ChatWindow />
+  return (
+    <>
+      <ChatWindow />
+      <AlertDialog />
+    </>
+  )
 }
 
 
@@ -92,7 +94,7 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
 
   // #region initial history/message fetch
   const historyRes = await apiFetch(`/api/endpoints/histories/prefetch/getAllHistoriesPrefetch`, ApiMethods.POST, {username, accessToken})
-  const confirmedHistories: History[] = [];
+  const confirmedHistories: DbHistory[] = [];
 
   if(Array.isArray(historyRes.history)){
     historyRes.history.forEach((history: History) => {
@@ -100,7 +102,7 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
     });
   }
 
-  const historyIds = confirmedHistories.map((history: History) => history.id);
+  const historyIds = confirmedHistories.map((history: DbHistory) => history.id);
 
   const messagesRes = await apiFetch(`/api/endpoints/messages/prefetch/getMessagesByHistoryIdsPrefetch`, ApiMethods.POST, {username, accessToken, body: {historyIds}});
   const confirmedMessages: Message[] = [];
@@ -112,8 +114,9 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
   }
   // #endregion
 
-  const histories: History[] = confirmedHistories;
+  const histories: DbHistory[] = confirmedHistories;
   const messages: Message[] = confirmedMessages;
+  const sortedMessages: Message[] = messages.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
 
   // if theres either no histories or no messages - return with initial histories = []
   if(!histories || !messages){
@@ -126,12 +129,14 @@ export const getServerSideProps: GetServerSideProps<IEntry> = async(context: Get
   }
 
   const newHistories: History[] = [];
-  histories.forEach((history: History) => {
+  histories.forEach((history: DbHistory) => {
     // if there are no messages for this history - skip it
-    if(!messages.find((message: Message) => message.historyId === history.id)) return;
+    if(!sortedMessages.find((message: Message) => message.historyId === history.id)) return;
 
-    history.messages = messages.filter((message: Message) => message.historyId === history.id);
-    newHistories.push(history);
+    const newHistory: History = {...history, temperature: parseInt(history.temperature), messages: []};
+    newHistory.messages = sortedMessages.filter((message: Message) => message.historyId === history.id);
+
+    newHistories.push(newHistory);
   });
   const sortedHistories = newHistories.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
 

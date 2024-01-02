@@ -3,7 +3,7 @@ import { StartGeminiChatResponseBody } from '../../../pages/api/endpoints/gemini
 import { MessageGeminiData } from '../../_Bundles/chat/MessageGeminiData';
 import { MessageGeminiMethods } from '../../_Bundles/chat/MessageGeminiMethods';
 import { callGemini } from './callGemini';
-import { saveMessageToDb } from './saveMessageToDb';
+import { saveMessagesToDb } from './saveMessageToDb';
 
 export const messageGemini = async(messageGeminiData: MessageGeminiData, messageGeminiMethods: MessageGeminiMethods): Promise<boolean> => {
   const { currentMessageHistory, messageInput } = messageGeminiData;
@@ -16,28 +16,32 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
       role: 'user',
       parts: messageInput,
       initialPrint: true,
-      historyId: currentMessageHistory.id
+      historyId: currentMessageHistory.id,
+      created: new Date()
     },
     //1 - model response to user to be rendered immediately
     {
       role: 'model',
       parts: '',
       initialPrint: false,
-      historyId: currentMessageHistory.id
+      historyId: currentMessageHistory.id,
+      created: new Date()
     },
     //2 - model response to user to be saved in db and history
     {
       role: 'model',
       parts: '',
       initialPrint: true,
-      historyId: currentMessageHistory.id
+      historyId: currentMessageHistory.id,
+      created: new Date()
     },
     //3 - in case user is not logged in anymore
     {
       role: 'model',
       parts: 'Please login to use Chat Gemini',
       initialPrint: true,
-      historyId: 0
+      historyId: 0,
+      created: new Date()
     }
   ];
 
@@ -77,7 +81,6 @@ export const messageGemini = async(messageGeminiData: MessageGeminiData, message
   changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, newMessages[0], newMessages[1]]})
   addMessageToHistory(newMessages[2]);
   changeAiResponseLoading(false);
-  await saveMessageToDb({role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id}, apiFetchFunctions);
-  await saveMessageToDb(newMessages[2], apiFetchFunctions);
+  await saveMessagesToDb([{role: 'user', parts: messageInput, initialPrint: true, historyId: currentMessageHistory.id, created: new Date()}, newMessages[2]], apiFetchFunctions);
   return true;
 };

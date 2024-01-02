@@ -1,5 +1,5 @@
 export type DbHistory = {
   id: number;
-  temperature: number;
+  temperature: string;
   created: Date;
 }

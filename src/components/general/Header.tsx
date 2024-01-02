@@ -11,6 +11,7 @@ import { usePageStore } from '../../_state/Page/pageStore';
 import { useLoginStore } from '../../_state/Session/loginStore';
 import styles from '../Chat/_styles/chatStyles.module.css';
 import { HistoriesList } from '../Chat/history/components/historiesList';
+import { NewChatButton } from '../Chat/history/components/NewChatButton';
 import { LoginButton } from '../Session/LoginButton';
 import { LoginDialog } from '../Session/LoginDialog';
 import genStyles from './_styles/generalStyles.module.css';
@@ -38,7 +39,7 @@ export const Header: React.FC<IHeader> = () => {
       <IconButton {...iconButtonProps} onClick={() => changeDrawerOpen(true)}>
         <MenuIcon />
       </IconButton>
-        <SwipeableDrawer anchor='right' swipeAreaWidth={frameSize !== 'desktop'? 25: 0} open={drawerOpen} onClose={() => changeDrawerOpen(false)} onOpen={() => changeDrawerOpen(true)}>
+        <SwipeableDrawer anchor='right' sx={{zIndex: 0}} swipeAreaWidth={frameSize !== 'desktop'? 15: 0} open={drawerOpen} onClose={() => changeDrawerOpen(false)} onOpen={() => changeDrawerOpen(true)}>
           <SimpleBar id={genStyles.simplebar}>
             <Container id={genStyles.drawerContainer}>
               {loggedIn? <DrawerContent />: <DrawerContentLogin />}
@@ -53,8 +54,18 @@ interface IDrawerContent {}
 
 const DrawerContent: React.FC<IDrawerContent> = () => {
   const { frameSize } = useMediaQueryStore();
+  const { changeDrawerOpen } = usePageStore();
 
-  if(frameSize !== 'desktop') return <HistoriesList />;
+  if(frameSize !== 'desktop'){
+    return(
+      <Container disableGutters>
+        <Container id={genStyles.newChatButtonContainerMobile} onClick={() => changeDrawerOpen(false)} disableGutters>
+          <NewChatButton />
+        </Container>
+        <HistoriesList />
+      </Container>
+    )
+  }
 
   return null;
 };
@@ -70,4 +81,4 @@ const DrawerContentLogin: React.FC<IDrawerContentLogin> = () => {
       </Container>
     </Container>
   )
-};
+}

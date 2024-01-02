@@ -13,11 +13,11 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
   const { currentMessageHistory, aiResponseLoading, messageInput, typingOutResponse, loggedIn } = sendUserMessageData;
   const { changeCurrentMessageHistory, changeAiReponseLoading, changeMessageInput, addHistory, addMessageToHistory, clearHistories, changeLoggedIn, changeError, changeErrorSnackbarOpen } = sendUserMessageMethods;
 
-  if(messageInput === '' || aiResponseLoading || keyCode !== 'Enter' || typingOutResponse) return;
+  if(messageInput === '' || aiResponseLoading || keyCode !== ('Enter' || '66' || '40') || typingOutResponse) return;
 
   //if not logged in, send not logged in message
   if(!loggedIn){
-    changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, {role: 'user', parts: messageInput, initialPrint: true, historyId: 0},  {role: 'model', parts: 'Please login to use Chat Gemini', initialPrint: false, historyId: 0}]});
+    changeCurrentMessageHistory({...currentMessageHistory, messages: [...currentMessageHistory.messages, {role: 'user', parts: messageInput, initialPrint: true, historyId: 0, created: new Date()},  {role: 'model', parts: 'Please login to use Chat Gemini', initialPrint: false, historyId: 0, created: new Date()}]});
     changeMessageInput('');
     changeAiReponseLoading(false);
     return;
@@ -52,7 +52,7 @@ export const sendUserMessageToGemini = async(sendUserMessageData: SendUserMessag
 
     changeCurrentMessageHistory({...currentMessageHistory, id: currentMessageHistory.id});
 
-    const newHistory: History = {...response.history, messages: [...currentMessageHistory.messages, {role: 'user', parts: messageInput, initialPrint: true, historyId: response.history.id} ]};
+    const newHistory: History = {...response.history, messages: [...currentMessageHistory.messages]};
     addHistory(newHistory);
   }
 

@@ -91,7 +91,7 @@ async function apiFetch(url: string, method: ApiMethods, options: FetchOptions):
   if(response.status === 401) {
     changeLoggedIn(false);
     clearHistories();
-    changeCurrentMessageHistory({id: 0, temperature: 0.2, messages: [{parts: 'Please login to use Chat Gemini', initialPrint: true, historyId: 0, role: 'model'}], created: new Date()});
+    changeCurrentMessageHistory({id: 0, temperature: 0.2, messages: [{parts: 'Please login to use Chat Gemini', initialPrint: true, historyId: 0, role: 'model', created: new Date()}], created: new Date()});
 
     return {error: {errorId: 0, errorCode: 800}, body: {}};
   }

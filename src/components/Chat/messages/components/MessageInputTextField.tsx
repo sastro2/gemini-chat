@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from '@mui/material';
 import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historyStore';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
-import { useErrorStore } from '../../../../_state/Error/errorStore';
+import { useErrorStore } from '../../../../_state/InputResponse/errorStore';
 import { useLoginStore } from '../../../../_state/Session/loginStore';
 import { SendUserMessageData } from '../../../../methods/_Bundles/chat/SendUserMessageData';
 import { SendUserMessageMethods } from '../../../../methods/_Bundles/chat/SendUserMessageMethods';

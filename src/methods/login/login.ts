@@ -5,6 +5,7 @@ import { History } from '../../_types/History';
 import { Message } from '../../_types/Message';
 import { LoginData } from '../_Bundles/login/LoginData';
 import { LoginMethods } from '../_Bundles/login/LoginMethods';
+import { DbHistory } from '../dataAccess/_models/dbHistory';
 import apiFetch, { ApiFetchBody } from '../general/apiFetch';
 import { dbHistoryGuard } from '../Typeguards/dbHistoryGuard';
 import { loginUserResponseBodyGuard } from '../Typeguards/loginUserResponseBodyGuard';
@@ -31,7 +32,7 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
 
   // #region fetch histories and messages
   const historiesRes: ApiFetchBody = await apiFetch(`/api/endpoints/histories/getAllHistoriesByUserId`, ApiMethods.POST, {functions: apiFetchFunctions});
-  const confirmedHistories: History[] = [];
+  const confirmedHistories: DbHistory[] = [];
 
 
   if(Array.isArray(historiesRes.histories)) {
@@ -42,7 +43,7 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
     });
   }
 
-  const historyIds = confirmedHistories.map((history: History) => history.id);
+  const historyIds = confirmedHistories.map((history: DbHistory) => history.id);
 
   const messagesRes: ApiFetchBody = await apiFetch(`/api/endpoints/messages/getMessagesByHistoryIds`, ApiMethods.POST, {functions: apiFetchFunctions, body: {historyIds}});
   const confirmedMessages: Message[] = [];
@@ -56,15 +57,19 @@ export const login = async(loginData: LoginData, loginMethods: LoginMethods): Pr
   }
   // #endregion
 
-  const histories: History[] = confirmedHistories;
+  const histories: DbHistory[] = confirmedHistories;
   const messages: Message[] = confirmedMessages;
+  const sortedMessages = messages.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
 
   const newHistories: History[] = [];
-  histories.forEach((history: History) => {
-    if(!messages.find((message: Message) => message.historyId === history.id)) return;
+  histories.forEach((history: DbHistory) => {
+    if(!sortedMessages.find((message: Message) => message.historyId === history.id)) return;
 
-    history.messages = messages.filter((message: Message) => message.historyId === history.id);
-    newHistories.push(history);
+    const newHistory: History = {...history, temperature: parseInt(history.temperature), messages: []};
+    newHistory.messages = sortedMessages.filter((message: Message) => message.historyId === history.id);
+
+    newHistory.messages = sortedMessages.filter((message: Message) => message.historyId === history.id);
+    newHistories.push(newHistory);
   });
   const sortedHistories = newHistories.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
 

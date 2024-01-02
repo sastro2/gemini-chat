@@ -11,5 +11,5 @@ export const usePageStore = create<IPageStore>(set => ({
   page: 'chat',
   drawerOpen: false,
   changeDrawerOpen: (drawerOpen: boolean) => set({ drawerOpen }),
-  changePage: (page: 'chat' | 'functions' | 'profile') => set({ page })
+  changePage: (page: 'chat' | 'functions' | 'profile') => set({ page }),
 }));

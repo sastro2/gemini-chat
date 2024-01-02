@@ -14,18 +14,6 @@
   flex-direction: column;
   gap: 1%;
 }
-#errorContainer {
-  margin: 0;
-  padding: 0;
-  gap: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#closeIcon{
-  margin: 0;
-  padding: 0;
-}
 #bugReportContainer {
   position: absolute;
   bottom: 0;

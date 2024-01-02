@@ -1,6 +1,6 @@
 import 'simplebar-react/dist/simplebar.min.css';
 import { Container } from '@mui/material';
-import { createRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { useMediaQueryStore } from '../../../_state/Page/mediaQueryStore';
@@ -12,38 +12,10 @@ import { TypingIndicator } from './components/TypingIndicator';
 interface IMessagesWindow {}
 
 export const MessagesWindow: React.FC<IMessagesWindow> = () => {
-  const [text, setText] = useState<string>('');
-  const {currentMessageHistory, aiResponseLoading, changeCurrentMessageHistory, changeTypingOutResponse} = useMessagesStore();
+  const {currentMessageHistory, aiResponseLoading} = useMessagesStore();
   const { frameSize } = useMediaQueryStore();
 
-  const scrollableNodeRef = createRef();
-
-  //type out Ai response
-  useEffect(() => {
-    if((currentMessageHistory.messages[currentMessageHistory.messages.length - 1].role === 'user') || (currentMessageHistory.messages[currentMessageHistory.messages.length - 1].initialPrint)) return;
-    changeTypingOutResponse(true);
-
-    let currentIndex = 0;
-
-    const intervalId = setInterval(() => {
-      setText((prevText) => prevText  + currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts[currentIndex]);
-
-      currentIndex += 1;
-
-      if (currentIndex === currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length) {
-        clearInterval(intervalId);
-        setText('')
-
-        const newMessage = currentMessageHistory.messages[currentMessageHistory.messages.length - 1];
-        newMessage.initialPrint = true;
-        const newHistory = currentMessageHistory;
-        currentMessageHistory.messages[currentMessageHistory.messages.length - 1] = newMessage;
-
-        changeCurrentMessageHistory(newHistory);
-        changeTypingOutResponse(false);
-      }
-    }, 800 / currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length > 0.8? 0.8: 800 / currentMessageHistory.messages[currentMessageHistory.messages.length - 1].parts.length);
-  }, [currentMessageHistory, changeCurrentMessageHistory, changeTypingOutResponse]);
+  const scrollableNodeRef = useRef<HTMLDivElement>(null);
 
   return(
     <SimpleBar id={frameSize !== 'desktop'? styles.simpleBarMobile: styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
@@ -51,10 +23,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
         {currentMessageHistory.messages.map((message, index) => {
           // if message hasnt been printed type it out
           if(!message.initialPrint){
-            if(message.parts.length === text.length) message.initialPrint = true;
-
-            const textToRender = text;
-            return <TextBoxInitPrint key={message.parts + index} message={message} index={index} textToRender={textToRender} />
+            return <TextBoxInitPrint key={message.parts + index} message={message} index={index} scrollableNodeRef={scrollableNodeRef} />
           }
 
           // if model response is currently loading render typing indicator below last message

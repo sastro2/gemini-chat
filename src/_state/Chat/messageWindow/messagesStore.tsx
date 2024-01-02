@@ -23,7 +23,8 @@ export const defaultCurrentMessageHistory: History = {
       role: 'model',
       parts: 'Hello, how can I help you today?',
       initialPrint: false,
-      historyId: 0
+      historyId: 0,
+      created: new Date(),
     }
   ]
 };

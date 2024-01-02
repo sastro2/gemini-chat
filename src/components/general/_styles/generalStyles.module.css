@@ -10,3 +10,38 @@
   width: 100%;
   overflow: auto;
 }
+#newChatButtonContainerMobile {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 5%;
+}
+
+/* AlertDialog */
+
+/* SuccessSnackbar */
+#successContainer {
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#successCloseIcon{
+  margin: 0;
+  padding: 0;
+}
+
+/* ErrorSnackbar */
+#errorContainer {
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#closeIcon{
+  margin: 0;
+  padding: 0;
+}

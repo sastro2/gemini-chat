@@ -52,6 +52,10 @@
   left: 15px;
   height: 200%;
 }
+#temperatureSliderMobile {
+  width: 100%;
+  display: 'flex';
+}
 #temperatureButton {
   height: 100%;
   padding: 0;
@@ -136,6 +140,28 @@ scrollbar-width: none;
   padding: 0;
   margin: 0;
   gap: 0.5%;
+}
+#messageInputMobile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  gap: 0.5%;
+}
+#temperatureInputMobile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#temperatureInputMobileIcon {
+  padding: 0% 2% 1.5% 1%;
+}
+#temperatureInputMobileIcon:active {
+  opacity: 80%;
+}
+#temperatureSliderMobileContainer {
+  padding-left: 0;
 }
 
 /* MessagesWindow */
