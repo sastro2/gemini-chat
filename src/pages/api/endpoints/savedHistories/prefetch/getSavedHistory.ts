@@ -63,7 +63,7 @@ const getSavedHistory = async(req: GetSavedHistoryNextApiReq, res: NextApiRespon
     return;
   }
 
-  resBody.messages = messages.slice(0, result.msgCount - 1);
+  resBody.messages = messages.slice(0, result.msgCount);
   res.status(200).send(resBody);
   return;
 };
