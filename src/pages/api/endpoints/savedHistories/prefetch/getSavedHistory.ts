@@ -51,19 +51,19 @@ const getSavedHistory = async(req: GetSavedHistoryNextApiReq, res: NextApiRespon
 
   resBody.auth = true;
 
-  const historyId = await selectSavedHistoryByAccessString(accessString);
-  if(!historyId) {
+  const result = await selectSavedHistoryByAccessString(accessString);
+  if(!result || !result.historyId || !result.msgCount) {
     res.status(200).send(resBody);
     return;
   }
 
-  const messages = await selectMessagesByHistoryIds([historyId]);
+  const messages = await selectMessagesByHistoryIds([result.historyId]);
   if(!messages) {
     res.status(200).send(resBody);
     return;
   }
 
-  resBody.messages = messages;
+  resBody.messages = messages.slice(0, result.msgCount - 1);
   res.status(200).send(resBody);
   return;
 };

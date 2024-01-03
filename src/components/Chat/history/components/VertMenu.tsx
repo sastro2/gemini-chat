@@ -15,6 +15,7 @@ import { useMediaQueryStore } from '../../../../_state/Page/mediaQueryStore';
 import { useLoginStore } from '../../../../_state/Session/loginStore';
 import { ApiFetchFunctions } from '../../../../_types/ApiFetchFunctions';
 import { ApiMethods } from '../../../../_types/ApiMethods';
+import { History } from '../../../../_types/History';
 import apiFetch from '../../../../methods/general/apiFetch';
 
 interface IVertMenu {
@@ -45,9 +46,9 @@ const handleDeleteButtonAction = (historyId: number, deleteButtonFunctions: ApiF
 };
 
 // save history to savedHistories table to share
-export const addSavedHistory = async(historyId: number, apiFetchFunctions: ApiFetchFunctions): Promise<{accessString: string, saved: boolean} | null> => {
+export const addSavedHistory = async(history: History, apiFetchFunctions: ApiFetchFunctions): Promise<{accessString: string, saved: boolean} | null> => {
 
-  const res = await apiFetch('./api/endpoints/savedHistories/addSavedHistory', ApiMethods.POST, {body: {historyId: historyId}, functions: apiFetchFunctions});
+  const res = await apiFetch('./api/endpoints/savedHistories/addSavedHistory', ApiMethods.POST, {body: {historyId: history.id, msgCount: history.messages.length}, functions: apiFetchFunctions});
 
   if(typeof res.accessString == 'string'){
     if(res.saved){
@@ -58,10 +59,10 @@ export const addSavedHistory = async(historyId: number, apiFetchFunctions: ApiFe
 
   return null;
 };
-const handleShareButtonAction = async(historyId: number, shareButtonFunctions: ApiFetchFunctions & ShareButtonFunctions) => {
+const handleShareButtonAction = async(history: History, shareButtonFunctions: ApiFetchFunctions & ShareButtonFunctions) => {
   const { changeSuccessMessage, changeSuccessSnackbarOpen } = shareButtonFunctions;
 
-  const res = await addSavedHistory(historyId, shareButtonFunctions)
+  const res = await addSavedHistory(history, shareButtonFunctions)
 
   if(res?.accessString){
     if(res.saved){
@@ -101,11 +102,10 @@ export const VertMenu: React.FC<IVertMenu> = () => {
     changeSuccessMessage: changeSuccessMessage,
     changeSuccessSnackbarOpen: changeSuccessSnackbarOpen,
   };
-  console.log(menuAnchorEl)
 
   return(
     <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={() =>  changeMenuAnchorEl(null)}>
-      <MenuItem dense={frameSize !== 'desktop'} sx={{padding: '3px 8px 3px 6px', fontSize: frameSize === 'desktop'? '16px': '12px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleShareButtonAction(currentMessageHistory.id, {...shareBtnFunctions, ...apiFetchFunctions})]}>
+      <MenuItem dense={frameSize !== 'desktop'} sx={{padding: '3px 8px 3px 6px', fontSize: frameSize === 'desktop'? '16px': '12px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleShareButtonAction(currentMessageHistory, {...shareBtnFunctions, ...apiFetchFunctions})]}>
         <IosShareIcon /> &nbsp; Share
       </MenuItem>
       <MenuItem dense={frameSize !== 'desktop'} sx={{padding: '3px 8px 3px 6px', color: 'red', fontSize: frameSize === 'desktop'? '16px': '12px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleDeleteButtonAction(currentMessageHistory.id, {...deleteBtnFunctions, ...apiFetchFunctions})]}>

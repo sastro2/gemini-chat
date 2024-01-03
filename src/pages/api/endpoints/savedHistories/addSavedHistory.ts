@@ -7,6 +7,7 @@ import { selectSavedHistoryByHistoryId } from '../../../../methods/dataAccess/sa
 import { confirmAccessClient } from '../../../../methods/server/confirmAccessClient';
 
 type AddSavedHistoryReqBody = {
+  msgCount: number;
   historyId: number;
 };
 
@@ -31,11 +32,18 @@ const addSavedHistory = async(req: AddSavedHistoryNextApiReq, res: NextApiRespon
 
   await confirmAccessClient(req.headers.cookie, res, resBody);
 
-  const { historyId } = req.body;
+  const { historyId, msgCount } = req.body;
 
-  const accessString = await selectSavedHistoryByHistoryId(historyId);
-  if(accessString) {
-    resBody.accessString = accessString;
+  const response = await selectSavedHistoryByHistoryId(historyId);
+
+  let historyExists: {accessString: string, msgCount: number} = {accessString: '', msgCount: 0};
+
+  response.map((savedHistory) => {
+    if(savedHistory.msgCount === msgCount) historyExists = savedHistory;
+  })
+
+  if(response && historyExists.accessString) {
+    resBody.accessString = historyExists.accessString;
     resBody.saved = true;
 
     res.status(200).send(resBody);
@@ -43,7 +51,7 @@ const addSavedHistory = async(req: AddSavedHistoryNextApiReq, res: NextApiRespon
   }
 
   const randomString = generateRandomString(32);
-  const acsString = await insertSavedHistory(historyId, randomString);
+  const acsString = await insertSavedHistory(historyId, randomString, msgCount);
 
   if(!acsString) {
     const errorId = await insertError(50500, 'Internal server error.');

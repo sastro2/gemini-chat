@@ -1,14 +1,20 @@
 import databaseInstance from '../../db';
 
-export async function selectSavedHistoryByHistoryId(historyId: number): Promise<string | null> {
+export async function selectSavedHistoryByHistoryId(historyId: number): Promise<{accessString: string, msgCount: number}[]> {
 
   const result = await databaseInstance`
-  SELECT "accessString"
+  SELECT "accessString", "msgCount"
   FROM public."savedHistories"
   WHERE "historyId" = ${historyId}
   `
 
-  if(result[0] && 'accessString' in result[0] && typeof result[0].accessString === 'string') return result[0].accessString
+  const confirmedSavedHistory: {accessString: string, msgCount: number}[] = [];
 
-  return null;
+  result.forEach((row) => {
+    if('accessString' in row && typeof row.accessString === 'string' && 'msgCount' in row && typeof row.msgCount === 'number'){
+      confirmedSavedHistory.push({accessString: row.accessString, msgCount: row.msgCount});
+    }
+  });
+
+  return confirmedSavedHistory;
 }

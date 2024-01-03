@@ -1,11 +1,11 @@
 import databaseInstance from '../../db';
 
-export async function insertSavedHistory(historyId: number, accessString: string): Promise<string | null> {
+export async function insertSavedHistory(historyId: number, accessString: string, msgCount: number): Promise<string | null> {
 
   const result = await databaseInstance`
   INSERT INTO public."savedHistories"(
-    "accessString", "historyId")
-    VALUES (${accessString}, ${historyId})
+    "accessString", "historyId", "msgCount")
+    VALUES (${accessString}, ${historyId}, ${msgCount})
     RETURNING "accessString"
   `
 
