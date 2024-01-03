@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultApiResponseBody } from '../../../../../_types/DefaultApiResponseBody';
 import { insertError } from '../../../../../methods/dataAccess/errors/INSERT/insertError';
-import { validateAccessOptions } from '../../../../../methods/server/validateAccessOptions';
+import { confirmAccessServer } from '../../../../../methods/server/confirmAccessServer';
 
 type AuthenticateUserReqBody = {
   accessToken: string;
@@ -19,13 +19,9 @@ const authenticateUserPrefetch = async(req: AuthenticateUserNextApiReq, res: Nex
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.body.accessToken, res, true, req.body.username);
-
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
-
   const { accessToken, username } = req.body;
+
+  await confirmAccessServer(accessToken, res, resBody, username);
 
   if(!accessToken || !username) {
     const errorId = await insertError(40400, 'Bad request.');

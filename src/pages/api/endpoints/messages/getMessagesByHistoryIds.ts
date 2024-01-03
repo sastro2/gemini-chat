@@ -3,7 +3,7 @@ import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBod
 import { Message } from '../../../../_types/Message';
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectMessagesByHistoryIds } from '../../../../methods/dataAccess/messages/SELECT/selectMessagesByHistoryIds';
-import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
+import { confirmAccessClient } from '../../../../methods/server/confirmAccessClient';
 
 type GetAllMessagesReqBody = {
   historyIds: number[];
@@ -22,11 +22,7 @@ const getMessagesByHistoryIds = async(req: GetAllMessagesNextApiReq, res: NextAp
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
-
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
+  await confirmAccessClient(req.headers.cookie, res, resBody);
 
   const { historyIds } = req.body;
 

@@ -4,10 +4,7 @@ import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBod
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { insertSavedHistory } from '../../../../methods/dataAccess/savedHistories/INSERT/insertSavedHistory';
 import { selectSavedHistoryByHistoryId } from '../../../../methods/dataAccess/savedHistories/SELECT/selectSavedHistoryByHistoryId';
-import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
-import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
-import { checkUserAccessToken } from '../../../../methods/server/checkUserAccessToken';
-import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
+import { confirmAccessClient } from '../../../../methods/server/confirmAccessClient';
 
 type AddSavedHistoryReqBody = {
   historyId: number;
@@ -32,28 +29,9 @@ const addSavedHistory = async(req: AddSavedHistoryNextApiReq, res: NextApiRespon
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
-
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
-
-  const userAccessToken = await selectAccessTokenByUsername(accessOptions.username);
-  await checkUserAccessToken(userAccessToken, res, accessOptions);
+  await confirmAccessClient(req.headers.cookie, res, resBody);
 
   const { historyId } = req.body;
-
-  const userId = await selectUserIdByUsername(accessOptions.username);
-
-  if(!userId) {
-    const errorId = await insertError(30401, 'User not found.');
-    resBody.error = {errorCode: 30, errorId: errorId? errorId: 0};
-
-    res.status(401).send(resBody);
-    return;
-  }
-
-  resBody.auth = true;
 
   const accessString = await selectSavedHistoryByHistoryId(historyId);
   if(accessString) {

@@ -141,13 +141,17 @@ scrollbar-width: none;
   margin: 0;
   gap: 0.5%;
 }
-#messageInputMobile {
+#messageInputMobileContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
   padding: 0;
   margin: 0;
   gap: 0.5%;
+}
+#messageInputMobile {
+  display: flex;
+  gap: 1.5%;
 }
 #temperatureInputMobile {
   display: flex;
@@ -169,6 +173,7 @@ scrollbar-width: none;
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 #simpleBar {
   height: 100%;
@@ -196,7 +201,16 @@ scrollbar-width: none;
   white-space: pre-wrap;
   justify-content: flex-end;
   padding: 0.5%;
-  position: relative;
+}
+#threeDotMenuContainer {
+  right: 0.5%;
+  top:95px;
+  position: fixed;
+}
+#threeDotMenuContainerMobile {
+  right: 8px;
+  top: 80px;
+  position: fixed;
 }
 
 /* TypingIndicator */

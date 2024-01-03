@@ -91,26 +91,6 @@
   align-items: center;
   padding: 0;
 }
-#verticalMenuContainer {
-  color: var(--historyColor);
-  padding: 0;
-  margin: 0;
-  display: flex;
-  height: auto;
-  width: 20px;
-  justify-content: flex-end;
-  align-items: center;
-  z-index: 1;
-}
-#verticalMenuContainer:hover {
-  opacity: 75%;
-}
-#verticalMenuContainer:active {
-  opacity: 50%;
-}
-#verticalMenuButton {
-  padding-bottom: 2px;
-}
 #text {
   color: var(--historyColor);
 }

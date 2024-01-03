@@ -11,6 +11,7 @@ import {
   useErrorStore,
 } from '../../../../_state/InputResponse/errorStore';
 import { useSuccessStore } from '../../../../_state/InputResponse/successStore';
+import { useMediaQueryStore } from '../../../../_state/Page/mediaQueryStore';
 import { useLoginStore } from '../../../../_state/Session/loginStore';
 import { ApiFetchFunctions } from '../../../../_types/ApiFetchFunctions';
 import { ApiMethods } from '../../../../_types/ApiMethods';
@@ -82,6 +83,7 @@ export const VertMenu: React.FC<IVertMenu> = () => {
   const { changeLoggedIn } = useLoginStore();
   const { changeCurrentMessageHistory, currentMessageHistory } = useMessagesStore();
   const { changeSuccessMessage, changeSuccessSnackbarOpen } = useSuccessStore();
+  const { frameSize } = useMediaQueryStore();
 
   const apiFetchFunctions: ApiFetchFunctions = {
     changeLoggedIn: changeLoggedIn,
@@ -99,13 +101,14 @@ export const VertMenu: React.FC<IVertMenu> = () => {
     changeSuccessMessage: changeSuccessMessage,
     changeSuccessSnackbarOpen: changeSuccessSnackbarOpen,
   };
+  console.log(menuAnchorEl)
 
   return(
     <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={() =>  changeMenuAnchorEl(null)}>
-      <MenuItem sx={{padding: '3px 8px 3px 6px', fontSize: '16px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleShareButtonAction(currentMessageHistory.id, {...shareBtnFunctions, ...apiFetchFunctions})]}>
+      <MenuItem dense={frameSize !== 'desktop'} sx={{padding: '3px 8px 3px 6px', fontSize: frameSize === 'desktop'? '16px': '12px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleShareButtonAction(currentMessageHistory.id, {...shareBtnFunctions, ...apiFetchFunctions})]}>
         <IosShareIcon /> &nbsp; Share
       </MenuItem>
-      <MenuItem sx={{padding: '3px 8px 3px 6px', color: 'red', fontSize: '16px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleDeleteButtonAction(currentMessageHistory.id, {...deleteBtnFunctions, ...apiFetchFunctions})]}>
+      <MenuItem dense={frameSize !== 'desktop'} sx={{padding: '3px 8px 3px 6px', color: 'red', fontSize: frameSize === 'desktop'? '16px': '12px', fontWeight: '425'}} onClick={() => [changeMenuAnchorEl(null), handleDeleteButtonAction(currentMessageHistory.id, {...deleteBtnFunctions, ...apiFetchFunctions})]}>
         <DeleteIcon color='error' /> &nbsp; Delete
       </MenuItem>
     </Menu>

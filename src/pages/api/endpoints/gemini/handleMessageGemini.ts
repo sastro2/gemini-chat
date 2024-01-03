@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
 import { Message } from '../../../../_types/Message';
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
-import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
+import { confirmAccessClient } from '../../../../methods/server/confirmAccessClient';
 
 type StartGeminiChatReqBody = {
   history: Message[];
@@ -29,7 +29,7 @@ const handleMessageGemini = async(req: StartGeminiChatNextApiReq, res: NextApiRe
 
       const resBody: StartGeminiChatResponseBody = {auth: false, error: {errorCode: 0, errorId: 0}, message: ''};
 
-      await validateAccessOptions(req.headers.cookie, res, false);
+      await confirmAccessClient(req.headers.cookie, res, resBody);
 
        const model = AI.getGenerativeModel({ model: 'gemini-pro' });
 

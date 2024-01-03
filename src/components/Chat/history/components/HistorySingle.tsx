@@ -1,10 +1,9 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Container, Typography } from '@mui/material';
-import { useHistoryStore } from '../../../../_state/Chat/historyWindow/historyStore';
 import { useMessagesStore } from '../../../../_state/Chat/messageWindow/messagesStore';
 import { useMediaQueryStore } from '../../../../_state/Page/mediaQueryStore';
 import { usePageStore } from '../../../../_state/Page/pageStore';
 import { History } from '../../../../_types/History';
+import { ThreeDotMenu } from '../../../general/ThreeDotMenu';
 import styles from '../_styles/historyStyles.module.css';
 
 interface IHistory {
@@ -16,7 +15,6 @@ export const HistorySingle: React.FC<IHistory> = (props) => {
   const {history, index} = props;
   const {aiResponseLoading, typingOutResponse, currentMessageHistory, changeCurrentMessageHistory} = useMessagesStore();
   const { changeDrawerOpen } = usePageStore();
-  const { changeMenuAnchorEl, changeMenuHistoryId } = useHistoryStore()
   const { frameSize } = useMediaQueryStore();
 
   if(!(0 in history.messages)|| !(1 in history.messages)) return(null);
@@ -29,9 +27,7 @@ export const HistorySingle: React.FC<IHistory> = (props) => {
       <Container id={styles.fadeContainer} maxWidth={false}>
         <Container id={styles.fade}>
           {(currentMessageHistory.id === history.id) && frameSize === 'desktop'
-            ? <Container id={styles.verticalMenuContainer} maxWidth={false} onClick={(e) => [(aiResponseLoading || typingOutResponse)? null: changeMenuAnchorEl(e.currentTarget), changeMenuHistoryId(history.id), e.stopPropagation()]}>
-                <MoreVertIcon id={styles.verticalMenuButton} fontSize='small' />
-              </Container>
+            ?<ThreeDotMenu historyId={history.id} />
             : null}
         </Container>
       </Container>

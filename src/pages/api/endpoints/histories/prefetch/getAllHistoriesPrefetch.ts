@@ -6,7 +6,7 @@ import { selectAllHistoriesByUserId } from '../../../../../methods/dataAccess/hi
 import { selectAccessTokenByUsername } from '../../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
 import { selectUserIdByUsername } from '../../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
 import { checkUserAccessToken } from '../../../../../methods/server/checkUserAccessToken';
-import { validateAccessOptions } from '../../../../../methods/server/validateAccessOptions';
+import { confirmAccessServer } from '../../../../../methods/server/confirmAccessServer';
 
 type GetAllHistoriesReqBody = {
   accessToken: string;
@@ -26,13 +26,9 @@ const getAllHistoriesPrefetch = async(req: GetAllHistoriesNextApiReq, res: NextA
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.body.accessToken, res, true, req.body.username);
-
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
-
   const { accessToken, username } = req.body;
+
+  await confirmAccessServer(accessToken, res, resBody, username);
 
   if(!req.body.accessToken) {
     const errorId = await insertError(22400, 'Bad auth request.');

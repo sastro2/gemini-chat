@@ -34,14 +34,17 @@ export const MessageInput: React.FC<IMessageInput> = () => {
 
   if(frameSize === 'mobile'){
     return(
-      <Container id={styles.messageInputMobile} maxWidth={false}>
+      <Container id={styles.messageInputMobileContainer} maxWidth={false}>
         <Container id={styles.temperatureInputMobile} disableGutters>
           <Tooltip open={tooltipOpen} onClose={() => setTooltipOpen(false)} onOpen={() => setTooltipOpen(true)} title={<div>Adjust the temperature to increase randomness in Geminis responses making it more or less creative. Learn more about <a target='blanc' href={'https://ai.google.dev/docs/concepts#model_parameters'}>temperature</a></div>}>
             <InfoOutlinedIcon id={styles.temperatureInputMobileIcon} ref={infoIconRef} onClick={() => setTooltipOpen(!tooltipOpen)} color='info' fontSize='small' />
           </Tooltip>
           <TemperatureSliderMobile />
         </Container>
-        <MessageInputTextField />
+        <Container id={styles.messageInputMobile} disableGutters>
+          <MessageInputTextField />
+          <SendButton />
+        </Container>
       </Container>
     )
   }

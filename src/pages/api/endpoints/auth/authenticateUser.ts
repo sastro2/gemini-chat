@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBody';
-import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
+import { confirmAccessClient } from '../../../../methods/server/confirmAccessClient';
 
 type AuthenticateUserResponseBody = DefaultApiResponseBody
 
@@ -9,11 +9,7 @@ const authenticateUser = async(req: NextApiRequest, res: NextApiResponse<Authent
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
-
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
+  await confirmAccessClient(req.headers.cookie, res, resBody);
 
   resBody.auth = true;
   res.status(200).send(resBody);

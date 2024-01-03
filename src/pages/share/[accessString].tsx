@@ -26,13 +26,15 @@ export default function Saved(props: ISaved) {
 
   if(messages.length === 0) messages = [{created: new Date(), parts: 'This chat does not exist or was deleted', role: 'model', initialPrint: false, historyId: 0}]
 
+  const sortedMessages: Message[] = messages.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
+
   return (
     <SimpleBar style={{display: 'flex', height: '100%'}}>
       <Container id={frameSize !== 'desktop'? styles.messagesContainerMobile: styles.messagesContainer} maxWidth={false}>
         <h2 style={{color: 'lightGray'}}>
         {messages[0].created.toLocaleDateString()}
         </h2>
-        <SavedWindow messages={messages} />
+        <SavedWindow messages={sortedMessages} />
       </Container>
     </SimpleBar>
   )

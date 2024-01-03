@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react';
 import SimpleBar from 'simplebar-react';
 import { useMessagesStore } from '../../../_state/Chat/messageWindow/messagesStore';
 import { useMediaQueryStore } from '../../../_state/Page/mediaQueryStore';
+import { ThreeDotMenu } from '../../general/ThreeDotMenu';
+import { VertMenu } from '../history/components/VertMenu';
 import styles from './_styles/messageStyles.module.css';
 import { TextBox } from './components/TextBox';
 import { TextBoxInitPrint } from './components/TextBoxInitPrint';
@@ -27,7 +29,13 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
 
   return(
     <SimpleBar id={frameSize !== 'desktop'? styles.simpleBarMobile: styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
-        <Container id={styles.messagesWindow} maxWidth={false}>
+      <Container id={styles.messagesWindow} maxWidth={false}>
+        {frameSize !== 'desktop'
+          ? <Container id={frameSize === 'mobile'? styles.threeDotMenuContainerMobile: styles.threeDotMenuContainer}>
+              <VertMenu />
+              <ThreeDotMenu historyId={currentMessageHistory.id} />
+            </Container>
+          : null}
         {currentMessageHistory.messages.map((message, index) => {
           // if message hasnt been printed type it out
           if(!message.initialPrint){

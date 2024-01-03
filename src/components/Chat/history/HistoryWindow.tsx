@@ -3,7 +3,6 @@ import { useMediaQueryStore } from '../../../_state/Page/mediaQueryStore';
 import styles from './_styles/historyStyles.module.css';
 import { HistoriesList } from './components/historiesList';
 import { NewChatButton } from './components/NewChatButton';
-import { VertMenu } from './components/VertMenu';
 
 interface IHistoryWindow {}
 
@@ -16,7 +15,6 @@ export const HistoryWindow: React.FC<IHistoryWindow> = () => {
     <Container id={styles.historyWindow} maxWidth='xs'>
       <NewChatButton />
       <HistoriesList />
-      <VertMenu />
     </Container>
   );
 };

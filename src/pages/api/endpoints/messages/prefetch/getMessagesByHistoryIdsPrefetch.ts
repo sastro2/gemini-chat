@@ -3,7 +3,7 @@ import { DefaultApiResponseBody } from '../../../../../_types/DefaultApiResponse
 import { Message } from '../../../../../_types/Message';
 import { insertError } from '../../../../../methods/dataAccess/errors/INSERT/insertError';
 import { selectMessagesByHistoryIds } from '../../../../../methods/dataAccess/messages/SELECT/selectMessagesByHistoryIds';
-import { validateAccessOptions } from '../../../../../methods/server/validateAccessOptions';
+import { confirmAccessServer } from '../../../../../methods/server/confirmAccessServer';
 
 type GetAllMessagesReqBody = {
   accessToken: string;
@@ -24,15 +24,9 @@ const getAllMessagesByHistoryIdsPrefetch = async(req: GetAllMessagesNextApiReq, 
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.body.accessToken, res, true, req.body.username);
+  const { accessToken, username, historyIds } = req.body;
 
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
-
-  resBody.auth = true;
-
-  const { historyIds } = req.body;
+  await confirmAccessServer(accessToken, res, resBody, username);
 
   if(!req.body.historyIds) {
     const errorId = await insertError(40400, 'Bad request.');

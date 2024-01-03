@@ -3,6 +3,7 @@ import { Container, Link, LinkProps } from '@mui/material';
 import { useErrorStore } from '../../_state/InputResponse/errorStore';
 import { useMediaQueryStore } from '../../_state/Page/mediaQueryStore';
 import styles from './_styles/chatStyles.module.css';
+import { VertMenu } from './history/components/VertMenu';
 
 interface IChatAbsolutes {}
 
@@ -22,6 +23,7 @@ export const ChatAbsolutes: React.FC<IChatAbsolutes> = () => {
         <Link id={styles.bugReportLink} {...bugLinkProps} href={`${bugLinkProps.href}${error.errorId}${error.errorCode}`}>
           <BugReportIcon id={styles.bugReportIcon} />
         </Link>
+        <VertMenu />
       </Container>: null}
     </>
   )

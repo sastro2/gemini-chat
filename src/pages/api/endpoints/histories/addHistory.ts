@@ -3,10 +3,7 @@ import { DefaultApiResponseBody } from '../../../../_types/DefaultApiResponseBod
 import { DbHistory } from '../../../../methods/dataAccess/_models/dbHistory';
 import { insertError } from '../../../../methods/dataAccess/errors/INSERT/insertError';
 import { insertHistory } from '../../../../methods/dataAccess/histories/INSERT/insertHistory';
-import { selectAccessTokenByUsername } from '../../../../methods/dataAccess/users/SELECT/selectAccessTokenByUsername';
-import { selectUserIdByUsername } from '../../../../methods/dataAccess/users/SELECT/selectUserIdByUsername';
-import { checkUserAccessToken } from '../../../../methods/server/checkUserAccessToken';
-import { validateAccessOptions } from '../../../../methods/server/validateAccessOptions';
+import { confirmAccessClient } from '../../../../methods/server/confirmAccessClient';
 
 type AddHistoryReqBody = {
   historyTemperature: number;
@@ -25,28 +22,9 @@ const addHistory = async(req: AddHistoryNextApiReq, res: NextApiResponse<AddHist
 
   if(req.method !== 'POST') {res.status(405).send(resBody); return;}
 
-  const accessOptions = await validateAccessOptions(req.headers.cookie, res, false);
-
-  if(!accessOptions?.accessToken ||!accessOptions.username) {
-    return;
-  }
-
-  const userAccessToken = await selectAccessTokenByUsername(accessOptions.username);
-  await checkUserAccessToken(userAccessToken, res, accessOptions);
+  const userId = await confirmAccessClient(req.headers.cookie, res, resBody);
 
   const { historyTemperature } = req.body;
-
-  const userId = await selectUserIdByUsername(accessOptions.username);
-
-  if(!userId) {
-    const errorId = await insertError(30401, 'User not found.');
-    resBody.error = {errorCode: 30, errorId: errorId? errorId: 0};
-
-    res.status(401).send(resBody);
-    return;
-  }
-
-  resBody.auth = true;
 
   const history = await insertHistory(userId, new Date(), historyTemperature);
 
