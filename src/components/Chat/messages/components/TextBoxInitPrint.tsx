@@ -27,7 +27,7 @@ export const TextBoxInitPrint: React.FC<ITextBoxInitPrint> = (props) => {
   //calc distance from bottom of messages window if the last message is an ai message or initial is true
   if(scrollableNodeRef.current && typingOutResponse){
     const distanceFromBottom = scrollableNodeRef.current.scrollHeight - (scrollableNodeRef.current.scrollTop + scrollableNodeRef.current.clientHeight);
-    scrollbarInAutoScrollRange = (distanceFromBottom < 50) && (distanceFromBottom > 0);
+    scrollbarInAutoScrollRange = (distanceFromBottom < 100) && (distanceFromBottom > 0);
   }
 
   //scroll messageWindow if the distance to bottom has changed and is in the autoscroll range

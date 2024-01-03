@@ -25,7 +25,7 @@ export const MessagesWindow: React.FC<IMessagesWindow> = () => {
         top: scrollableNodeRef.current.scrollHeight,
       });
     }
-  }, [aiResponseLoading])
+  }, [aiResponseLoading, currentMessageHistory.id])
 
   return(
     <SimpleBar id={frameSize !== 'desktop'? styles.simpleBarMobile: styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
