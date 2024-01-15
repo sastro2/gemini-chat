@@ -13,7 +13,7 @@ interface IAlertDialog {
 
 export const AlertDialog: React.FC<IAlertDialog> = () => {
   const { alertDialogOpen, alertDialog, changeAlertDialogOpen } = useErrorStore();
-  const { title, content, confirm, disagreeBtnText, agreeBtnText } = alertDialog;
+  const { title, content, confirm, changeState, disagreeBtnText, agreeBtnText, fontSize } = alertDialog;
 
   return(
     <Dialog
@@ -26,7 +26,7 @@ export const AlertDialog: React.FC<IAlertDialog> = () => {
           {title}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <DialogContentText id="alert-dialog-description" fontSize={fontSize? fontSize: ''}>
           {content}
         </DialogContentText>
       </DialogContent>
@@ -34,7 +34,7 @@ export const AlertDialog: React.FC<IAlertDialog> = () => {
         <Button variant='outlined' onClick={() => changeAlertDialogOpen(false)}>
           {disagreeBtnText}
         </Button>
-        <Button color='error' variant='contained' onClick={() => [changeAlertDialogOpen(false), confirm? confirm(): null]} autoFocus>
+        <Button color='error' variant='contained' onClick={() => [changeAlertDialogOpen(false), confirm? confirm(): null, changeState? changeState(): null]} autoFocus>
           {agreeBtnText}
         </Button>
       </DialogActions>

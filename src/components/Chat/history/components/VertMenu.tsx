@@ -7,7 +7,7 @@ import {
   useMessagesStore,
 } from '../../../../_state/Chat/messageWindow/messagesStore';
 import {
-  AlertDialog,
+  AlertDialogType,
   useErrorStore,
 } from '../../../../_state/InputResponse/errorStore';
 import { useSuccessStore } from '../../../../_state/InputResponse/successStore';
@@ -23,7 +23,7 @@ interface IVertMenu {
 
 type DeleteButtonFunctions = {
   changeAlertDialogOpen: (boolean: boolean) => void;
-  changeAlertDialog: (alertDialog: AlertDialog) => void;
+  changeAlertDialog: (alertDialog: AlertDialogType) => void;
   removeHistory: (historyId: number) => void;
 }
 type ShareButtonFunctions = {

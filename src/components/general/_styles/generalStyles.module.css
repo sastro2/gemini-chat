@@ -3,12 +3,13 @@
   display: flex;
   background-color: var(--baseBackground);
   width: 220px;
-  height: 100vh;
+  height: 100%;
 }
 #simplebar {
   display: flex;
   width: 100%;
   overflow: auto;
+  height: 100%;
 }
 #newChatButtonContainerMobile {
   display: flex;
@@ -66,4 +67,12 @@
 }
 #verticalMenuButton {
   padding-bottom: 2px;
+}
+#profileButton {
+  display: flex;
+  color: var(--historyColor);
+  height: 45px;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 5% 0 0 0;
 }

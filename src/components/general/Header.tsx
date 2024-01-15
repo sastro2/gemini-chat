@@ -1,20 +1,11 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import {
-  Container,
-  IconButton,
-  IconButtonProps,
-  SwipeableDrawer,
-} from '@mui/material';
-import SimpleBar from 'simplebar-react';
+import { Container, IconButton, IconButtonProps } from '@mui/material';
 import { useMediaQueryStore } from '../../_state/Page/mediaQueryStore';
 import { usePageStore } from '../../_state/Page/pageStore';
-import { useLoginStore } from '../../_state/Session/loginStore';
 import styles from '../Chat/_styles/chatStyles.module.css';
-import { HistoriesList } from '../Chat/history/components/historiesList';
-import { NewChatButton } from '../Chat/history/components/NewChatButton';
 import { LoginButton } from '../Session/LoginButton';
 import { LoginDialog } from '../Session/LoginDialog';
-import genStyles from './_styles/generalStyles.module.css';
+import { NavDrawer } from './components/NavDrawer';
 
 interface IHeader {}
 
@@ -28,8 +19,7 @@ const iconButtonProps: IconButtonProps = {
 
 export const Header: React.FC<IHeader> = () => {
   const { frameSize } = useMediaQueryStore();
-  const { drawerOpen, changeDrawerOpen } = usePageStore();
-  const { loggedIn } = useLoginStore();
+  const { changeDrawerOpen } = usePageStore();
 
   return (
     // move login styles to genStyles at some point
@@ -39,46 +29,7 @@ export const Header: React.FC<IHeader> = () => {
       <IconButton {...iconButtonProps} onClick={() => changeDrawerOpen(true)}>
         <MenuIcon />
       </IconButton>
-        <SwipeableDrawer anchor='right' sx={{zIndex: 0}} swipeAreaWidth={frameSize !== 'desktop'? 15: 0} open={drawerOpen} onClose={() => changeDrawerOpen(false)} onOpen={() => changeDrawerOpen(true)}>
-          <SimpleBar id={genStyles.simplebar}>
-            <Container id={genStyles.drawerContainer}>
-              {loggedIn? <DrawerContent />: <DrawerContentLogin />}
-            </Container>
-          </SimpleBar>
-        </SwipeableDrawer>
+      <NavDrawer />
     </Container>
   );
 };
-
-interface IDrawerContent {}
-
-const DrawerContent: React.FC<IDrawerContent> = () => {
-  const { frameSize } = useMediaQueryStore();
-  const { changeDrawerOpen } = usePageStore();
-
-  if(frameSize !== 'desktop'){
-    return(
-      <Container disableGutters>
-        <Container id={genStyles.newChatButtonContainerMobile} onClick={() => changeDrawerOpen(false)} disableGutters>
-          <NewChatButton />
-        </Container>
-        <HistoriesList />
-      </Container>
-    )
-  }
-
-  return null;
-};
-
-interface IDrawerContentLogin {}
-
-const DrawerContentLogin: React.FC<IDrawerContentLogin> = () => {
-  // quick inline styles for deploy change later
-  return (
-    <Container style={{display: 'flex', justifyContent: 'end', margin: 0, paddingTop: '15px'}} maxWidth={false} disableGutters>
-      <Container style={{width: 'auto', margin: 0}} disableGutters>
-        <LoginButton />
-      </Container>
-    </Container>
-  )
-}

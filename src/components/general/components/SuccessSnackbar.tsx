@@ -6,8 +6,8 @@ import {
   IconButton,
   Snackbar,
 } from '@mui/material';
-import { useSuccessStore } from '../../_state/InputResponse/successStore';
-import styles from './_styles/generalStyles.module.css';
+import { useSuccessStore } from '../../../_state/InputResponse/successStore';
+import styles from '../_styles/generalStyles.module.css';
 
 interface ISuccessSnackbar {}
 

@@ -7,8 +7,8 @@ import {
   Snackbar,
 } from '@mui/material';
 import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react';
-import { useErrorStore } from '../../_state/InputResponse/errorStore';
-import styles from './_styles/generalStyles.module.css';
+import { useErrorStore } from '../../../_state/InputResponse/errorStore';
+import styles from '../_styles/generalStyles.module.css';
 
 interface IErrorSnackbar {}
 

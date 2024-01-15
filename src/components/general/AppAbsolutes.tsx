@@ -1,5 +1,5 @@
-import { ErrorSnackbar } from './ErrorSnackbar';
-import { SuccessSnackbar } from './SuccessSnackbar';
+import { ErrorSnackbar } from './components/ErrorSnackbar';
+import { SuccessSnackbar } from './components/SuccessSnackbar';
 
 interface IAppAbsolutes {}
 

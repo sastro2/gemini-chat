@@ -5,22 +5,24 @@ interface IErrorStore{
   errorSnackbarOpen: boolean;
   error: Error
   alertDialogOpen: boolean;
-  alertDialog: AlertDialog;
+  alertDialog: AlertDialogType;
   changeErrorSnackbarOpen: (boolean: boolean) => void;
   changeError: (error: Error) => void;
   changeAlertDialogOpen: (boolean: boolean) => void;
-  changeAlertDialog: (alertDialog: AlertDialog) => void;
+  changeAlertDialog: (alertDialog: AlertDialogType) => void;
 }
 
-export type AlertDialog = {
+export type AlertDialogType = {
   title: string;
   content?: string;
   confirm?: () => Promise<void>;
+  changeState?: () => void;
   disagreeBtnText: string;
   agreeBtnText: string;
+  fontSize?: number;
 }
 
-export const defaultAlertDialog: AlertDialog = {
+export const defaultAlertDialog: AlertDialogType = {
   title: '',
   disagreeBtnText: '',
   agreeBtnText: '',
@@ -36,5 +38,5 @@ export const useErrorStore = create<IErrorStore>(set => ({
   changeErrorSnackbarOpen: (boolean: boolean) => set({errorSnackbarOpen: boolean}),
   changeError: (error: Error) => set({error: error}),
   changeAlertDialogOpen: (boolean: boolean) => set({alertDialogOpen: boolean}),
-  changeAlertDialog: (alertDialog: AlertDialog) => set({alertDialog: alertDialog}),
+  changeAlertDialog: (alertDialog: AlertDialogType) => set({alertDialog: alertDialog}),
 }));

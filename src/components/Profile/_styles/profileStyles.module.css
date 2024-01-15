@@ -1,0 +1,105 @@
+#profileBackground {
+  background-color: var(--baseBackground);
+  width: 100vw;
+  height: 100vh;
+}
+#profileContent {
+  height: 100%;
+  width: 100%;
+  border-radius: 20px;
+  background-color: var(--messageWindowBackground);
+}
+#profileTitle {
+  color: var(--textColor);
+  width: 100%;
+  padding: 5% 0 0% 0%;
+}
+#profileTitleContainer {
+  position: relative;
+}
+#drawerButton {
+  position: absolute;
+  right: 1%;
+  top: 5%;
+}
+#profileSelectContainer {
+  padding: 3% 0 0 3%;
+  width: 100%;
+}
+#profileSelect {
+  color: var(--textColor);
+  background-color: var(--historyBackground);
+  border: 1px solid;
+  border-color: var(--baseBackground);
+  width: 200px;
+}
+#profileSelectMobile {
+  color: var(--textColor);
+  background-color: var(--historyBackground);
+  border: 1px solid;
+  border-color: var(--baseBackground);
+  width: 100px;
+}
+#profileSelectLabel {
+  color: var(--textColor);
+}
+#avatarContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  border-bottom: white solid 0.5px;
+  padding: 0 0 1% 3%;
+  gap: 1.5%;
+}
+#avatar {
+  margin-bottom: 1%;
+}
+#editIcon {
+  opacity: 0%;
+  z-index: 1;
+}
+#editContainer {
+  width: auto;
+  height: auto;
+  margin-bottom: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+#editIconContainer {
+  position: absolute;
+  z-index: 1;
+  opacity: 80%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25%;
+  margin-bottom: 1%;
+}
+#editIconContainer:hover #editIcon {
+  opacity: 80%;
+}
+#editIconContainer:hover + #avatar {
+  opacity: 80%;
+}
+#editIconContainer:active #editIcon {
+  opacity: 60%;
+}
+#editIconContainer:active + #avatar {
+  opacity: 60%;
+}
+#backIcon {
+  color: var(--textColor);
+  position: absolute;
+  right: 1%;
+  top: 10%;
+  cursor: pointer;
+}
+#backIcon:hover {
+  opacity: 80%;
+}
+#backIcon:active {
+  opacity: 60%;
+}
